@@ -13,10 +13,21 @@ public class Kompozicija /*extends Thread implements Serializable*/ {
 	ZeljeznickaStanica odrediste;  //odredisna stanica na koju kompozicija treba da stigne
 	ZeljeznickaStanica polazak;
 		
+	public Kompozicija(int _brLokomotiva, int _brVagona, String _raspored, double _brzina, ZeljeznickaStanica _polazak, ZeljeznickaStanica _odrediste) throws Exception
+	{
+		if(_brLokomotiva > maxLokomotiva || _brLokomotiva < 1 || _brVagona > maxVagona)
+			throw new Exception("Kompozicija nije validna!");
+		brzinaKretanja = _brzina;
+		polazak = _polazak;
+		odrediste = _odrediste;
+		vagoni = new ArrayList<>(_brVagona);
+		lokomotive = new ArrayList<>(_brLokomotiva);
+		kreirajKompoziciju(_raspored);
+	}
 	
 	private void kreirajKompoziciju(String raspored)
 	{
-		String[] niz = raspored.split(",");
+		String[] niz = raspored.split(".");
 		
 		for (String string : niz) {
 			
@@ -74,18 +85,6 @@ public class Kompozicija /*extends Thread implements Serializable*/ {
 		//System.out.println("TEST");
 	}
 	
-
-	public Kompozicija(int _brLokomotiva, int _brVagona, String _raspored, double _brzina, ZeljeznickaStanica _polazak, ZeljeznickaStanica _odrediste) throws Exception{
-		if(_brLokomotiva > maxLokomotiva || _brLokomotiva < 1 || _brVagona > maxVagona)
-			throw new Exception("Kompozicija nije validna!");
-		brzinaKretanja = _brzina;
-		polazak = _polazak;
-		odrediste = _odrediste;
-		vagoni = new ArrayList<>(_brVagona);
-		lokomotive = new ArrayList<>(_brLokomotiva);
-		kreirajKompoziciju(_raspored);
-		
-	}
 
 	/*@Override
 	public void run() {
