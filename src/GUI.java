@@ -8,7 +8,6 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 
 public class GUI extends JFrame {
 
@@ -43,7 +42,6 @@ public class GUI extends JFrame {
 		
 		GUI gui = new GUI();
 		
-		guiMapa[21][26].setBackground(Color.red);
 		
 		Vozilo v1 = new Vozilo(1, 'C');
 		Vozilo v2 = new Vozilo(1, 'C');
