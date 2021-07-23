@@ -1,0 +1,10 @@
+VN - vagon posebne namjene
+VPR - vagon putnicki restoran
+VPS - vagon putnicki za spavanje
+VT - vagon teretni
+
+
+LP - lokomotiva putnicka
+LT - lokomotiva transportna
+LU - lokomotiva univerzalna
+LM - lokomotiva manevarska
