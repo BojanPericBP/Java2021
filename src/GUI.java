@@ -2,11 +2,15 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.util.ArrayList;
+import java.util.Iterator;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+
 
 
 public class GUI extends JFrame {
@@ -14,6 +18,7 @@ public class GUI extends JFrame {
 	private static final long serialVersionUID = 1L;
 	static final int MAT_SIZE = 30;
 	
+	static JFrame frame;
 	
 	static char[][] mapa;
 	static ArrayList<ZeljeznickaStanica> stanice = new ArrayList<>(5);
@@ -23,7 +28,7 @@ public class GUI extends JFrame {
 	
 	JButton btnKretanje;
 	JButton btnStart;
-	public JPanel[][] guiMapa;
+	static public JPanel[][] guiMapa;
 	/**
 	 * Launch the application.
 	 */
@@ -35,14 +40,22 @@ public class GUI extends JFrame {
 		stanice.add(new ZeljeznickaStanica('C', new Koordinate(6,6)));
 		stanice.add(new ZeljeznickaStanica('D', new Koordinate(1,26)));
 		stanice.add(new ZeljeznickaStanica('E', new Koordinate(25,26)));
-		
-		
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception{
 		
 		GUI gui = new GUI();
 		
+		/*TOOD pomjeranje automobila kod
+		JLabel test1 = new JLabel(new ImageIcon("C:\\Users\\Bojan\\Desktop\\matrica.png"));
+		JLabel test2 = new JLabel(new ImageIcon("C:\\Users\\Bojan\\Desktop\\matrica.png"));
+	
+		 
+		guiMapa[20][i].add(test1);
+		Thread.sleep(2000);
+		guiMapa[20][i-1].add(test1);
+		SwingUtilities.updateComponentTreeUI(frame);
+		*/
 	}
 
 	/**
@@ -52,7 +65,7 @@ public class GUI extends JFrame {
 	public GUI() {
 
 		
-		JFrame frame = new JFrame("NASLOV");
+		frame = new JFrame("NASLOV");
 		frame.setSize(450,348);
 		
 		contentPanel= new JPanel();
