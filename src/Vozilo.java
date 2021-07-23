@@ -1,3 +1,5 @@
+import javax.swing.JLabel;
+
 public class Vozilo extends Thread {
 	static private int count=0;
 	String marka;
@@ -28,10 +30,13 @@ public class Vozilo extends Thread {
 		Koordinate k = sledeciKorak();
 		if(provjeraPruznogPrelaza(k))
 		{
-			
+			GUI.guiMapa[k.i][k.j].add((JLabel)GUI.guiMapa[trKoo.i][trKoo.j].getComponents()[0]);
+			preKoo.i = trKoo.i;
+			preKoo.j = trKoo.j;
+			trKoo = k;
 		}
 		
-		//kada automobil enstane sa mape treba umanjiti broj vozila na putovima i skontati ko cuva referencu na neki niz trenutnih vozila na putovima
+		//kada automobil nestane sa mape treba umanjiti broj vozila na putovima i skontati ko cuva referencu na neki niz trenutnih vozila na putovima
 		
 	}
 	
