@@ -13,8 +13,7 @@ public class KreiranjeVozila extends TimerTask
 	ArrayList<Vozilo> vozilaNaCekanjuB;
 	ArrayList<Vozilo> vozilaNaCekanjuC;
 	ArrayList<ArrayList<Vozilo>> vozilaNaCekanju;
-	
-	int[] trenutniBrVozilaNaPutevima = {10, 20, 30}; //TODO skontat gdje ovo premjestiti
+
 	double[] maxBrzine = new double[3];
 	int[] maxBrVozila = new int[3];
 	
@@ -59,12 +58,12 @@ public class KreiranjeVozila extends TimerTask
 		
 		if(rand.nextBoolean())
 		{
-			if((trenutniBrVozilaNaPutevima[randomPut] + vozilaNaCekanju.get(randomPut).size()) < maxBrVozila[randomPut]) 
+			if((GUI.trenutniBrVozilaNaPutevima[randomPut] + vozilaNaCekanju.get(randomPut).size()) < maxBrVozila[randomPut]) 
 				vozilaNaCekanju.get(randomPut).add(new Automobil(rand.nextDouble()*maxBrzine[randomPut], naziviPuteva[randomPut])); //TODO: gdje se odredjuje smijer vozila i ostali atributi?
 		}
 		else
 		{
-			if((trenutniBrVozilaNaPutevima[randomPut] + vozilaNaCekanju.get(randomPut).size()) < maxBrVozila[randomPut])
+			if((GUI.trenutniBrVozilaNaPutevima[randomPut] + vozilaNaCekanju.get(randomPut).size()) < maxBrVozila[randomPut])
 				vozilaNaCekanju.get(randomPut).add(new Kamion(rand.nextDouble()*maxBrzine[randomPut], naziviPuteva[randomPut]));
 		}
 	}
@@ -84,17 +83,17 @@ public class KreiranjeVozila extends TimerTask
 			{
 				Vozilo tmpVozilo = vozilaNaCekanju.get(i).remove(0);
 				tmpVozilo.trKoo = kordStart[i][0];
-				trenutniBrVozilaNaPutevima[i]++; 
+				GUI.trenutniBrVozilaNaPutevima[i]++; 
 				GUI.guiMapa[tmpVozilo.trKoo.i][tmpVozilo.trKoo.j].add(new JLabel(new ImageIcon("car.png")));
-				//tmpVozilo.start();
+				tmpVozilo.start();
 			}
 			else if(vozilaNaCekanju.get(i).size()>0 && GUI.guiMapa[ kordStart[i][1].i ][ kordStart[i][1].j ].getComponents().length == 0) //ako nema niko na pocetku smijera 1
 			{
 				Vozilo tmpVozilo = vozilaNaCekanju.get(i).remove(0);
 				tmpVozilo.trKoo = kordStart[i][1];
-				trenutniBrVozilaNaPutevima[i]++; 
+				GUI.trenutniBrVozilaNaPutevima[i]++; 
 				GUI.guiMapa[tmpVozilo.trKoo.i][tmpVozilo.trKoo.j].add(new JLabel(new ImageIcon("car.png")));
-				//tmpVozilo.start();
+				tmpVozilo.start();
 			}
 		}
 	}

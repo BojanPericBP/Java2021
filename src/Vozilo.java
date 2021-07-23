@@ -1,7 +1,12 @@
+import java.awt.Color;
+import java.awt.Component;
+
 import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
+
 
 public class Vozilo extends Thread {
-	static private int count=0;
+	static private int count = 0;
 	String marka;
 	String model;
 	int godiste;
@@ -11,99 +16,171 @@ public class Vozilo extends Thread {
 	Koordinate preKoo;
 	char smjer;
 	char put;
-	
-	public Vozilo(double _maxBrzina, char _put)
-	{ 
+
+	public Vozilo(double _maxBrzina, char _put) {
 		maxBrzina = _maxBrzina;
-		trenutnaBrzina = (0.5 + Math.random()*(maxBrzina-0.5))*1000;
-		marka = "marka"+count;
-		model = "model"+count;
+		trenutnaBrzina = (0.5 + Math.random() * (maxBrzina - 0.5)) * 1000;
+		marka = "marka" + count;
+		model = "model" + count;
 		godiste = 1990 + count++;
 		put = _put;
+		trKoo = new Koordinate(-1, -1);
+		preKoo = new Koordinate(-1, -1);
 	}
-	
+
 	@Override
 	public void run() {
+
+		while (trKoo.i != -1 || trKoo.j != -1) {
+
+			try {
+
+				Thread.sleep((long)trenutnaBrzina);
+			} catch (Exception e) {
+				System.err.println("greska");
+			}
+			
+			synchronized(GUI.frame)
+			{
+
+			Koordinate k = sledeciKorak();
+
+			if(trKoo.equals(k))
+			{
+
+				continue;
+			}
+			
+			if (k.i == -1 || k.j == -1) {
+				GUI.guiMapa[trKoo.i][trKoo.j].remove((JLabel) GUI.guiMapa[trKoo.i][trKoo.j].getComponents()[0]);
+				trKoo = k;
+				// Dekrementoravi broj vozila na putu i moramo znati koji je to put
+			}
+			else if(k.i == -2)
+			{
+				Koordinate tmpKoord = prelazakPruznogPrelaza();
+				if(tmpKoord != null)
+				{
+					GUI.guiMapa[tmpKoord.i][tmpKoord.j].add((JLabel) GUI.guiMapa[trKoo.i][trKoo.j].getComponents()[0]);
+					trKoo = tmpKoord;
+				}
+				else {			
+					continue;//TODO mozda nece raditi pa cemo morati pauzirati i nastavljati tredove
+				}
+			}
+			
+			else {
+				usaglasavanjeBrzine(k);
+				GUI.guiMapa[k.i][k.j].add((JLabel) GUI.guiMapa[trKoo.i][trKoo.j].getComponents()[0]);
+				
+				preKoo.i = trKoo.i;
+				preKoo.j = trKoo.j;
+				trKoo = k;
+				
+			}
+			
+			//synchronized (GUI.guiMapa) {
+				SwingUtilities.updateComponentTreeUI(GUI.frame);
+			//}	
+				
+				
+			// kada automobil nestane sa mape treba umanjiti broj vozila na putovima i
+			// skontati ko cuva referencu na neki niz trenutnih vozila na putovima
+			}
+		}
+		System.out.println("GOTOVOOOOOOOOOO");
+	}
+
+	private Koordinate prelazakPruznogPrelaza() { // provjerava da li se moze preci preko pruge i vraca koordinate sledeceg polja ako se moze preci
 		
-		usaglasavanjeBrzine();
-		
-		Koordinate k = sledeciKorak();
-		if(provjeraPruznogPrelaza(k))
+		if(put == 'A' && smjer == '0' && GUI.guiMapa[20][2].getBackground() == Color.orange)
 		{
-			GUI.guiMapa[k.i][k.j].add((JLabel)GUI.guiMapa[trKoo.i][trKoo.j].getComponents()[0]);
-			preKoo.i = trKoo.i;
-			preKoo.j = trKoo.j;
-			trKoo = k;
+			preKoo.i = 20;
+			preKoo.j = 2;
+			return new Koordinate(20,1);
 		}
 		
-		//kada automobil nestane sa mape treba umanjiti broj vozila na putovima i skontati ko cuva referencu na neki niz trenutnih vozila na putovima
+		else if(put == 'A' && smjer == '1' && GUI.guiMapa[21][2].getBackground() == Color.orange)
+		{
+			preKoo.i = 21;
+			preKoo.j = 2;
+			return new Koordinate(21,3);
+		}
 		
-	}
-	
-	
-	
-	private boolean provjeraPruznogPrelaza(Koordinate sledeciKorak) {  //provjerava da li su na sledecem koraku pruzni prelaz i ako jeste da li moze preci preko pruge ili ne
-		// TODO Auto-generated method stub
-		return false;
+		else if(put == 'B' && smjer == '0' && GUI.guiMapa[6][14].getBackground() == Color.orange)
+		{
+			preKoo.i = 6;
+			preKoo.j =14;
+			return new Koordinate(5,14);
+		}
+			
+		else if(put == 'B' && smjer == '1' && GUI.guiMapa[6][13].getBackground() == Color.orange)
+		{
+			preKoo.i = 6;
+			preKoo.j = 13;
+			return new Koordinate(7,13);
+		}
+		
+		else if(put == 'C' && smjer == '0' && GUI.guiMapa[20][26].getBackground() == Color.orange)
+		{
+			preKoo.i = 20;
+			preKoo.j = 26;
+			return new Koordinate(20,25);
+		}
+		
+		else if(put == 'C' && smjer == '1' && GUI.guiMapa[21][26].getBackground() == Color.orange)
+		{
+			preKoo.i = 21;
+			preKoo.j = 26;
+			return new Koordinate(21,27);
+		}
+		
+	return null;
 	}
 
-	private void usaglasavanjeBrzine() {
-		
-		//if(GUI.mapa[trKoo.i][trKoo.j].getCompone)
-		
+	private void usaglasavanjeBrzine(Koordinate preKoo) {
+
+		Component[] cmp;
+		cmp = GUI.guiMapa[preKoo.i][preKoo.j].getComponents();
+
+		if (cmp.length == 1)// ako je vece od nula onda se na toj poziciji nalazi vozilo
+			trenutnaBrzina = Integer.parseInt(((JLabel) cmp[0]).getName());
 	}
 
-	Koordinate sledeciKorak()//  TODO uraditi i za pruzne prelaze
+	Koordinate sledeciKorak()// TODO uraditi i za pruzne prelaze
 	{
 
-		if( trKoo.j < 29 && (GUI.mapa[trKoo.i][trKoo.j+1] == smjer && trKoo.j+1 != preKoo.j)) //provjera desno
+		if (trKoo.j < 29 && ((GUI.mapa[trKoo.i][trKoo.j + 1] == smjer || GUI.mapa[trKoo.i][trKoo.j + 1] == 'x') && trKoo.j + 1 != preKoo.j)) // provjera desno
 		{
-//			preKoo.i = trKoo.i;
-//			preKoo.j = trKoo.j;
-			return new Koordinate(trKoo.i,trKoo.j+1);
-			
+			if( GUI.guiMapa[trKoo.i][trKoo.j + 1].getComponents().length == 1)
+				return trKoo;
+			return  (GUI.mapa[trKoo.i][trKoo.j + 1] == 'x') ? new Koordinate(-2, -2) : new Koordinate(trKoo.i, trKoo.j + 1);
 		}
-		
-		else if( trKoo.j > 0 && (GUI.mapa[trKoo.i][trKoo.j-1] == smjer && trKoo.j-1 != preKoo.j)) //provjera lijevo
-		{
-//			preKoo.i = trKoo.i;
-//			preKoo.j = trKoo.j;
-			
-			return new Koordinate(trKoo.i,trKoo.j-1);
-		}
-		else if( trKoo.i > 0 && (GUI.mapa[trKoo.i-1][trKoo.j] == smjer && trKoo.i-1 != preKoo.i))  //provjera gore
-		{
-//			preKoo.i = trKoo.i;
-//			preKoo.j = trKoo.j;
-			return new Koordinate(trKoo.i-1,trKoo.j);
-		}
-		
-		else if(trKoo.i < 29 && (GUI.mapa[trKoo.i+1][trKoo.j] == smjer && trKoo.i+1 != preKoo.i)) //provjera dole
-		{
-//			preKoo.i = trKoo.i;
-//			preKoo.j = trKoo.j;
-			return new Koordinate(trKoo.i+1,trKoo.j);
-		}
-		else {//TODO treba izbrisati auto sa guia
-//			trKoo.i = trKoo.j = -1;
-			return new Koordinate(-1,-1);
-		}
-	}
-	
 
-	public static void main(String arsdrd[])
-	{
-		/*Vozilo vozilo = new Vozilo(100, 'C');
-		vozilo.smjer = '1';
-		vozilo.trKoo = new Koordinate(29,22);
-		vozilo.preKoo = new Koordinate(-1,-1);
-		GUI g = new GUI();
-		
-		while(vozilo.trKoo.i != -1)
+		else if (trKoo.j > 0 && ((GUI.mapa[trKoo.i][trKoo.j - 1] == smjer || GUI.mapa[trKoo.i][trKoo.j - 1] == 'x') && trKoo.j - 1 != preKoo.j)) // provjera lijevo
 		{
-			vozilo.kretanje();
-			System.out.println("("+vozilo.trKoo.i+","+vozilo.trKoo.j+")");
-		}*/
+			if( GUI.guiMapa[trKoo.i][trKoo.j - 1].getComponents().length == 1)
+				return trKoo;
+			return  (GUI.mapa[trKoo.i][trKoo.j - 1] == 'x') ? new Koordinate(-2, -2) : new Koordinate(trKoo.i, trKoo.j - 1);
+		} 
+		
+		else if (trKoo.i > 0 && ((GUI.mapa[trKoo.i - 1][trKoo.j] == smjer || GUI.mapa[trKoo.i - 1][trKoo.j] == 'x')&& trKoo.i - 1 != preKoo.i)) // provjera gore
+		{
+			if( GUI.guiMapa[trKoo.i - 1][trKoo.j].getComponents().length == 1)
+				return trKoo;
+			return  (GUI.mapa[trKoo.i-1][trKoo.j] == 'x') ? new Koordinate(-2, -2) : new Koordinate(trKoo.i-1, trKoo.j);
+		}
+
+		else if (trKoo.i < 29 && ((GUI.mapa[trKoo.i + 1][trKoo.j] == smjer || GUI.mapa[trKoo.i + 1][trKoo.j] == 'x')&& trKoo.i + 1 != preKoo.i)) // provjera dole
+		{
+			if( GUI.guiMapa[trKoo.i + 1][trKoo.j].getComponents().length == 1)
+				return trKoo;
+			return  (GUI.mapa[trKoo.i+1][trKoo.j] == 'x') ? new Koordinate(-2, -2) : new Koordinate(trKoo.i+1, trKoo.j);
+		} 
+		
+		else {
+			return new Koordinate(-1, -1);
+		}
 	}
-	
+
 }

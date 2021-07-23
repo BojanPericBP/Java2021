@@ -2,8 +2,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -12,21 +10,19 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-
-
 public class GUI extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	static final int MAT_SIZE = 30;
 	
-	static JFrame frame;
-	
+	static int[] trenutniBrVozilaNaPutevima = {0, 0, 0};
 	static char[][] mapa;
 	static ArrayList<ZeljeznickaStanica> stanice = new ArrayList<>(5);
 
-	static private JPanel contentPanel;
-	static private GridLayout gridLayout;
 	
+	static private GridLayout gridLayout;
+	static private JPanel contentPanel;
+	static JFrame frame;
 	JButton btnKretanje;
 	JButton btnStart;
 	static public JPanel[][] guiMapa;
@@ -47,16 +43,78 @@ public class GUI extends JFrame {
 		
 		GUI gui = new GUI();
 		
-		/*TOOD pomjeranje automobila kod
-		JLabel test1 = new JLabel(new ImageIcon("C:\\Users\\Bojan\\Desktop\\matrica.png"));
+		guiMapa[21][26].setBackground(Color.red);
+		
+		Vozilo v1 = new Vozilo(1, 'C');
+		Vozilo v2 = new Vozilo(1, 'C');
+		Vozilo v3 = new Vozilo(1, 'C');
+		
+		v1.trKoo.i = 29;
+		v1.trKoo.j = 22;
+		v1.smjer = '1';
+		v1.trenutnaBrzina = 500;
+		
+		v2.trKoo.i = 26;
+		v2.trKoo.j = 22;
+		v2.preKoo.i = 27;
+		v2.preKoo.j = 22;
+		v2.smjer = '1';
+		v2.trenutnaBrzina = 1000;
+		
+		v3.trKoo.i = 27;
+		v3.trKoo.j = 22;
+		v3.preKoo.i = 28;
+		v3.preKoo.j = 22;
+		v3.smjer = '1';
+		v3.trenutnaBrzina = 400;
+		
+		/*v4.trKoo.i = 15;
+		v4.trKoo.j = 14;
+		v4.preKoo.i = 16;
+		v4.preKoo.j = 14;
+		v4.smjer = '0';
+		v4.trenutnaBrzina = 1200;
+		
+		v5.trKoo.i = 22;
+		v5.trKoo.j = 14;
+		v5.preKoo.i = 23;
+		v5.preKoo.j = 14;
+		v5.smjer = '0';
+		v5.trenutnaBrzina = 900;*/
+		
+
+		guiMapa[v1.trKoo.i][v1.trKoo.j].add(new JLabel(new ImageIcon("car.png")));
+		((JLabel)guiMapa[v1.trKoo.i][v1.trKoo.j].getComponents()[0]).setName(""+(long)v1.trenutnaBrzina);
+		
+		guiMapa[v2.trKoo.i][v2.trKoo.j].add(new JLabel(new ImageIcon("car.png")));
+		((JLabel)guiMapa[v2.trKoo.i][v2.trKoo.j].getComponents()[0]).setName(""+(long)v2.trenutnaBrzina);//TODO testirati sa dvije slicice
+		
+		guiMapa[v3.trKoo.i][v3.trKoo.j].add(new JLabel(new ImageIcon("car.png")));
+		((JLabel)guiMapa[v3.trKoo.i][v3.trKoo.j].getComponents()[0]).setName(""+(long)v3.trenutnaBrzina);
+		
+		/*guiMapa[v4.trKoo.i][v4.trKoo.j].add(new JLabel(new ImageIcon("car.png")));
+		((JLabel)guiMapa[v4.trKoo.i][v4.trKoo.j].getComponents()[0]).setName(""+(long)v4.trenutnaBrzina);
+		
+		guiMapa[v5.trKoo.i][v5.trKoo.j].add(new JLabel(new ImageIcon("car.png")));
+		((JLabel)guiMapa[v5.trKoo.i][v5.trKoo.j].getComponents()[0]).setName(""+(long)v5.trenutnaBrzina);*/
+		v1.start();
+		v2.start();
+		v3.start();
+		//v4.start();
+		//v5.start();
+		
+		
+		//TOOD pomjeranje automobila kod
+		/*JLabel test1 = new JLabel(new ImageIcon("C:\\Users\\Bojan\\Desktop\\matrica.png"));
 		JLabel test2 = new JLabel(new ImageIcon("C:\\Users\\Bojan\\Desktop\\matrica.png"));
 	
-		 
+		
+		
 		guiMapa[20][i].add(test1);
 		Thread.sleep(2000);
 		guiMapa[20][i-1].add(test1);
-		SwingUtilities.updateComponentTreeUI(frame);
-		*/
+		SwingUtilities.updateComponentTreeUI(frame);*/
+		
 	}
 
 	/**
@@ -234,9 +292,9 @@ public class GUI extends JFrame {
 		guiMapa[21][26].setBackground(Color.orange);
 		mapa [21][26] ='x';
 		
-		((JLabel)guiMapa[26][25].getComponents()[0]).setName("sasa");
-		System.out.println(((JLabel)guiMapa[26][25].getComponents()[0]).getName());
-		System.out.println(guiMapa[26][25].getComponents().length);
+//		((JLabel)guiMapa[26][25].getComponents()[0]).setName("sasa");
+//		System.out.println(((JLabel)guiMapa[26][25].getComponents()[0]).getName());
+//		System.out.println(guiMapa[26][25].getComponents().length);
 
 		
 		frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE );
