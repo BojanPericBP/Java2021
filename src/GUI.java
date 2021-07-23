@@ -2,6 +2,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 
 import javax.swing.ImageIcon;
@@ -232,6 +233,11 @@ public class GUI extends JFrame {
 		mapa [20][26] ='x';
 		guiMapa[21][26].setBackground(Color.orange);
 		mapa [21][26] ='x';
+		
+		((JLabel)guiMapa[26][25].getComponents()[0]).setName("sasa");
+		System.out.println(((JLabel)guiMapa[26][25].getComponents()[0]).getName());
+		System.out.println(guiMapa[26][25].getComponents().length);
+
 		
 		frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE );
 		frame.pack();
