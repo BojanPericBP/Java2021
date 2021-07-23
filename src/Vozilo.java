@@ -1,4 +1,4 @@
-public class Vozilo {
+public class Vozilo extends Thread {
 	static private int count=0;
 	String marka;
 	String model;
@@ -20,37 +20,68 @@ public class Vozilo {
 		put = _put;
 	}
 	
-	void kretanje()//setovati trenutne i prethodne koordinate TODO uraditi i za pruzne prelaze
+	@Override
+	public void run() {
+		
+		usaglasavanjeBrzine();
+		
+		Koordinate k = sledeciKorak();
+		if(provjeraPruznogPrelaza(k))
+		{
+			
+		}
+		
+		//kada automobil enstane sa mape treba umanjiti broj vozila na putovima i skontati ko cuva referencu na neki niz trenutnih vozila na putovima
+		
+	}
+	
+	
+	
+	private boolean provjeraPruznogPrelaza(Koordinate sledeciKorak) {  //provjerava da li su na sledecem koraku pruzni prelaz i ako jeste da li moze preci preko pruge ili ne
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	private void usaglasavanjeBrzine() {
+		
+		//if(GUI.mapa[trKoo.i][trKoo.j].getCompone)
+		
+	}
+
+	Koordinate sledeciKorak()//  TODO uraditi i za pruzne prelaze
 	{
 
 		if( trKoo.j < 29 && (GUI.mapa[trKoo.i][trKoo.j+1] == smjer && trKoo.j+1 != preKoo.j)) //provjera desno
 		{
-			preKoo.i = trKoo.i;
-			preKoo.j = trKoo.j;
-			trKoo.j++;
+//			preKoo.i = trKoo.i;
+//			preKoo.j = trKoo.j;
+			return new Koordinate(trKoo.i,trKoo.j+1);
+			
 		}
 		
 		else if( trKoo.j > 0 && (GUI.mapa[trKoo.i][trKoo.j-1] == smjer && trKoo.j-1 != preKoo.j)) //provjera lijevo
 		{
-			preKoo.i = trKoo.i;
-			preKoo.j = trKoo.j;
-			trKoo.j--;
+//			preKoo.i = trKoo.i;
+//			preKoo.j = trKoo.j;
+			
+			return new Koordinate(trKoo.i,trKoo.j-1);
 		}
 		else if( trKoo.i > 0 && (GUI.mapa[trKoo.i-1][trKoo.j] == smjer && trKoo.i-1 != preKoo.i))  //provjera gore
 		{
-			preKoo.i = trKoo.i;
-			preKoo.j = trKoo.j;
-			trKoo.i--;
+//			preKoo.i = trKoo.i;
+//			preKoo.j = trKoo.j;
+			return new Koordinate(trKoo.i-1,trKoo.j);
 		}
 		
 		else if(trKoo.i < 29 && (GUI.mapa[trKoo.i+1][trKoo.j] == smjer && trKoo.i+1 != preKoo.i)) //provjera dole
 		{
-			preKoo.i = trKoo.i;
-			preKoo.j = trKoo.j;
-			trKoo.i++;
+//			preKoo.i = trKoo.i;
+//			preKoo.j = trKoo.j;
+			return new Koordinate(trKoo.i+1,trKoo.j);
 		}
 		else {//TODO treba izbrisati auto sa guia
-			trKoo.i = trKoo.j = -1;
+//			trKoo.i = trKoo.j = -1;
+			return new Koordinate(-1,-1);
 		}
 	}
 	
