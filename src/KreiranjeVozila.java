@@ -4,6 +4,9 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.TimerTask;
 
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+
 public class KreiranjeVozila extends TimerTask
 {
 	ArrayList<Vozilo> vozilaNaCekanjuA;
@@ -82,14 +85,16 @@ public class KreiranjeVozila extends TimerTask
 				Vozilo tmpVozilo = vozilaNaCekanju.get(i).remove(0);
 				tmpVozilo.trKoo = kordStart[i][0];
 				trenutniBrVozilaNaPutevima[i]++; 
-				tmpVozilo.start();
+				GUI.guiMapa[tmpVozilo.trKoo.i][tmpVozilo.trKoo.j].add(new JLabel(new ImageIcon("car.png")));
+				//tmpVozilo.start();
 			}
 			else if(vozilaNaCekanju.get(i).size()>0 && GUI.guiMapa[ kordStart[i][1].i ][ kordStart[i][1].j ].getComponents().length == 0) //ako nema niko na pocetku smijera 1
 			{
 				Vozilo tmpVozilo = vozilaNaCekanju.get(i).remove(0);
 				tmpVozilo.trKoo = kordStart[i][1];
 				trenutniBrVozilaNaPutevima[i]++; 
-				tmpVozilo.start();
+				GUI.guiMapa[tmpVozilo.trKoo.i][tmpVozilo.trKoo.j].add(new JLabel(new ImageIcon("car.png")));
+				//tmpVozilo.start();
 			}
 		}
 	}
