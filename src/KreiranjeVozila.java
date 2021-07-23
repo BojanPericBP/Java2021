@@ -6,7 +6,6 @@ import java.util.TimerTask;
 
 public class KreiranjeVozila extends TimerTask
 {
-	//TODO postaviti GUI.guiMapa na static
 	ArrayList<Vozilo> vozilaNaCekanjuA;
 	ArrayList<Vozilo> vozilaNaCekanjuB;
 	ArrayList<Vozilo> vozilaNaCekanjuC;
@@ -78,19 +77,19 @@ public class KreiranjeVozila extends TimerTask
 		
 		for(int i=0; i<3; ++i) 
 		{
-			if(vozilaNaCekanju.get(i).size()>0 && vozilaNaCekanju.get(i).get(0).smjer == '0' && GUI.guiMapa[ kordStart[i][0].i ][ kordStart[i][0].j ] != null) //TODO skontat prepoznavanje da li je zauzeto polje na GUI-u
+			if(vozilaNaCekanju.get(i).size()>0 && vozilaNaCekanju.get(i).get(0).smjer == '0' && GUI.guiMapa[ kordStart[i][0].i ][ kordStart[i][0].j ].getComponents().length == 0)
 			{
 				Vozilo tmpVozilo = vozilaNaCekanju.get(i).remove(0);
 				tmpVozilo.trKoo = kordStart[i][0];
-				trenutniBrVozilaNaPutevima[i]++; //a trebalo bi se umanjivati u klasi vozilo kad se zavrsi kretanje
-				//tmpVozilo.start(); //TODO vozila moraju biti tredovi
+				trenutniBrVozilaNaPutevima[i]++; 
+				tmpVozilo.start();
 			}
-			else if(vozilaNaCekanju.get(i).size()>0 && GUI.guiMapa[ kordStart[i][1].i ][ kordStart[i][1].j ] != null) //ako nema niko na pocetku smijera 1
+			else if(vozilaNaCekanju.get(i).size()>0 && GUI.guiMapa[ kordStart[i][1].i ][ kordStart[i][1].j ].getComponents().length == 0) //ako nema niko na pocetku smijera 1
 			{
 				Vozilo tmpVozilo = vozilaNaCekanju.get(i).remove(0);
 				tmpVozilo.trKoo = kordStart[i][1];
 				trenutniBrVozilaNaPutevima[i]++; 
-				//tmpVozilo.start();
+				tmpVozilo.start();
 			}
 		}
 	}
