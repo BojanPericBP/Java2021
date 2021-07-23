@@ -71,9 +71,9 @@ public class KreiranjeVozila extends TimerTask
 	{
 		Koordinate[][] kordStart = 
 		{ 
-			{ new Koordinate(0, 0), new Koordinate(0, 0) }, //TODO popuniti
-			{ new Koordinate(0, 0), new Koordinate(0, 0) },
-			{ new Koordinate(0, 0), new Koordinate(0, 0) }
+			{ new Koordinate(29, 8), new Koordinate(21, 0) }, //A
+			{ new Koordinate(29, 14), new Koordinate(0, 13) }, //B
+			{ new Koordinate(20, 29), new Koordinate(29, 22) }	//C
 		};
 		
 		for(int i=0; i<3; ++i) 
