@@ -58,7 +58,8 @@ public class Vozilo extends Thread
 				if (k.i == -1 && k.j == -1)
 				{
 					GUI.guiMapa[trKoo.i][trKoo.j].remove((JLabel) GUI.guiMapa[trKoo.i][trKoo.j].getComponents()[0]);
-					trKoo.i = trKoo.j = -1;
+					//trKoo.i = trKoo.j = -1;
+					trKoo = k;
 					GUI.trenutniBrVozilaNaPutevima[put - 'A']--;
 				}
 				else if (k.i == -2)
@@ -67,7 +68,8 @@ public class Vozilo extends Thread
 					if (tmpKoord != null)
 					{
 						GUI.guiMapa[tmpKoord.i][tmpKoord.j].add((JLabel) GUI.guiMapa[trKoo.i][trKoo.j].getComponents()[0]);
-						trKoo.i = tmpKoord.i; trKoo.i = tmpKoord.j;
+						//trKoo.i = tmpKoord.i; trKoo.i = tmpKoord.j;
+						trKoo = tmpKoord;
 					}
 					else
 					{
@@ -82,10 +84,12 @@ public class Vozilo extends Thread
 
 					preKoo.i = trKoo.i;
 					preKoo.j = trKoo.j;
-					trKoo.i = k.i; trKoo.j = k.j;
+					//trKoo.i = k.i; trKoo.j = k.j;
+					trKoo = k;
 				}
 
 				SwingUtilities.updateComponentTreeUI(GUI.frame);
+				
 			}
 
 		}
@@ -176,9 +180,8 @@ public class Vozilo extends Thread
 
 		if (trKoo.j < 29 && ((GUI.mapa[trKoo.i][trKoo.j + 1] == smjer || GUI.mapa[trKoo.i][trKoo.j + 1] == 'x') && trKoo.j + 1 != preKoo.j)) // provjera desno
 		{
-			if (GUI.guiMapa[trKoo.i][trKoo.j + 2].getComponents().length == 1)
+			if (GUI.guiMapa[trKoo.i][trKoo.j + 1].getComponents().length == 1)
 			{
-				
 				return trKoo;
 			}
 			return (GUI.mapa[trKoo.i][trKoo.j + 1] == 'x') ? new Koordinate(-2, -2) : new Koordinate(trKoo.i, trKoo.j + 1);
@@ -186,21 +189,21 @@ public class Vozilo extends Thread
 
 		else if (trKoo.j > 0 && ((GUI.mapa[trKoo.i][trKoo.j - 1] == smjer || GUI.mapa[trKoo.i][trKoo.j - 1] == 'x') && trKoo.j - 1 != preKoo.j)) // provjera lijevo
 		{
-			if (GUI.guiMapa[trKoo.i][trKoo.j - 2].getComponents().length == 1)
+			if (GUI.guiMapa[trKoo.i][trKoo.j - 1].getComponents().length == 1)
 				return trKoo;
 			return (GUI.mapa[trKoo.i][trKoo.j - 1] == 'x') ? new Koordinate(-2, -2) : new Koordinate(trKoo.i, trKoo.j - 1);
 		}
 
 		else if (trKoo.i > 0 && ((GUI.mapa[trKoo.i - 1][trKoo.j] == smjer || GUI.mapa[trKoo.i - 1][trKoo.j] == 'x') && trKoo.i - 1 != preKoo.i)) // provjera gore
 		{
-			if (GUI.guiMapa[trKoo.i - 2][trKoo.j].getComponents().length == 1)
+			if (GUI.guiMapa[trKoo.i - 1][trKoo.j].getComponents().length == 1)
 				return trKoo;
 			return (GUI.mapa[trKoo.i - 1][trKoo.j] == 'x') ? new Koordinate(-2, -2) : new Koordinate(trKoo.i - 1, trKoo.j);
 		}
 
 		else if (trKoo.i < 29 && ((GUI.mapa[trKoo.i + 1][trKoo.j] == smjer || GUI.mapa[trKoo.i + 1][trKoo.j] == 'x') && trKoo.i + 1 != preKoo.i)) // provjera dole
 		{
-			if (GUI.guiMapa[trKoo.i + 2][trKoo.j].getComponents().length == 1)
+			if (GUI.guiMapa[trKoo.i + 1][trKoo.j].getComponents().length == 1)
 				return trKoo;
 			return (GUI.mapa[trKoo.i + 1][trKoo.j] == 'x') ? new Koordinate(-2, -2) : new Koordinate(trKoo.i + 1, trKoo.j);
 		}

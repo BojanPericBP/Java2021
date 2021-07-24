@@ -89,7 +89,7 @@ public class KreiranjeVozila extends TimerTask
 				((JLabel)GUI.guiMapa[tmpVozilo.trKoo.i][tmpVozilo.trKoo.j].getComponents()[0]).setName(""+(long)tmpVozilo.trenutnaBrzina);
 				tmpVozilo.start();
 			}
-			else if(vozilaNaCekanju.get(i).size()>0 && GUI.guiMapa[ kordStart[i][1].i ][ kordStart[i][1].j ].getComponents().length == 0) //ako nema niko na pocetku smijera 1
+			else if(vozilaNaCekanju.get(i).size()>0 && vozilaNaCekanju.get(i).get(0).smjer == '1' && GUI.guiMapa[ kordStart[i][1].i ][ kordStart[i][1].j ].getComponents().length == 0) //ako nema niko na pocetku smijera 1
 			{
 				Vozilo tmpVozilo = vozilaNaCekanju.get(i).remove(0);
 				tmpVozilo.trKoo.i = kordStart[i][1].i;
