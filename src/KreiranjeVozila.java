@@ -32,7 +32,7 @@ public class KreiranjeVozila extends TimerTask
 	{
 		try
 		{
-			Scanner dat = new Scanner(new File("src/vozila_config.txt"));
+			Scanner dat = new Scanner(new File("vozila_config.txt"));
 			dat.nextLine();
 			for (int i = 0; i < 3 ; i++)
 			{
@@ -56,15 +56,15 @@ public class KreiranjeVozila extends TimerTask
 		Random rand = new Random();
 		int randomPut = rand.nextInt(3);
 		
-		if(rand.nextBoolean())
+		if(rand.nextBoolean()) //TRUE: kreira se auto, FALSE: kreira se kamion
 		{
 			if((GUI.trenutniBrVozilaNaPutevima[randomPut] + vozilaNaCekanju.get(randomPut).size()) < maxBrVozila[randomPut]) 
-				vozilaNaCekanju.get(randomPut).add(new Automobil(rand.nextDouble()*maxBrzine[randomPut], naziviPuteva[randomPut])); //TODO: gdje se odredjuje smijer vozila i ostali atributi?
+				vozilaNaCekanju.get(randomPut).add(new Automobil(maxBrzine[randomPut], naziviPuteva[randomPut]));
 		}
 		else
 		{
 			if((GUI.trenutniBrVozilaNaPutevima[randomPut] + vozilaNaCekanju.get(randomPut).size()) < maxBrVozila[randomPut])
-				vozilaNaCekanju.get(randomPut).add(new Kamion(rand.nextDouble()*maxBrzine[randomPut], naziviPuteva[randomPut]));
+				vozilaNaCekanju.get(randomPut).add(new Kamion(maxBrzine[randomPut], naziviPuteva[randomPut]));
 		}
 	}
 
@@ -72,27 +72,31 @@ public class KreiranjeVozila extends TimerTask
 	{
 		Koordinate[][] kordStart = 
 		{ 
-			{ new Koordinate(29, 8), new Koordinate(21, 0) }, //A
-			{ new Koordinate(29, 14), new Koordinate(0, 13) }, //B
+			{ new Koordinate(29, 8), new Koordinate(21, 0) },   //A
+			{ new Koordinate(29, 14), new Koordinate(0, 13) },  //B
 			{ new Koordinate(20, 29), new Koordinate(29, 22) }	//C
 		};
 		
-		for(int i=0; i<3; ++i) 
+		for(int i=0; i<3; ++i) //na svaki put pokusa po jedno vozilo postaviti po jedno vozilo
 		{
 			if(vozilaNaCekanju.get(i).size()>0 && vozilaNaCekanju.get(i).get(0).smjer == '0' && GUI.guiMapa[ kordStart[i][0].i ][ kordStart[i][0].j ].getComponents().length == 0)
 			{
 				Vozilo tmpVozilo = vozilaNaCekanju.get(i).remove(0);
-				tmpVozilo.trKoo = kordStart[i][0];
+				tmpVozilo.trKoo.i = kordStart[i][0].i;
+				tmpVozilo.trKoo.j = kordStart[i][0].j;
 				GUI.trenutniBrVozilaNaPutevima[i]++; 
 				GUI.guiMapa[tmpVozilo.trKoo.i][tmpVozilo.trKoo.j].add(new JLabel(new ImageIcon("car.png")));
+				((JLabel)GUI.guiMapa[tmpVozilo.trKoo.i][tmpVozilo.trKoo.j].getComponents()[0]).setName(""+(long)tmpVozilo.trenutnaBrzina);
 				tmpVozilo.start();
 			}
 			else if(vozilaNaCekanju.get(i).size()>0 && GUI.guiMapa[ kordStart[i][1].i ][ kordStart[i][1].j ].getComponents().length == 0) //ako nema niko na pocetku smijera 1
 			{
 				Vozilo tmpVozilo = vozilaNaCekanju.get(i).remove(0);
-				tmpVozilo.trKoo = kordStart[i][1];
+				tmpVozilo.trKoo.i = kordStart[i][1].i;
+				tmpVozilo.trKoo.j = kordStart[i][1].j;
 				GUI.trenutniBrVozilaNaPutevima[i]++; 
 				GUI.guiMapa[tmpVozilo.trKoo.i][tmpVozilo.trKoo.j].add(new JLabel(new ImageIcon("car.png")));
+				((JLabel)GUI.guiMapa[tmpVozilo.trKoo.i][tmpVozilo.trKoo.j].getComponents()[0]).setName(""+(long)tmpVozilo.trenutnaBrzina);
 				tmpVozilo.start();
 			}
 		}
@@ -111,7 +115,6 @@ public class KreiranjeVozila extends TimerTask
 //KORISTENJE U MAIN-U
 
 //Timer timer = new Timer();
-//timer.schedule(new KreiranjeVozila, 2000);
+//timer.schedule(new KreiranjeVozila(), 2000, 2000);
 //timer.cancel();
-
 

@@ -1,3 +1,0 @@
- br. lokomotiva,     br. vagona,     raspored, 	         brzina kretanja,      polazak,    odrediste
-----------------------------------------------------------------------------------------------------
- 2,                  3,              LU.LP.VPS.VPR.VN,   0.5,                      A,          B

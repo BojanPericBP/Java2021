@@ -1,7 +1,10 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.Timer;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -38,11 +41,15 @@ public class GUI extends JFrame {
 		stanice.add(new ZeljeznickaStanica('E', new Koordinate(25,26)));
 	}
 	
-	public static void main(String[] args) throws Exception{
+	public static void main(String[] args) throws Exception
+	{
 		
 		GUI gui = new GUI();
-		
-		
+		Timer timer = new Timer();
+		timer.schedule(new KreiranjeVozila(), 0, 500);
+		Thread.sleep(5000);
+		timer.cancel();
+/*		
 		Vozilo v1 = new Vozilo(1, 'C');
 		Vozilo v2 = new Vozilo(1, 'C');
 		Vozilo v3 = new Vozilo(1, 'C');
@@ -80,7 +87,7 @@ public class GUI extends JFrame {
 		v5.smjer = '0';
 		v5.trenutnaBrzina = 900;*/
 		
-
+/*
 		guiMapa[v1.trKoo.i][v1.trKoo.j].add(new JLabel(new ImageIcon("car.png")));
 		((JLabel)guiMapa[v1.trKoo.i][v1.trKoo.j].getComponents()[0]).setName(""+(long)v1.trenutnaBrzina);
 		
@@ -95,7 +102,7 @@ public class GUI extends JFrame {
 		
 		guiMapa[v5.trKoo.i][v5.trKoo.j].add(new JLabel(new ImageIcon("car.png")));
 		((JLabel)guiMapa[v5.trKoo.i][v5.trKoo.j].getComponents()[0]).setName(""+(long)v5.trenutnaBrzina);*/
-		v1.start();
+/*		v1.start();
 		v2.start();
 		v3.start();
 		//v4.start();
@@ -121,7 +128,6 @@ public class GUI extends JFrame {
 	
 	public GUI() {
 
-		
 		frame = new JFrame("NASLOV");
 		frame.setSize(450,348);
 		
@@ -289,10 +295,6 @@ public class GUI extends JFrame {
 		mapa [20][26] ='x';
 		guiMapa[21][26].setBackground(Color.orange);
 		mapa [21][26] ='x';
-		
-//		((JLabel)guiMapa[26][25].getComponents()[0]).setName("sasa");
-//		System.out.println(((JLabel)guiMapa[26][25].getComponents()[0]).getName());
-//		System.out.println(guiMapa[26][25].getComponents().length);
 
 		
 		frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE );
@@ -303,9 +305,8 @@ public class GUI extends JFrame {
 		frame.setSize(1200,800);
 		
 		initialize();
+		
 	}
 	
 	
-	
-
 }
