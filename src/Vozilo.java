@@ -58,7 +58,6 @@ public class Vozilo extends Thread
 				if (k.i == -1 && k.j == -1)
 				{
 					GUI.guiMapa[trKoo.i][trKoo.j].remove((JLabel) GUI.guiMapa[trKoo.i][trKoo.j].getComponents()[0]);
-					//trKoo.i = trKoo.j = -1;
 					trKoo = k;
 					GUI.trenutniBrVozilaNaPutevima[put - 'A']--;
 				}
@@ -68,13 +67,12 @@ public class Vozilo extends Thread
 					if (tmpKoord != null)
 					{
 						GUI.guiMapa[tmpKoord.i][tmpKoord.j].add((JLabel) GUI.guiMapa[trKoo.i][trKoo.j].getComponents()[0]);
-						//trKoo.i = tmpKoord.i; trKoo.i = tmpKoord.j;
 						trKoo = tmpKoord;
 					}
 					else
 					{
 						System.out.println("drugi");
-						continue; // TODO mozda nece raditi pa cemo morati pauzirati i nastavljati tredove
+						continue; 
 					}
 				}
 				else
@@ -84,18 +82,13 @@ public class Vozilo extends Thread
 
 					preKoo.i = trKoo.i;
 					preKoo.j = trKoo.j;
-					//trKoo.i = k.i; trKoo.j = k.j;
 					trKoo = k;
 				}
 
 				SwingUtilities.updateComponentTreeUI(GUI.frame);
-				
 			}
-
 		}
-
 		System.out.println("GOTOVOOOOOOOOOO");
-
 	}
 
 	private synchronized Koordinate prelazakPruznogPrelaza() // provjerava da li se moze preci preko pruge i vraca: koordinate

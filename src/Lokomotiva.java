@@ -20,6 +20,9 @@ public class Lokomotiva implements IMoveable{
 		snaga = Math.random()*10;
 		idLokomotive = count++;
 		
+		trKoo = new Koordinate(-1,-1);
+		preKoo = new Koordinate(-1,-1);
+		
 		if(tipLokomotive == "univerzalna")
 			jeUniverzalna = true;
 		else if(tipLokomotive == "putnicka")
@@ -38,6 +41,7 @@ public class Lokomotiva implements IMoveable{
 		 {
 			 preKoo = new Koordinate(trKoo);
 			 trKoo.i--;
+			 
 		 }
 		 else if(GUI.mapa[trKoo.i+1][trKoo.j] == 'p' || GUI.mapa[trKoo.i+1][trKoo.j] == 'x' || GUI.mapa[trKoo.i+1][trKoo.j] == 's')//provjerava dole
 		 {

@@ -12,6 +12,8 @@ public class Kompozicija /*extends Thread implements Serializable*/ {
 	double brzinaKretanja;
 	ZeljeznickaStanica odrediste;  //odredisna stanica na koju kompozicija treba da stigne
 	ZeljeznickaStanica polazak;
+	
+	boolean jeNaPruzi;
 		
 	public Kompozicija(int _brLokomotiva, int _brVagona, String _raspored, double _brzina, ZeljeznickaStanica _polazak, ZeljeznickaStanica _odrediste) throws Exception
 	{
@@ -77,6 +79,24 @@ public class Kompozicija /*extends Thread implements Serializable*/ {
 		}
 	}
 	
+	
+	void metoda()
+	{
+		boolean flag = false;
+		for (Lokomotiva lok : lokomotive)
+			if (!lok.move()) {
+				//udjiUStanicu(k);
+				flag = true;
+				break;
+			}
+
+		for (Vagon vagon : vagoni)
+			if (!vagon.move() || flag) {
+				//udjiUStanicu(k);
+				break;
+			}
+		flag = false;
+	}
 	
 	public static void main(String argp[]) throws Exception
 	{
