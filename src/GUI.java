@@ -47,30 +47,32 @@ public class GUI extends JFrame {
 		GUI gui = new GUI();
 		Timer timer = new Timer();
 		timer.schedule(new KreiranjeVozila(), 0, 500);
-		Thread.sleep(5000);
-		timer.cancel();
+		//Thread.sleep(5000);
+		//timer.cancel();
 /*		
 		Vozilo v1 = new Vozilo(1, 'C');
 		Vozilo v2 = new Vozilo(1, 'C');
 		Vozilo v3 = new Vozilo(1, 'C');
 		
-		v1.trKoo.i = 29;
-		v1.trKoo.j = 22;
-		v1.smjer = '1';
+		v1.trKoo.i = 20;
+		v1.trKoo.j = 23;
+		v1.preKoo.i = 20;
+		v1.preKoo.j = 24;
+		v1.smjer = '0';
 		v1.trenutnaBrzina = 500;
 		
-		v2.trKoo.i = 26;
-		v2.trKoo.j = 22;
-		v2.preKoo.i = 27;
-		v2.preKoo.j = 22;
-		v2.smjer = '1';
-		v2.trenutnaBrzina = 1000;
+		v2.trKoo.i = 20;
+		v2.trKoo.j = 24;
+		v2.preKoo.i = 20;
+		v2.preKoo.j = 25;
+		v2.smjer = '0';
+		v2.trenutnaBrzina = 400;
 		
-		v3.trKoo.i = 27;
-		v3.trKoo.j = 22;
-		v3.preKoo.i = 28;
-		v3.preKoo.j = 22;
-		v3.smjer = '1';
+		v3.trKoo.i = 20;
+		v3.trKoo.j = 25;
+		v3.preKoo.i = 20;
+		v3.preKoo.j = 26;
+		v3.smjer = '0';
 		v3.trenutnaBrzina = 400;
 		
 		/*v4.trKoo.i = 15;
