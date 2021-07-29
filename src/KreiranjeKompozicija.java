@@ -81,7 +81,7 @@ public class KreiranjeKompozicija
 			char pocetnaStanica = podaci[4].trim().charAt(0);
 			char krajnjaStanica = podaci[5].trim().charAt(0);
 			
-			GUI.stanice.get(pocetnaStanica-'A').redUStanici.add(new Kompozicija(brLokomotiva,  brVagona,  raspored,  brzina,  GUI.stanice.get(pocetnaStanica-'A'),  GUI.stanice.get(krajnjaStanica-'A')));
+			GUI.stanice.get(pocetnaStanica-'A').redUStanici.add(new Kompozicija(brLokomotiva,  brVagona,  raspored,  brzina,  GUI.stanice.get(pocetnaStanica-'A'),  GUI.stanice.get(krajnjaStanica-'A'), ""));
 
 		}
 		catch (Exception e)

@@ -1,9 +1,10 @@
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Kompozicija /*extends Thread implements Serializable*/ {
 	
 	private static final long serialVersionUID = 1L;
-	
+	public String path;
 	final int maxLokomotiva = 2;
 	final int maxVagona = 5;
 	
@@ -13,9 +14,8 @@ public class Kompozicija /*extends Thread implements Serializable*/ {
 	ZeljeznickaStanica odrediste;  //odredisna stanica na koju kompozicija treba da stigne
 	ZeljeznickaStanica polazak;
 	
-	boolean jeNaPruzi;
 		
-	public Kompozicija(int _brLokomotiva, int _brVagona, String _raspored, double _brzina, ZeljeznickaStanica _polazak, ZeljeznickaStanica _odrediste) throws Exception
+	public Kompozicija(int _brLokomotiva, int _brVagona, String _raspored, double _brzina, ZeljeznickaStanica _polazak, ZeljeznickaStanica _odrediste,String _path) throws Exception
 	{
 		if(_brLokomotiva > maxLokomotiva || _brLokomotiva < 1 || _brVagona > maxVagona)
 			throw new Exception("Kompozicija nije validna!");
@@ -24,12 +24,15 @@ public class Kompozicija /*extends Thread implements Serializable*/ {
 		odrediste = _odrediste;
 		vagoni = new ArrayList<>(_brVagona);
 		lokomotive = new ArrayList<>(_brLokomotiva);
+		
+		path = _path;
+		
 		kreirajKompoziciju(_raspored);
 	}
 	
 	private void kreirajKompoziciju(String raspored)
 	{
-		String[] niz = raspored.split(".");
+		String[] niz = raspored.split(";");
 		
 		for (String string : niz) {
 			
@@ -79,36 +82,30 @@ public class Kompozicija /*extends Thread implements Serializable*/ {
 		}
 	}
 	
+	void udjiUStanicu() {
+		for (int i = 1; i < lokomotive.size(); i++) {
+			
+			while (lokomotive.get(i).move());
+		}
+
+		for (Vagon var : vagoni)
+			while (var.move());
+
+	}
 	
-	void metoda()
+	boolean kretanjeKompozicije() //true kad udje u stanicu
 	{
-		boolean flag = false;
 		for (Lokomotiva lok : lokomotive)
 			if (!lok.move()) {
-				//udjiUStanicu(k);
-				flag = true;
-				break;
+				udjiUStanicu();
+				
+				return true; // vagon uso u stanicu
 			}
-
 		for (Vagon vagon : vagoni)
-			if (!vagon.move() || flag) {
-				//udjiUStanicu(k);
+			if (!vagon.move()) {
+				udjiUStanicu();
 				break;
 			}
-		flag = false;
+		return false;
 	}
-	
-	public static void main(String argp[]) throws Exception
-	{
-		//Kompozicija kompozicija = new Kompozicija(2, 3, "VN,LU,VPS,VPR,LP", 45, 'a', 'b');
-		//kompozicija.kompozicija.forEach(System.out::println);
-		//System.out.println("TEST");
-	}
-	
-
-	/*@Override
-	public void run() {
-		// TODO Auto-generated method stub
-		super.run();
-	}*/
 }

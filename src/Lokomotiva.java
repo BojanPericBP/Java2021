@@ -1,5 +1,7 @@
 import java.util.Random;
 
+import javax.swing.JLabel;
+
 
 public class Lokomotiva implements IMoveable{
 
@@ -36,28 +38,70 @@ public class Lokomotiva implements IMoveable{
 	}
 
 	@Override
-	public boolean move() {
-		if(GUI.mapa[trKoo.i-1][trKoo.j] == 'p' || GUI.mapa[trKoo.i-1][trKoo.j] == 'x' || GUI.mapa[trKoo.i-1][trKoo.j] == 's')//provjerava gore// == 0
+	public boolean move() {//TODO malos rediti ovaj kod pls
+		if((GUI.mapa[trKoo.i-1][trKoo.j] == 'p' || GUI.mapa[trKoo.i-1][trKoo.j] == 'x' || GUI.mapa[trKoo.i-1][trKoo.j] == 's')
+				&& (trKoo.i-1 != preKoo.i))//provjerava gore// == 0
 		 {
 			 preKoo = new Koordinate(trKoo);
 			 trKoo.i--;
+			 if(GUI.mapa[trKoo.i][trKoo.j]!='s') 
+				 GUI.guiMapa[trKoo.i][trKoo.j].add((JLabel) GUI.guiMapa[preKoo.i][preKoo.j].getComponents()[0]);
 			 
+			 
+			 else if(GUI.mapa[trKoo.i][trKoo.j] == 's') {
+				 GUI.guiMapa[preKoo.i][preKoo.j].remove((JLabel) GUI.guiMapa[preKoo.i][preKoo.j].getComponents()[0]);
+				 return false;
+			}
+			 
+			 return true;
 		 }
-		 else if(GUI.mapa[trKoo.i+1][trKoo.j] == 'p' || GUI.mapa[trKoo.i+1][trKoo.j] == 'x' || GUI.mapa[trKoo.i+1][trKoo.j] == 's')//provjerava dole
+		 else if((GUI.mapa[trKoo.i+1][trKoo.j] == 'p' || GUI.mapa[trKoo.i+1][trKoo.j] == 'x' || GUI.mapa[trKoo.i+1][trKoo.j] == 's')
+				 && (trKoo.i+1 != preKoo.i))//provjerava dole
 		 {
 			 preKoo = new Koordinate(trKoo);
 			 trKoo.i++;
+			 if(GUI.mapa[trKoo.i][trKoo.j]!='s') 
+				 GUI.guiMapa[trKoo.i][trKoo.j].add((JLabel) GUI.guiMapa[preKoo.i][preKoo.j].getComponents()[0]);
+			 
+			 else if(GUI.mapa[trKoo.i][trKoo.j] == 's') {		//ovo srediti
+				 GUI.guiMapa[preKoo.i][preKoo.j].remove((JLabel) GUI.guiMapa[preKoo.i][preKoo.j].getComponents()[0]); //ovo srediti
+				 return false; // ovo srediti
+			}
+			 
+			 
+			 return true;
 		 }
-		 else if(GUI.mapa[trKoo.i][trKoo.j+1] == 'p' || GUI.mapa[trKoo.i][trKoo.j+1] == 'x' || GUI.mapa[trKoo.i][trKoo.j+1] == 's')//provjerava desno// == 0
+		 else if((GUI.mapa[trKoo.i][trKoo.j+1] == 'p' || GUI.mapa[trKoo.i][trKoo.j+1] == 'x' || GUI.mapa[trKoo.i][trKoo.j+1] == 's')
+				 && (trKoo.j+1 != preKoo.j))//provjerava desno// == 0
 		 {
 			 preKoo = new Koordinate(trKoo);
 			 trKoo.j++;
+			 if(GUI.mapa[trKoo.i][trKoo.j]!='s') 
+				 GUI.guiMapa[trKoo.i][trKoo.j].add((JLabel) GUI.guiMapa[preKoo.i][preKoo.j].getComponents()[0]);
+			 
+			 
+			 else if(GUI.mapa[trKoo.i][trKoo.j] == 's') {
+				 GUI.guiMapa[preKoo.i][preKoo.j].remove((JLabel) GUI.guiMapa[preKoo.i][preKoo.j].getComponents()[0]);
+				 return false;
+			}
+			 return true;
 		 }
-		 else if(GUI.mapa[trKoo.i][trKoo.j-1] == 'p' || GUI.mapa[trKoo.i][trKoo.j-1] == 'x' || GUI.mapa[trKoo.i][trKoo.j-1] == 's')//provjerava lijevo// == 0
+		 else if((GUI.mapa[trKoo.i][trKoo.j-1] == 'p' || GUI.mapa[trKoo.i][trKoo.j-1] == 'x' || GUI.mapa[trKoo.i][trKoo.j-1] == 's')
+				 && (trKoo.j-1 != preKoo.j))//provjerava lijevo// == 0
 		 {
 			 preKoo = new Koordinate(trKoo);
 			 trKoo.j--;
+			 if(GUI.mapa[trKoo.i][trKoo.j]!='s') 
+				 GUI.guiMapa[trKoo.i][trKoo.j].add((JLabel) GUI.guiMapa[preKoo.i][preKoo.j].getComponents()[0]);
+			 
+			 else if(GUI.mapa[trKoo.i][trKoo.j] == 's') {
+				 GUI.guiMapa[preKoo.i][preKoo.j].remove((JLabel) GUI.guiMapa[preKoo.i][preKoo.j].getComponents()[0]);
+				 return false;
+			}
+			 
+			 return true;
 		 }
+		
 		return false;
 	}
 	

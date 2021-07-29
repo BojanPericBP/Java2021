@@ -2,12 +2,15 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Timer;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+
 
 public class GUI extends JFrame {
 
@@ -31,19 +34,84 @@ public class GUI extends JFrame {
 
 	private void initialize()
 	{
-		stanice.add(new ZeljeznickaStanica('A', new Koordinate(27, 3)));
-		stanice.add(new ZeljeznickaStanica('B', new Koordinate(6,6)));
-		stanice.add(new ZeljeznickaStanica('C', new Koordinate(6,6)));
-		stanice.add(new ZeljeznickaStanica('D', new Koordinate(1,26)));
-		stanice.add(new ZeljeznickaStanica('E', new Koordinate(25,26)));
+		stanice.add(new ZeljeznickaStanica('A', new ArrayList<Koordinate>()));
+		stanice.get(0).koordinate.add(new Koordinate(27,2));
+		
+		stanice.add(new ZeljeznickaStanica('B', new ArrayList<Koordinate>()));
+		stanice.get(1).koordinate.add(new Koordinate(6,6));
+		stanice.get(1).koordinate.add(new Koordinate(6,7));
+		
+		stanice.add(new ZeljeznickaStanica('C', new ArrayList<Koordinate>()));
+		stanice.get(2).koordinate.add(new Koordinate(12,19));
+		stanice.get(2).koordinate.add(new Koordinate(12,20));
+		stanice.get(2).koordinate.add(new Koordinate(13,20));
+		stanice.get(2).koordinate.add(new Koordinate(13,19));
+		
+		stanice.add(new ZeljeznickaStanica('D', new ArrayList<Koordinate>()));
+		stanice.get(3).koordinate.add(new Koordinate(1,26));
+		
+		stanice.add(new ZeljeznickaStanica('E', new ArrayList<Koordinate>()));
+		stanice.get(4).koordinate.add(new Koordinate(25,26));
 	}
 	
 	public static void main(String[] args) throws Exception
 	{
 		
 		GUI gui = new GUI();
-		Timer timer = new Timer();
-		timer.schedule(new KreiranjeVozila(), 0, 500);
+		
+		ZeljeznickaStanica a = stanice.get(0);
+		ZeljeznickaStanica b = stanice.get(1);
+		ZeljeznickaStanica c = stanice.get(2);
+		ZeljeznickaStanica d = stanice.get(3);
+		ZeljeznickaStanica e = stanice.get(4);
+		
+		ZeljeznickaStanica polazak = a;
+		ZeljeznickaStanica odrediste = b;
+		
+		
+		
+		Kompozicija komp = new Kompozicija(2, 3, "LU", 0.5, polazak, odrediste,"lokomotiva.png");
+		komp.lokomotive.get(0).trKoo = new Koordinate(23,2);
+		komp.lokomotive.get(0).preKoo = new Koordinate(24,2);
+		
+		polazak.redUStanici.add(komp);
+		
+		Kompozicija komp1 = new Kompozicija(2, 3, "LU", 0.5, polazak, odrediste,"train.png");
+		polazak.redUStanici.add(komp1);
+		
+		polazak.run();
+		odrediste.run();
+		
+		c.run();
+		//b.run();
+		
+		//stanice.get(0).redUStanici.add(komp1);\
+		/*
+		a.run();
+		b.run();
+		c.run();
+		d.run();
+		e.run();
+		*/
+		/*a.run();
+		for (int i = 0; i < 1; i++) {
+			b.run();
+		}*/
+		//a.wait();
+		//b.wait();
+		
+		/*
+		for (int i = 0; i < 1; i++) {
+			SwingUtilities.updateComponentTreeUI(gui);
+			b.run();
+			SwingUtilities.updateComponentTreeUI(gui);
+		}*/
+		
+		//b.start();
+		
+		/*Timer timer = new Timer();
+		timer.schedule(new KreiranjeVozila(), 0, 500);*/
+	
 		//Thread.sleep(5000);
 		//timer.cancel();
 /*		
@@ -245,7 +313,7 @@ public class GUI extends JFrame {
 		guiMapa[16][4].setBackground(Color.green);
 		mapa[16][4]='p';
 		guiMapa[26][25].setBackground(Color.green);
-		mapa[26][25]='p';
+		//mapa[26][25]='p';
 		guiMapa[9][27].setBackground(Color.green);
 		mapa[9][27]='p';
 		guiMapa[3][23].setBackground(Color.green);
@@ -253,24 +321,24 @@ public class GUI extends JFrame {
 		guiMapa[4][23].setBackground(Color.green);
 		mapa[4][23]='p';
 		guiMapa[2][26].setBackground(Color.green);
-		mapa[2][26]='p';
+		//mapa[2][26]='p';
 		guiMapa[2][27].setBackground(Color.green);
-		mapa[2][27]='p';
+		//mapa[2][27]='p';
 		guiMapa[27][1].setBackground(Color.green);
-		mapa[27][1]='p';
+		//mapa[27][1]='p';
 		guiMapa[28][1].setBackground(Color.green);
-		mapa[28][1]='p';
+		//mapa[28][1]='p';
 		guiMapa[5][6].setBackground(Color.green);
-		mapa[5][6]='p';
+		//mapa[5][6]='p';
 		guiMapa[5][7].setBackground(Color.green);
-		mapa[5][7]='p';
+		//mapa[5][7]='p';
 		
 		mapa[27][2] = 's';
 		
 		guiMapa[28][1].add(new JLabel("A"));
 		mapa[27][2] = mapa[28][2] = 's';
 		guiMapa[6][6].add(new JLabel("B"));
-		mapa[6][6] = mapa[6][7] ='s';
+		mapa[6][6] = 's'; mapa[6][7] = 's';
 		guiMapa[13][19].add(new JLabel("C"));
 		mapa[12][20]='s';
 		guiMapa[2][26].add(new JLabel("D"));
@@ -278,9 +346,8 @@ public class GUI extends JFrame {
 		guiMapa[26][25].add(new JLabel("E"));
 		mapa[25][26] = 's';
 		mapa[21][21] = mapa[21][8] = '0';
-		
-		
-		
+		mapa[26][26]= mapa [25][25] = mapa [29][2] = mapa [25][27] = 0;
+		mapa[13][20] = mapa[13][19] = mapa[12][19] = 's';
 		//setovanje pruznih prelaza
 		guiMapa[20][2].setBackground(Color.orange);
 		mapa[20][2]='x';
@@ -291,7 +358,7 @@ public class GUI extends JFrame {
 		guiMapa[6][14].setBackground(Color.orange);
 		mapa [6][14] ='x';
 		guiMapa[20][26].setBackground(Color.orange);
-		mapa [20][26] ='x';
+		mapa [20][26] = 'x';
 		guiMapa[21][26].setBackground(Color.orange);
 		mapa [21][26] ='x';
 
