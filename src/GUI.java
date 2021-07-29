@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 
+
 public class GUI extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -58,7 +59,7 @@ public class GUI extends JFrame {
 	{
 		
 		GUI gui = new GUI();
-		
+
 		ZeljeznickaStanica a = stanice.get(0);
 		ZeljeznickaStanica b = stanice.get(1);
 		ZeljeznickaStanica c = stanice.get(2);
@@ -71,21 +72,18 @@ public class GUI extends JFrame {
 		
 		
 		Kompozicija komp = new Kompozicija(2, 3, "LU", 0.5, polazak, odrediste,"lokomotiva.png");
-		komp.lokomotive.get(0).trKoo = new Koordinate(23,2);
-		komp.lokomotive.get(0).preKoo = new Koordinate(24,2);
-		
 		polazak.redUStanici.add(komp);
 		
-		Kompozicija komp1 = new Kompozicija(2, 3, "LU", 0.5, polazak, odrediste,"train.png");
-		polazak.redUStanici.add(komp1);
+		//Kompozicija komp1 = new Kompozicija(2, 3, "LU", 0.5, polazak, odrediste,"train.png");
+		//polazak.redUStanici.add(komp1);
 		
 		polazak.run();
 		odrediste.run();
 		
-		c.run();
+		//c.run();
 		//b.run();
 		
-		//stanice.get(0).redUStanici.add(komp1);\
+		//stanice.get(0).redUStanici.add(komp1);
 		/*
 		a.run();
 		b.run();
@@ -159,7 +157,7 @@ public class GUI extends JFrame {
 		((JLabel)guiMapa[v1.trKoo.i][v1.trKoo.j].getComponents()[0]).setName(""+(long)v1.trenutnaBrzina);
 		
 		guiMapa[v2.trKoo.i][v2.trKoo.j].add(new JLabel(new ImageIcon("car.png")));
-		((JLabel)guiMapa[v2.trKoo.i][v2.trKoo.j].getComponents()[0]).setName(""+(long)v2.trenutnaBrzina);//TODO testirati sa dvije slicice
+		((JLabel)guiMapa[v2.trKoo.i][v2.trKoo.j].getComponents()[0]).setName(""+(long)v2.trenutnaBrzina);
 		
 		guiMapa[v3.trKoo.i][v3.trKoo.j].add(new JLabel(new ImageIcon("car.png")));
 		((JLabel)guiMapa[v3.trKoo.i][v3.trKoo.j].getComponents()[0]).setName(""+(long)v3.trenutnaBrzina);
