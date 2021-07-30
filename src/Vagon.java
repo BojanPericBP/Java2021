@@ -19,7 +19,7 @@ public class Vagon implements IMoveable{
 	}
 	
 	@Override
-	public boolean move() {
+	synchronized public boolean move() {
 		
 		 if(GUI.mapa[trKoo.i-1][trKoo.j] == 'p' || GUI.mapa[trKoo.i-1][trKoo.j] == 'x' )//provjerava gore// == 0
 		 {

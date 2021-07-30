@@ -4,7 +4,6 @@ import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Timer;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -12,16 +11,14 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 
-
-public class GUI extends JFrame {
-
+public class GUI extends JFrame 
+{
 	private static final long serialVersionUID = 1L;
 	static final int MAT_SIZE = 30;
 	
 	static int[] trenutniBrVozilaNaPutevima = {0, 0, 0};
 	static char[][] mapa;
 	static ArrayList<ZeljeznickaStanica> stanice = new ArrayList<>(5);
-
 	
 	static private GridLayout gridLayout;
 	static private JPanel contentPanel;
@@ -29,9 +26,7 @@ public class GUI extends JFrame {
 	JButton btnKretanje;
 	JButton btnStart;
 	static public JPanel[][] guiMapa;
-	/**
-	 * Launch the application.
-	 */
+	
 
 	private void initialize()
 	{
@@ -66,19 +61,26 @@ public class GUI extends JFrame {
 		ZeljeznickaStanica d = stanice.get(3);
 		ZeljeznickaStanica e = stanice.get(4);
 		
-		ZeljeznickaStanica polazak = a;
-		ZeljeznickaStanica odrediste = b;
+		
+		//ZeljeznickaStanica polazak = a;
+		//ZeljeznickaStanica odrediste = c;
 		
 		
 		
-		Kompozicija komp = new Kompozicija(2, 3, "LU", 0.5, polazak, odrediste,"lokomotiva.png");
-		polazak.redUStanici.add(komp);
+		Kompozicija komp1 = new Kompozicija(1, 0, "LU", 0.5, a, d,"lokomotiva.png");
+		a.redUStanici.add(komp1);
 		
-		//Kompozicija komp1 = new Kompozicija(2, 3, "LU", 0.5, polazak, odrediste,"train.png");
-		//polazak.redUStanici.add(komp1);
+		Kompozicija komp2 = new Kompozicija(1, 0, "LU", 0.5, a, e,"car.png");
+		a.redUStanici.add(komp2);
 		
-		polazak.run();
-		odrediste.run();
+		
+		
+		
+		a.start();
+		b.start();
+		c.start();
+		d.start();
+		e.start();
 		
 		//c.run();
 		//b.run();
@@ -333,15 +335,30 @@ public class GUI extends JFrame {
 		
 		mapa[27][2] = 's';
 		
+		guiMapa[27][1].add(new JLabel("A"));
 		guiMapa[28][1].add(new JLabel("A"));
+		guiMapa[27][2].add(new JLabel("A"));
+		guiMapa[28][2].add(new JLabel("A"));
 		mapa[27][2] = mapa[28][2] = 's';
 		guiMapa[6][6].add(new JLabel("B"));
+		guiMapa[6][7].add(new JLabel("B"));
+		guiMapa[5][6].add(new JLabel("B"));
+		guiMapa[5][7].add(new JLabel("B"));
 		mapa[6][6] = 's'; mapa[6][7] = 's';
+		guiMapa[12][19].add(new JLabel("C"));
 		guiMapa[13][19].add(new JLabel("C"));
+		guiMapa[12][20].add(new JLabel("C"));
+		guiMapa[13][20].add(new JLabel("C"));
 		mapa[12][20]='s';
+		guiMapa[1][26].add(new JLabel("D"));
+		guiMapa[1][27].add(new JLabel("D"));
 		guiMapa[2][26].add(new JLabel("D"));
+		guiMapa[2][27].add(new JLabel("D"));
 		mapa[1][26] = mapa[1][27] = 's';
+		guiMapa[25][25].add(new JLabel("E"));
+		guiMapa[25][26].add(new JLabel("E"));
 		guiMapa[26][25].add(new JLabel("E"));
+		guiMapa[26][26].add(new JLabel("E"));
 		mapa[25][26] = 's';
 		mapa[21][21] = mapa[21][8] = '0';
 		mapa[26][26]= mapa [25][25] = mapa [29][2] = mapa [25][27] = 0;

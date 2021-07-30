@@ -82,30 +82,31 @@ public class Kompozicija /*extends Thread implements Serializable*/ {
 		}
 	}
 	
-	void udjiUStanicu() {
-		for (int i = 1; i < lokomotive.size(); i++) {
-			
+	synchronized void udjiUStanicu() 
+	{
+		for (int i = 1; i < lokomotive.size(); i++) 
 			while (lokomotive.get(i).move());
-		}
 
 		for (Vagon var : vagoni)
 			while (var.move());
-
 	}
 	
-	boolean kretanjeKompozicije() //true kad udje u stanicu
+	synchronized boolean kretanjeKompozicije() //true kad udje u stanicu
 	{
 		for (Lokomotiva lok : lokomotive)
-			if (!lok.move()) {
+			if (!lok.move()) 
+			{
 				udjiUStanicu();
-				
 				return true; // vagon uso u stanicu
 			}
+		
 		for (Vagon vagon : vagoni)
-			if (!vagon.move()) {
+			if (!vagon.move()) 
+			{
 				udjiUStanicu();
 				break;
 			}
+		
 		return false;
 	}
 }
