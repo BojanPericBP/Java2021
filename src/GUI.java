@@ -70,7 +70,7 @@ public class GUI extends JFrame
 		Kompozicija komp1 = new Kompozicija(1, 0, "LU", 0.5, a, d,"lokomotiva.png");
 		a.redUStanici.add(komp1);
 		
-		Kompozicija komp2 = new Kompozicija(1, 0, "LU", 0.5, a, e,"car.png");
+		Kompozicija komp2 = new Kompozicija(1, 0, "LU", 0.5, a, e,"train.png");
 		a.redUStanici.add(komp2);
 		
 		
