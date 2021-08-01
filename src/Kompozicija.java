@@ -1,112 +1,187 @@
 import java.util.ArrayList;
-import java.util.Iterator;
 
-public class Kompozicija /*extends Thread implements Serializable*/ {
-	
+import javax.swing.SwingUtilities;
+
+public class Kompozicija extends Thread /* implements Serializable */ {
+
 	private static final long serialVersionUID = 1L;
 	public String path;
 	final int maxLokomotiva = 2;
 	final int maxVagona = 5;
-	
+
 	ArrayList<Lokomotiva> lokomotive;
 	ArrayList<Vagon> vagoni;
-	double brzinaKretanja;
-	ZeljeznickaStanica odrediste;  //odredisna stanica na koju kompozicija treba da stigne
+	long brzinaKretanja;
+	ZeljeznickaStanica odrediste; // odredisna stanica na koju kompozicija treba da stigne
 	ZeljeznickaStanica polazak;
-	
-		
-	public Kompozicija(int _brLokomotiva, int _brVagona, String _raspored, double _brzina, ZeljeznickaStanica _polazak, ZeljeznickaStanica _odrediste,String _path) throws Exception
-	{
-		if(_brLokomotiva > maxLokomotiva || _brLokomotiva < 1 || _brVagona > maxVagona)
+	// ZeljeznickaStanica sledecaStanica; // sledeca stanica prema kojoj kompozicija
+	// ide a ne iz koje je krenula npr A-B-C sledecaStanica = B
+	ZeljeznickaStanica prethodnaStanica;
+	Object lock = new Object();
+
+	public Kompozicija(int _brLokomotiva, int _brVagona, String _raspored, long _brzina, ZeljeznickaStanica _polazak,
+			ZeljeznickaStanica _odrediste, String _path) throws Exception {
+		if (_brLokomotiva > maxLokomotiva || _brLokomotiva < 1 || _brVagona > maxVagona)
 			throw new Exception("Kompozicija nije validna!");
 		brzinaKretanja = _brzina;
 		polazak = _polazak;
 		odrediste = _odrediste;
 		vagoni = new ArrayList<>(_brVagona);
 		lokomotive = new ArrayList<>(_brLokomotiva);
-		
+		prethodnaStanica = polazak;
+
 		path = _path;
-		
+
 		kreirajKompoziciju(_raspored);
 	}
-	
-	private void kreirajKompoziciju(String raspored)
-	{
-		String[] niz = raspored.split(";");
-		
-		for (String string : niz) {
-			
-			 if('V' == string.charAt(0)) //vagoni
-			 {
-				if('P'==string.charAt(1))//putnicki vagoni
+
+	@Override
+	public void run() {
+
+		while (!prethodnaStanica.equals(odrediste)) // ako ne bude radilo provjeriti reference i uraditi sa
+													// koordinatama
+		{
+				ZeljeznickaStanica susjed = odrediSusjeda();
+				if (kretanjeKompozicije()) // kompozicija usla u stanicu
 				{
-					if('S'==string.charAt(2))//spavaci
+
+					ZeljeznickaStanica.matricaSusjedstva[prethodnaStanica.nazivStanice - 'A'][susjed.nazivStanice- 'A']--;
+					prethodnaStanica = susjed; // npr prethodna je A ovo vrati B
+
+					susjed = odrediSusjeda(); // prethodna je sada B pa ovo vrati C
+
+					if (odrediste.koordinate.contains(lokomotive.get(0).trKoo)) // da li je u odredisnoj stanici
+					{
+						// TODO serijalizacija
+						System.out.println("USAO U STANICU");
+					} 
+					else // da li je u bilo kojoj stanici koja nije odredisna
+					{
+						try 
 						{
-							vagoni.add(new PutnickiVagonSpavaci());
+							synchronized (lock) 
+							{
+								this.wait();
+								//yield();
+							}
+						} 
+						catch (Exception e)
+						{
+							e.printStackTrace();
 						}
-					
-					else {//restoran
+						prethodnaStanica.redUStanici.add(this);
+					}
+				}
+				synchronized (GUI.guiMapa) 
+				{
+				SwingUtilities.updateComponentTreeUI(GUI.frame);
+				}
+			try 
+			{
+				sleep(brzinaKretanja); // TODO vratiti na brzinu kretanja
+			} 
+			catch (Exception e) 
+			{
+				e.printStackTrace();
+			}
+		}
+	}
+
+	synchronized ZeljeznickaStanica odrediSusjeda() { // vrati referencu susjedne stanice kak
+		// kojoj se
+		// kompozicija krece
+
+		if (prethodnaStanica.nazivStanice == 'A') {
+			return GUI.stanice.get(1);
+		} else if (prethodnaStanica.nazivStanice == 'B') {
+			if (odrediste == GUI.stanice.get(0))
+				return GUI.stanice.get(0);
+			else
+				return GUI.stanice.get(2);
+		} else if (prethodnaStanica.nazivStanice == 'D' || prethodnaStanica.nazivStanice == 'E') {
+			return GUI.stanice.get(2);
+		} else {
+			if (odrediste == GUI.stanice.get(0) || odrediste == GUI.stanice.get(1))
+				return GUI.stanice.get(1);
+			else if (odrediste == GUI.stanice.get(2))
+				return GUI.stanice.get(2);
+			else if (odrediste == GUI.stanice.get(3))
+				return GUI.stanice.get(3);
+			else
+				return GUI.stanice.get(4);
+		}
+	}
+
+	private void kreirajKompoziciju(String raspored) {
+		String[] niz = raspored.split(";");
+
+		for (String string : niz) {
+
+			if ('V' == string.charAt(0)) // vagoni
+			{
+				if ('P' == string.charAt(1))// putnicki vagoni
+				{
+					if ('S' == string.charAt(2))// spavaci
+					{
+						vagoni.add(new PutnickiVagonSpavaci());
+					}
+
+					else {// restoran
 						vagoni.add(new PutnickiVagonRestoran());
 					}
 				}
-				
-				else if('T'==string.charAt(1))
-				{//teretni
+
+				else if ('T' == string.charAt(1)) {// teretni
 					vagoni.add(new TeretniVagon());
 				}
-				
-				else 
-				{//posebne namjene
+
+				else {// posebne namjene
 					vagoni.add(new Vagon(true));
 				}
-				
-			 }
-			 else { //lokomotive
-				if('P'==string.charAt(1))//putnicka lokomotiva
+
+			} else { // lokomotive
+				if ('P' == string.charAt(1))// putnicka lokomotiva
 				{
 					lokomotive.add(new Lokomotiva("putnicka"));
-				}
-				else if('T'==string.charAt(1))//teretna lokomotiva
+				} else if ('T' == string.charAt(1))// teretna lokomotiva
 				{
 					lokomotive.add(new Lokomotiva("teretna"));
-				}
-				else if('U'==string.charAt(1)){//univerzalna lokomotiva
+				} else if ('U' == string.charAt(1)) {// univerzalna lokomotiva
 					lokomotive.add(new Lokomotiva("univerzalna"));
 				}
-				
-				else if(string.equals("LM"))// manevarska lokomotiva
+
+				else if (string.equals("LM"))// manevarska lokomotiva
 				{
 					lokomotive.add(new Lokomotiva("manevarska"));
 				}
 			}
 		}
 	}
-	
-	synchronized void udjiUStanicu() 
-	{
-		for (int i = 1; i < lokomotive.size(); i++) 
-			while (lokomotive.get(i).move());
+
+	synchronized void udjiUStanicu() {
+		for (int i = 1; i < lokomotive.size(); i++)
+			while (lokomotive.get(i).move())
+				;
 
 		for (Vagon var : vagoni)
-			while (var.move());
+			while (var.move())
+				;
 	}
-	
-	synchronized boolean kretanjeKompozicije() //true kad udje u stanicu
+
+	synchronized boolean kretanjeKompozicije() // true kad udje u stanicu
 	{
 		for (Lokomotiva lok : lokomotive)
-			if (!lok.move()) 
-			{
+			if (!lok.move()) {
 				udjiUStanicu();
 				return true; // vagon uso u stanicu
 			}
-		
+
 		for (Vagon vagon : vagoni)
-			if (!vagon.move()) 
-			{
+			if (!vagon.move()) {
 				udjiUStanicu();
 				break;
 			}
-		
+
 		return false;
 	}
 }

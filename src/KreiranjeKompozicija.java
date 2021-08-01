@@ -77,7 +77,7 @@ public class KreiranjeKompozicija
 			int brLokomotiva = Integer.parseInt(podaci[0].trim());
 			int brVagona = Integer.parseInt(podaci[1].trim());
 			String raspored = podaci[2].trim();
-			double brzina = Double.parseDouble(podaci[3].trim());
+			long brzina = Long.parseLong(podaci[3].trim());
 			char pocetnaStanica = podaci[4].trim().charAt(0);
 			char krajnjaStanica = podaci[5].trim().charAt(0);
 			
