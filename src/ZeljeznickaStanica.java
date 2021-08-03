@@ -62,11 +62,11 @@ public class ZeljeznickaStanica extends Thread {
 
 						if (kompozicija.isAlive()) 
 						{
-							synchronized (kompozicija.lock)
+							synchronized (kompozicija)
 							{
+								System.out.println("notify");
 								kompozicija.notify();
 							}
-					
 						} 
 						else 
 						{
@@ -79,7 +79,7 @@ public class ZeljeznickaStanica extends Thread {
 			}
 
 			try {
-				Thread.sleep(50); // TODO vratiti na brzinu kretanja
+				Thread.sleep(500); // TODO vratiti na brzinu kretanja
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

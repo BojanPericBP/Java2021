@@ -59,26 +59,29 @@ public class Kompozicija extends Thread /* implements Serializable */ {
 					{
 						try 
 						{
-							synchronized (lock) 
+							synchronized (this) 
 							{
-								this.wait();
-								//yield();
+								System.out.println("Dodao kompoziciju u "+prethodnaStanica.nazivStanice);
+								prethodnaStanica.redUStanici.add(this);
+								wait();
 							}
 						} 
 						catch (Exception e)
 						{
 							e.printStackTrace();
 						}
-						prethodnaStanica.redUStanici.add(this);
+//						System.out.println("Dodao kompoziciju u "+prethodnaStanica.nazivStanice);
+//						prethodnaStanica.redUStanici.add(this);
 					}
 				}
 				synchronized (GUI.guiMapa) 
 				{
-				SwingUtilities.updateComponentTreeUI(GUI.frame);
+					System.out.println("Gui je osvjezen");
+					SwingUtilities.updateComponentTreeUI(GUI.frame);
 				}
 			try 
 			{
-				sleep(brzinaKretanja); // TODO vratiti na brzinu kretanja
+				sleep(500); // TODO vratiti na brzinu kretanja
 			} 
 			catch (Exception e) 
 			{

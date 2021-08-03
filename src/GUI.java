@@ -73,9 +73,6 @@ public class GUI extends JFrame
 		//Kompozicija komp2 = new Kompozicija(1, 0, "LU", 500, a, e,"train.png");
 		//a.redUStanici.add(komp2);
 		
-		
-		
-		
 		a.start();
 		b.start();
 		c.start();
@@ -109,11 +106,11 @@ public class GUI extends JFrame
 		
 		//b.start();
 		
-		/*Timer timer = new Timer();
-		timer.schedule(new KreiranjeVozila(), 0, 500);*/
+		Timer timer = new Timer();
+		timer.schedule(new KreiranjeVozila(), 0, 500);
 	
-		//Thread.sleep(5000);
-		//timer.cancel();
+		Thread.sleep(5000);
+		timer.cancel();
 /*		
 		Vozilo v1 = new Vozilo(1, 'C');
 		Vozilo v2 = new Vozilo(1, 'C');
