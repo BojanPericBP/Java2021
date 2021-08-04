@@ -8,7 +8,7 @@ public class Kompozicija extends Thread /* implements Serializable */ {
 
 	private static final long serialVersionUID = 1L;
 	public String path;
-	final int maxLokomotiva = 2;
+	final int maxLokomotiva = 5;
 	final int maxVagona = 5;
 
 	ArrayList<Lokomotiva> lokomotive;
@@ -195,13 +195,75 @@ public class Kompozicija extends Thread /* implements Serializable */ {
 	{
 		for (int i = 0; i < lokomotive.size(); i++) 
 		{
+			//Da li (jeUStanici && jePrethodni na prvom polju pruge)
 			if (prethodnaStanica.koordinate.contains(lokomotive.get(i).trKoo) && !prethodnaStanica.koordinate.contains(lokomotive.get(i-1).preKoo))  // U prvom koraku se nece ispitivati drgui uslov
 			{
 				lokomotive.get(i).trKoo = new Koordinate(lokomotive.get(i-1).preKoo);
 				GUI.guiMapa[lokomotive.get(i).trKoo.i][lokomotive.get(i).trKoo.j].add(new JLabel(new ImageIcon(path)));
 			}
 			
-			else if (!lokomotive.get(i).move()) 
+			else 
+			{
+				if(i!=0) 
+				{
+					if(GUI.guiMapa[lokomotive.get(i - 1).preKoo.i][lokomotive.get(i - 1).preKoo.j].getComponents().length == 0)
+					{
+						boolean flag = lokomotive.get(i).move();
+				 
+						SwingUtilities.updateComponentTreeUI(GUI.frame);
+
+						if(!flag)
+						{
+							udjiUStanicu();
+							return true;
+						}
+					}
+				}
+				else {
+						boolean flag = lokomotive.get(i).move();
+				 
+						SwingUtilities.updateComponentTreeUI(GUI.frame);
+
+						if(!flag)
+						{
+							udjiUStanicu();
+							return true;
+						}
+					}
+			}
+		}
+		
+		for (int i = 0; i < vagoni.size(); i++) 
+		{
+			
+			if(i==0 && prethodnaStanica.koordinate.contains(vagoni.get(i).trKoo) && !prethodnaStanica.koordinate.contains(lokomotive.get(lokomotive.size()-1).preKoo))
+			{
+				vagoni.get(i).trKoo = new Koordinate(lokomotive.get(lokomotive.size()-1).preKoo);
+				GUI.guiMapa[vagoni.get(i).trKoo.i][vagoni.get(i).trKoo.j].add(new JLabel(new ImageIcon("vagon.png")));
+				SwingUtilities.updateComponentTreeUI(GUI.frame);
+				try {
+					Thread.sleep(brzinaKretanja);
+				} catch (InterruptedException e) {
+					
+					e.printStackTrace();
+				}
+			}
+			
+			//Da li (jeUStanici && jePrethodni na prvom polju pruge)
+			else if ((prethodnaStanica.koordinate.contains(vagoni.get(i).trKoo) && !prethodnaStanica.koordinate.contains(vagoni.get(i-1).preKoo)))
+			{
+				vagoni.get(i).trKoo = new Koordinate(vagoni.get(i-1).preKoo);
+				GUI.guiMapa[vagoni.get(i).trKoo.i][vagoni.get(i).trKoo.j].add(new JLabel(new ImageIcon("vagon.png")));
+				SwingUtilities.updateComponentTreeUI(GUI.frame);
+				try {
+					Thread.sleep(brzinaKretanja);
+				} catch (InterruptedException e) {
+					
+					e.printStackTrace();
+				}
+			}
+			
+			else if (i > 0 && GUI.guiMapa[vagoni.get(i - 1).preKoo.i][vagoni.get(i - 1).preKoo.j].getComponents().length == 0  && !vagoni.get(i).move())
 			{
 				SwingUtilities.updateComponentTreeUI(GUI.frame);
 				try {
@@ -214,15 +276,7 @@ public class Kompozicija extends Thread /* implements Serializable */ {
 				return true; // vagon uso u stanicu
 			}
 		}
-		
 
-		for (Vagon vagon : vagoni)
-			if (!vagon.move()) 
-			{
-				SwingUtilities.updateComponentTreeUI(GUI.frame);
-				udjiUStanicu();
-				break;
-			}
 
 		return false;
 	}

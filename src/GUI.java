@@ -66,7 +66,7 @@ public class GUI extends JFrame
 		//ZeljeznickaStanica odrediste = c;
 		
 		
-		Kompozicija komp1 = new Kompozicija(2, 0, "LU;VRS", 300, a, b,"lokomotiva.png");
+		Kompozicija komp1 = new Kompozicija(5, 0, "LU;LU;LU;LU;LU", 300, a, b,"lokomotiva.png");
 		//Kompozicija komp2 = new Kompozicija(2, 0, "LU;LU", 300, a, b,"lokomotiva.png");
 		//Kompozicija komp3 = new Kompozicija(2, 0, "LU;LU", 300, b, a, "lokomotiva.png");
 		a.redUStanici.add(komp1);
