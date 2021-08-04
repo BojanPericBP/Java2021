@@ -1,5 +1,7 @@
 import java.util.Random;
 
+import javax.swing.JLabel;
+
 public class Vagon implements IMoveable{
 	
 	static private int count = 0;
@@ -16,62 +18,76 @@ public class Vagon implements IMoveable{
 		IDVagona = count++;
 		duzinaVagona = new Random().nextInt(4)+1;
 		jePosebneNamjene = _jePosebneNamjene;
+		trKoo = new Koordinate(-1,-1);
+		preKoo = new Koordinate(-1,-1);
 	}
 	
 	@Override
 	synchronized public boolean move() {
 		
-		 if(GUI.mapa[trKoo.i-1][trKoo.j] == 'p' || GUI.mapa[trKoo.i-1][trKoo.j] == 'x' )//provjerava gore// == 0
+		 if((GUI.mapa[trKoo.i-1][trKoo.j] == 'p' || GUI.mapa[trKoo.i-1][trKoo.j] == 'x' || GUI.mapa[trKoo.i-1][trKoo.j] == 's')
+			 && (trKoo.i-1 != preKoo.i))//provjerava gore// == 0
 		 {
 			 preKoo = new Koordinate(trKoo);
 			 trKoo.i--;
+			 
+			 if(GUI.mapa[trKoo.i][trKoo.j]!='s') 
+				 GUI.guiMapa[trKoo.i][trKoo.j].add((JLabel) GUI.guiMapa[preKoo.i][preKoo.j].getComponents()[0]);
+			 
+			 
+			 else if(GUI.mapa[trKoo.i][trKoo.j] == 's') {
+				 GUI.guiMapa[preKoo.i][preKoo.j].remove((JLabel) GUI.guiMapa[preKoo.i][preKoo.j].getComponents()[0]);
+				 return false;
+			}
 			 return true;
 		 }
-		 else if(GUI.mapa[trKoo.i+1][trKoo.j] == 'p' || GUI.mapa[trKoo.i+1][trKoo.j] == 'x')//provjerava dole
+		 else if((GUI.mapa[trKoo.i+1][trKoo.j] == 'p' || GUI.mapa[trKoo.i+1][trKoo.j] == 'x' || GUI.mapa[trKoo.i+1][trKoo.j] == 's')
+			 && (trKoo.i+1 != preKoo.i))//provjerava dole
 		 {
 			 preKoo = new Koordinate(trKoo);
 			 trKoo.i++;
+			 
+			 if(GUI.mapa[trKoo.i][trKoo.j]!='s') 
+				 GUI.guiMapa[trKoo.i][trKoo.j].add((JLabel) GUI.guiMapa[preKoo.i][preKoo.j].getComponents()[0]);
+			 
+			 else if(GUI.mapa[trKoo.i][trKoo.j] == 's') {		//ovo srediti
+				 GUI.guiMapa[preKoo.i][preKoo.j].remove((JLabel) GUI.guiMapa[preKoo.i][preKoo.j].getComponents()[0]);
+				 return false; // ovo srediti
+				}
 			 return true;
 		 }
-		 else if(GUI.mapa[trKoo.i][trKoo.j+1] == 'p' || GUI.mapa[trKoo.i][trKoo.j+1] == 'x')//provjerava desno// == 0
+		 else if((GUI.mapa[trKoo.i][trKoo.j+1] == 'p' || GUI.mapa[trKoo.i][trKoo.j+1] == 'x' || GUI.mapa[trKoo.i][trKoo.j+1] == 's')
+			 && (trKoo.j+1 != preKoo.j))//provjerava desno// == 0
 		 {
 			 preKoo = new Koordinate(trKoo);
 			 trKoo.j++;
+			 
+			 if(GUI.mapa[trKoo.i][trKoo.j]!='s') 
+				 GUI.guiMapa[trKoo.i][trKoo.j].add((JLabel) GUI.guiMapa[preKoo.i][preKoo.j].getComponents()[0]);
+			 
+			 else if(GUI.mapa[trKoo.i][trKoo.j] == 's') {
+				 GUI.guiMapa[preKoo.i][preKoo.j].remove((JLabel) GUI.guiMapa[preKoo.i][preKoo.j].getComponents()[0]);
+				 return false;
+			}
+			 
 			 return true;
 		 }
-		 else if(GUI.mapa[trKoo.i][trKoo.j-1] == 'p' || GUI.mapa[trKoo.i][trKoo.j-1] == 'x')//provjerava lijevo// == 0
+		 else if((GUI.mapa[trKoo.i][trKoo.j-1] == 'p' || GUI.mapa[trKoo.i][trKoo.j-1] == 'x' || GUI.mapa[trKoo.i][trKoo.j-1] == 's')
+			 && (trKoo.j-1 != preKoo.j))//provjerava lijevo// == 0
 		 {
 			 preKoo = new Koordinate(trKoo);
 			 trKoo.j--;
+			 
+			 if(GUI.mapa[trKoo.i][trKoo.j]!='s') 
+				 GUI.guiMapa[trKoo.i][trKoo.j].add((JLabel) GUI.guiMapa[preKoo.i][preKoo.j].getComponents()[0]);
+			 
+			 else if(GUI.mapa[trKoo.i][trKoo.j] == 's') {
+				 GUI.guiMapa[preKoo.i][preKoo.j].remove((JLabel) GUI.guiMapa[preKoo.i][preKoo.j].getComponents()[0]);
+				 return false;
+			}
 			 return true;
 		 }
 
-		 else if(GUI.mapa[trKoo.i-1][trKoo.j] == 's')
-		 {
-			 preKoo = new Koordinate(trKoo);
-			 trKoo.i--;
-			 return false;
-		 }
-		 else if(GUI.mapa[trKoo.i+1][trKoo.j] == 's')
-		 {
-			 preKoo = new Koordinate(trKoo);
-			 trKoo.i++;
-			 return false;
-		 }
-			 
-		 else if(GUI.mapa[trKoo.i][trKoo.j+1] == 's')
-		 {
-			 preKoo = new Koordinate(trKoo);
-			 trKoo.j++;
-			 return false;
-		 }
-		 
-		 else if(GUI.mapa[trKoo.i][trKoo.j-1] == 's')
-		 {
-			 preKoo = new Koordinate(trKoo);
-			 trKoo.j--;
-			 return false;
-		 }
 		return false;
 	}
 

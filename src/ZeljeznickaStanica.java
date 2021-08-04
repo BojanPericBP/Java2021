@@ -9,7 +9,7 @@ public class ZeljeznickaStanica extends Thread {
 
 	ArrayList<Kompozicija> redUStanici;
 	ArrayList<Kompozicija> dolazneKompozicije;
-
+	public static final long brzinaRasporedjivanja = 500;
 	/*
 	 * matrica susjedstva[i][j] = 0; putanja od stanice i ka stanici j je slobodna
 	 * 
@@ -40,8 +40,6 @@ public class ZeljeznickaStanica extends Thread {
 
 		while (true) {
 
-			synchronized (GUI.guiMapa) 
-			{
 				Iterator<Kompozicija> iteratorKompozicija = redUStanici.iterator();
 
 				while (iteratorKompozicija.hasNext()) // pronalazi kompoziciju za koju je slobodna odredjena pruga i
@@ -49,22 +47,44 @@ public class ZeljeznickaStanica extends Thread {
 				{
 					Kompozicija kompozicija = iteratorKompozicija.next();
 					ZeljeznickaStanica susjed;
-
-					if (prugaJeSlobodna(kompozicija)) {
+					boolean jeSlobodna;
+					
+					synchronized (matricaSusjedstva) {
+						
+						jeSlobodna = prugaJeSlobodna(kompozicija);
+					}
+					
+					if (jeSlobodna) {
 						susjed = kompozicija.odrediSusjeda();
+						
+						for(int i = 0; i<kompozicija.lokomotive.size();++i)
+						{
+							kompozicija.lokomotive.get(i).preKoo = usmjeriKompoziciju(kompozicija)[0];
+							kompozicija.lokomotive.get(i).trKoo = new Koordinate(usmjeriKompoziciju(kompozicija)[0]);
+						}
+						
+						for(int i = 0; i<kompozicija.vagoni.size();++i)
+						{
+							kompozicija.vagoni.get(i).preKoo = new Koordinate (kompozicija.lokomotive.get(kompozicija.lokomotive.size()-1).preKoo);
+							kompozicija.vagoni.get(i).trKoo = new Koordinate(kompozicija.lokomotive.get(kompozicija.lokomotive.size()-1).trKoo);
+						}
+						
 						kompozicija.lokomotive.get(0).trKoo = usmjeriKompoziciju(kompozicija)[1];
-						kompozicija.lokomotive.get(0).preKoo = usmjeriKompoziciju(kompozicija)[0];
-
-						matricaSusjedstva[nazivStanice - 'A'][susjed.nazivStanice - 'A']++;
+						synchronized (this) 
+						{
+							matricaSusjedstva[nazivStanice - 'A'][susjed.nazivStanice - 'A']++;
+						}
 						susjed.dolazneKompozicije.add(kompozicija);
-						GUI.guiMapa[kompozicija.lokomotive.get(0).trKoo.i][kompozicija.lokomotive.get(0).trKoo.j].add(new JLabel(new ImageIcon(kompozicija.path)));
-						SwingUtilities.updateComponentTreeUI(GUI.frame);
+						synchronized (GUI.frame) 
+						{
+							GUI.guiMapa[kompozicija.lokomotive.get(0).trKoo.i][kompozicija.lokomotive.get(0).trKoo.j].add(new JLabel(new ImageIcon(kompozicija.path)));
+							SwingUtilities.updateComponentTreeUI(GUI.frame);
+						}
 
 						if (kompozicija.isAlive()) 
 						{
 							synchronized (kompozicija)
 							{
-								System.out.println("notify");
 								kompozicija.notify();
 							}
 						} 
@@ -72,14 +92,12 @@ public class ZeljeznickaStanica extends Thread {
 						{
 							kompozicija.start();
 						}
-
 						iteratorKompozicija.remove();
 					}
-				}
 			}
 
 			try {
-				Thread.sleep(500); // TODO vratiti na brzinu kretanja
+				Thread.sleep(brzinaRasporedjivanja);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -103,31 +121,6 @@ public class ZeljeznickaStanica extends Thread {
 		}
 		return false;
 	}
-
-//	synchronized ZeljeznickaStanica odrediSusjeda(Kompozicija kompozicija) { // vrati referencu susjedne stanice kak
-//																				// kojoj se
-//																				// kompozicija krece
-//
-//		if (nazivStanice == 'A') {
-//			return GUI.stanice.get(1);
-//		} else if (nazivStanice == 'B') {
-//			if (kompozicija.odrediste == GUI.stanice.get(0))
-//				return GUI.stanice.get(0);
-//			else
-//				return GUI.stanice.get(2);
-//		} else if (nazivStanice == 'D' || nazivStanice == 'E') {
-//			return GUI.stanice.get(2);
-//		} else {
-//			if (kompozicija.odrediste == GUI.stanice.get(0) || kompozicija.odrediste == GUI.stanice.get(1))
-//				return GUI.stanice.get(1);
-//			else if (kompozicija.odrediste == GUI.stanice.get(2))
-//				return GUI.stanice.get(2);
-//			else if (kompozicija.odrediste == GUI.stanice.get(3))
-//				return GUI.stanice.get(3);
-//			else
-//				return GUI.stanice.get(4);
-//		}
-//	}
 
 	synchronized Koordinate[] usmjeriKompoziciju(Kompozicija komp) {
 		if (nazivStanice == 'A')

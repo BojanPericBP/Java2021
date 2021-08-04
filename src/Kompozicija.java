@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
 public class Kompozicija extends Thread /* implements Serializable */ {
@@ -20,7 +22,8 @@ public class Kompozicija extends Thread /* implements Serializable */ {
 	Object lock = new Object();
 
 	public Kompozicija(int _brLokomotiva, int _brVagona, String _raspored, long _brzina, ZeljeznickaStanica _polazak,
-			ZeljeznickaStanica _odrediste, String _path) throws Exception {
+			ZeljeznickaStanica _odrediste, String _path) throws Exception 
+	{
 		if (_brLokomotiva > maxLokomotiva || _brLokomotiva < 1 || _brVagona > maxVagona)
 			throw new Exception("Kompozicija nije validna!");
 		brzinaKretanja = _brzina;
@@ -61,8 +64,7 @@ public class Kompozicija extends Thread /* implements Serializable */ {
 						{
 							synchronized (this) 
 							{
-								System.out.println("Dodao kompoziciju u "+prethodnaStanica.nazivStanice);
-								prethodnaStanica.redUStanici.add(this);
+								prethodnaStanica.redUStanici.add(this);//TODO kada zadnji vagon udje onda se doda u red cekanja sledece stanice
 								wait();
 							}
 						} 
@@ -70,18 +72,15 @@ public class Kompozicija extends Thread /* implements Serializable */ {
 						{
 							e.printStackTrace();
 						}
-//						System.out.println("Dodao kompoziciju u "+prethodnaStanica.nazivStanice);
-//						prethodnaStanica.redUStanici.add(this);
 					}
 				}
 				synchronized (GUI.guiMapa) 
 				{
-					System.out.println("Gui je osvjezen");
 					SwingUtilities.updateComponentTreeUI(GUI.frame);
 				}
 			try 
 			{
-				sleep(500); // TODO vratiti na brzinu kretanja
+				sleep(brzinaKretanja);
 			} 
 			catch (Exception e) 
 			{
@@ -163,24 +162,64 @@ public class Kompozicija extends Thread /* implements Serializable */ {
 
 	synchronized void udjiUStanicu() {
 		for (int i = 1; i < lokomotive.size(); i++)
-			while (lokomotive.get(i).move())
-				;
+		{
+			while (lokomotive.get(i).move()) 
+			{
+				SwingUtilities.updateComponentTreeUI(GUI.frame);
+				try {
+					Thread.sleep(brzinaKretanja);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		for (int i = 1; i < vagoni.size(); i++)
+		{
+			while (vagoni.get(i).move())
+			{
+				SwingUtilities.updateComponentTreeUI(GUI.frame);
+				try {
+					Thread.sleep(brzinaKretanja);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
 
-		for (Vagon var : vagoni)
-			while (var.move())
-				;
+	
 	}
 
 	synchronized boolean kretanjeKompozicije() // true kad udje u stanicu
 	{
-		for (Lokomotiva lok : lokomotive)
-			if (!lok.move()) {
+		for (int i = 0; i < lokomotive.size(); i++) 
+		{
+			if (prethodnaStanica.koordinate.contains(lokomotive.get(i).trKoo) && !prethodnaStanica.koordinate.contains(lokomotive.get(i-1).preKoo))  // U prvom koraku se nece ispitivati drgui uslov
+			{
+				lokomotive.get(i).trKoo = new Koordinate(lokomotive.get(i-1).preKoo);
+				GUI.guiMapa[lokomotive.get(i).trKoo.i][lokomotive.get(i).trKoo.j].add(new JLabel(new ImageIcon(path)));
+			}
+			
+			else if (!lokomotive.get(i).move()) 
+			{
+				SwingUtilities.updateComponentTreeUI(GUI.frame);
+				try {
+					Thread.sleep(brzinaKretanja);
+				} catch (InterruptedException e) {
+					
+					e.printStackTrace();
+				}
 				udjiUStanicu();
 				return true; // vagon uso u stanicu
 			}
+		}
+		
 
 		for (Vagon vagon : vagoni)
-			if (!vagon.move()) {
+			if (!vagon.move()) 
+			{
+				SwingUtilities.updateComponentTreeUI(GUI.frame);
 				udjiUStanicu();
 				break;
 			}

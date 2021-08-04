@@ -1,6 +1,7 @@
 import java.util.Random;
 
 import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
 
 
 public class Lokomotiva implements IMoveable{
@@ -38,7 +39,7 @@ public class Lokomotiva implements IMoveable{
 	}
 
 	@Override
-	synchronized public boolean move() {//TODO malos rediti ovaj kod pls
+	synchronized public boolean move() {//TODO malo srediti ovaj kod pls
 		if((GUI.mapa[trKoo.i-1][trKoo.j] == 'p' || GUI.mapa[trKoo.i-1][trKoo.j] == 'x' || GUI.mapa[trKoo.i-1][trKoo.j] == 's')
 				&& (trKoo.i-1 != preKoo.i))//provjerava gore// == 0
 		 {

@@ -66,9 +66,12 @@ public class GUI extends JFrame
 		//ZeljeznickaStanica odrediste = c;
 		
 		
-		
-		Kompozicija komp1 = new Kompozicija(1, 0, "LU", 500, a, d,"lokomotiva.png");
+		Kompozicija komp1 = new Kompozicija(2, 0, "LU;VRS", 300, a, b,"lokomotiva.png");
+		//Kompozicija komp2 = new Kompozicija(2, 0, "LU;LU", 300, a, b,"lokomotiva.png");
+		//Kompozicija komp3 = new Kompozicija(2, 0, "LU;LU", 300, b, a, "lokomotiva.png");
 		a.redUStanici.add(komp1);
+		//a.redUStanici.add(komp2);
+		//b.redUStanici.add(komp3);
 		
 		//Kompozicija komp2 = new Kompozicija(1, 0, "LU", 500, a, e,"train.png");
 		//a.redUStanici.add(komp2);
@@ -106,11 +109,11 @@ public class GUI extends JFrame
 		
 		//b.start();
 		
-		Timer timer = new Timer();
+		/*Timer timer = new Timer();
 		timer.schedule(new KreiranjeVozila(), 0, 500);
 	
 		Thread.sleep(5000);
-		timer.cancel();
+		timer.cancel();*/
 /*		
 		Vozilo v1 = new Vozilo(1, 'C');
 		Vozilo v2 = new Vozilo(1, 'C');
