@@ -1,7 +1,6 @@
 import java.util.Random;
 
 import javax.swing.JLabel;
-import javax.swing.SwingUtilities;
 
 
 public class Lokomotiva implements IMoveable{

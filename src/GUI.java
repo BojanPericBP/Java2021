@@ -2,13 +2,13 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Timer;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 
 public class GUI extends JFrame 
@@ -19,6 +19,7 @@ public class GUI extends JFrame
 	static int[] trenutniBrVozilaNaPutevima = {0, 0, 0};
 	static char[][] mapa;
 	static ArrayList<ZeljeznickaStanica> stanice = new ArrayList<>(5);
+	static boolean btnFlagStart = false;
 	
 	static private GridLayout gridLayout;
 	static private JPanel contentPanel;
@@ -53,8 +54,8 @@ public class GUI extends JFrame
 	public static void main(String[] args) throws Exception
 	{
 		
-		GUI gui = new GUI();
-
+		new GUI();
+		
 		ZeljeznickaStanica a = stanice.get(0);
 		ZeljeznickaStanica b = stanice.get(1);
 		ZeljeznickaStanica c = stanice.get(2);
@@ -66,15 +67,23 @@ public class GUI extends JFrame
 		//ZeljeznickaStanica odrediste = c;
 		
 		
-		Kompozicija komp1 = new Kompozicija(5, 1, "LU;LU;LU;LU;LU;VPS;VPS;VPS;VPS;VPS", 300, a, b);
-		Kompozicija komp2 = new Kompozicija(2, 2, "LU;LU;VPS;VPS", 300, c, d);
-		//Kompozicija komp3 = new Kompozicija(2, 0, "LU;LU", 300, b, a);
-		a.redUStanici.add(komp1);
-		c.redUStanici.add(komp2);
-		//b.redUStanici.add(komp3);
+		Kompozicija komp1 = new Kompozicija(2, 2, "LU;LU;VN;VPS", 700, b, d);
+		Kompozicija komp2 = new Kompozicija(2, 2, "LU;LU;VPS;VT", 200, b, e);
+		//Kompozicija komp3 = new Kompozicija(2, 3, "LU;LU;VPS;VPR;VN", 300, e, b);
+		//Kompozicija komp4 = new Kompozicija(1, 0, "LM", 300, b, c);
+		
+		b.redUStanici.add(komp1);
+		b.redUStanici.add(komp2);
+		//e.redUStanici.add(komp3);
+		//b.redUStanici.add(komp4);
 		
 		//Kompozicija komp2 = new Kompozicija(1, 0, "LU", 500, a, e);
 		//a.redUStanici.add(komp2);
+		
+		/*for (int i = 0; i < 20; i++) {
+			a.run();
+			b.run();
+		}*/
 		
 		a.start();
 		b.start();
@@ -109,10 +118,10 @@ public class GUI extends JFrame
 		
 		//b.start();
 		
-		/*Timer timer = new Timer();
+		Timer timer = new Timer();
 		timer.schedule(new KreiranjeVozila(), 0, 500);
 	
-		Thread.sleep(5000);
+		/*Thread.sleep(5000);
 		timer.cancel();*/
 /*		
 		Vozilo v1 = new Vozilo(1, 'C');
@@ -211,6 +220,11 @@ public class GUI extends JFrame
 		frame.getContentPane().add(leftPanel,BorderLayout.WEST);
 		
 		btnStart = new JButton("Start");
+		btnStart.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				btnFlagStart = true;
+			}
+		});
 		leftPanel.add(btnStart);
 		btnStart.setBounds(5, 5, 15, 30);
 		

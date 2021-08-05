@@ -9,7 +9,7 @@ public class ZeljeznickaStanica extends Thread {
 
 	ArrayList<Kompozicija> redUStanici;
 	ArrayList<Kompozicija> dolazneKompozicije;
-	public static final long brzinaRasporedjivanja = 500;
+	public static final long brzinaRasporedjivanja = 200;
 	/*
 	 * matrica susjedstva[i][j] = 0; putanja od stanice i ka stanici j je slobodna
 	 * 
@@ -38,62 +38,76 @@ public class ZeljeznickaStanica extends Thread {
 	public void run() // sinhronizacija// kompozicija je vec na prvom polju izvan pruge tj lokomotiva
 	{
 
-		while (true) {
+		while (GUI.btnFlagStart) {
 
-				Iterator<Kompozicija> iteratorKompozicija = redUStanici.iterator();
+			Iterator<Kompozicija> iteratorKompozicija = redUStanici.iterator();
 
-				while (iteratorKompozicija.hasNext()) // pronalazi kompoziciju za koju je slobodna odredjena pruga i
-														// usmejru lokomotivu na odgovarajuce polje
+			while (iteratorKompozicija.hasNext()) // pronalazi kompoziciju za koju je slobodna odredjena pruga i
+													// usmejru lokomotivu na odgovarajuce polje
+			{
+				Kompozicija kompozicija = iteratorKompozicija.next();
+				ZeljeznickaStanica susjed;
+				boolean jeSlobodna;
+
+				synchronized (matricaSusjedstva) {
+
+					jeSlobodna = prugaJeSlobodna(kompozicija);
+				}
+
+				if (jeSlobodna) 
 				{
-					Kompozicija kompozicija = iteratorKompozicija.next();
-					ZeljeznickaStanica susjed;
-					boolean jeSlobodna;
-					
-					synchronized (matricaSusjedstva) {
-						
-						jeSlobodna = prugaJeSlobodna(kompozicija);
-					}
-					
-					if (jeSlobodna) {
-						susjed = kompozicija.odrediSusjeda();
-						
-						for(int i = 0; i<kompozicija.lokomotive.size();++i)
-						{
-							kompozicija.lokomotive.get(i).preKoo = usmjeriKompoziciju(kompozicija)[0];
-							kompozicija.lokomotive.get(i).trKoo = new Koordinate(usmjeriKompoziciju(kompozicija)[0]);
-						}
-						
-						for(int i = 0; i<kompozicija.vagoni.size();++i)
-						{
-							kompozicija.vagoni.get(i).preKoo = new Koordinate (kompozicija.lokomotive.get(kompozicija.lokomotive.size()-1).preKoo);
-							kompozicija.vagoni.get(i).trKoo = new Koordinate(kompozicija.lokomotive.get(kompozicija.lokomotive.size()-1).trKoo);
-						}
-						
-						kompozicija.lokomotive.get(0).trKoo = usmjeriKompoziciju(kompozicija)[1];
-						synchronized (this) 
-						{
-							matricaSusjedstva[nazivStanice - 'A'][susjed.nazivStanice - 'A']++;
-						}
-						susjed.dolazneKompozicije.add(kompozicija);
-						synchronized (GUI.frame) 
-						{
-							GUI.guiMapa[kompozicija.lokomotive.get(0).trKoo.i][kompozicija.lokomotive.get(0).trKoo.j].add(new JLabel(new ImageIcon("lokomotiva.png")));
-							SwingUtilities.updateComponentTreeUI(GUI.frame);
-						}
+					susjed = kompozicija.odrediSusjeda();
 
-						if (kompozicija.isAlive()) 
+					
+					if(matricaSusjedstva[nazivStanice - 'A'][susjed.nazivStanice - 'A'] != 0)
+					{
+						long min = kompozicija.brzinaKretanja;
+						//prodjikroz dolazne dolazneKompozicije susjeda i uzmi 
+						for(Kompozicija k:susjed.dolazneKompozicije)
 						{
-							synchronized (kompozicija)
+							if(k.prethodnaStanica.nazivStanice == nazivStanice && k.brzinaKretanja > min)
 							{
-								kompozicija.notify();
+								min = k.brzinaKretanja;
 							}
-						} 
-						else 
-						{
-							kompozicija.start();
 						}
-						iteratorKompozicija.remove();
+						kompozicija.tmpBrzina = kompozicija.brzinaKretanja;
+						kompozicija.brzinaKretanja = min;
 					}
+					
+					for (int i = 0; i < kompozicija.lokomotive.size(); ++i) {
+						kompozicija.lokomotive.get(i).preKoo = usmjeriKompoziciju(kompozicija)[0];
+						kompozicija.lokomotive.get(i).trKoo = new Koordinate(usmjeriKompoziciju(kompozicija)[0]);
+					}
+
+					for (int i = 0; i < kompozicija.vagoni.size(); ++i) {
+						kompozicija.vagoni.get(i).preKoo = new Koordinate(
+								kompozicija.lokomotive.get(kompozicija.lokomotive.size() - 1).preKoo);
+						kompozicija.vagoni.get(i).trKoo = new Koordinate(
+								kompozicija.lokomotive.get(kompozicija.lokomotive.size() - 1).trKoo);
+					}
+
+					kompozicija.lokomotive.get(0).trKoo = usmjeriKompoziciju(kompozicija)[1];
+					synchronized (this) {
+						matricaSusjedstva[nazivStanice - 'A'][susjed.nazivStanice - 'A']++;
+					}
+					susjed.dolazneKompozicije.add(kompozicija);
+					synchronized (GUI.frame) {
+						GUI.guiMapa[kompozicija.lokomotive.get(0).trKoo.i][kompozicija.lokomotive.get(0).trKoo.j]
+								.add(new JLabel(new ImageIcon("lokomotiva.png")));
+						((JLabel) GUI.guiMapa[kompozicija.lokomotive.get(0).trKoo.i][kompozicija.lokomotive
+								.get(0).trKoo.j].getComponent(0)).setName(kompozicija.brzinaKretanja + "k");
+						SwingUtilities.updateComponentTreeUI(GUI.frame);
+					}
+					
+					if (kompozicija.isAlive()) {
+						synchronized (kompozicija) {
+							kompozicija.notify();
+						}
+					} else {
+						kompozicija.start();
+					}
+					iteratorKompozicija.remove();
+				}
 			}
 
 			try {
@@ -160,9 +174,12 @@ public class ZeljeznickaStanica extends Thread {
 			return (new Koordinate[] { new Koordinate(1, 26), new Koordinate(1, 25), new Koordinate(1, 24) }); // ka C
 
 		else if (nazivStanice == 'E')
-			return (new Koordinate[] { new Koordinate(25, 26), new Koordinate(24, 26), new Koordinate(23, 26) }); // ka C
+			return (new Koordinate[] { new Koordinate(25, 26), new Koordinate(24, 26), new Koordinate(23, 26) }); // ka
+																													// C
 
 		return null;
 	}
 
+	
+	
 }

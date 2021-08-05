@@ -51,7 +51,6 @@ public class Vozilo extends Thread
 
 				if (trKoo.equals(k))
 				{
-					System.out.println("prvi");
 					continue;
 				}
 
@@ -71,7 +70,6 @@ public class Vozilo extends Thread
 					}
 					else
 					{
-						System.out.println("drugi");
 						continue; 
 					}
 				}
@@ -85,10 +83,12 @@ public class Vozilo extends Thread
 					trKoo = k;
 				}
 
-				SwingUtilities.updateComponentTreeUI(GUI.frame);
+				synchronized(GUI.frame)
+				{
+					SwingUtilities.updateComponentTreeUI(GUI.frame);					
+				}
 			}
 		}
-		System.out.println("GOTOVOOOOOOOOOO");
 	}
 
 	private synchronized Koordinate prelazakPruznogPrelaza() // provjerava da li se moze preci preko pruge i vraca: koordinate
@@ -160,7 +160,6 @@ public class Vozilo extends Thread
 
 	private synchronized void usaglasavanjeBrzine(Koordinate preKoo)
 	{
-
 		Component[] cmp;
 		cmp = GUI.guiMapa[preKoo.i][preKoo.j].getComponents();
 
@@ -200,7 +199,6 @@ public class Vozilo extends Thread
 				return trKoo;
 			return (GUI.mapa[trKoo.i + 1][trKoo.j] == 'x') ? new Koordinate(-2, -2) : new Koordinate(trKoo.i + 1, trKoo.j);
 		}
-
 		else
 		{
 			return new Koordinate(-1, -1);

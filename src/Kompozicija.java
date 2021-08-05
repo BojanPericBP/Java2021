@@ -1,11 +1,11 @@
+import java.awt.Color;
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
-
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
-public class Kompozicija extends Thread /* implements Serializable */ {
+public class Kompozicija extends Thread implements Serializable  {
 
 	private static final long serialVersionUID = 1L;
 	final int maxLokomotiva = 5;
@@ -14,6 +14,7 @@ public class Kompozicija extends Thread /* implements Serializable */ {
 	ArrayList<Lokomotiva> lokomotive;
 	ArrayList<Vagon> vagoni;
 	long brzinaKretanja;
+	long tmpBrzina;
 	ZeljeznickaStanica odrediste; // odredisna stanica na koju kompozicija treba da stigne
 	ZeljeznickaStanica polazak;
 	// ZeljeznickaStanica sledecaStanica; // sledeca stanica prema kojoj kompozicija
@@ -32,16 +33,22 @@ public class Kompozicija extends Thread /* implements Serializable */ {
 		vagoni = new ArrayList<>(_brVagona);
 		lokomotive = new ArrayList<>(_brLokomotiva);
 		prethodnaStanica = polazak;
+		tmpBrzina = brzinaKretanja;
 		
 		kreirajKompoziciju(_raspored);
 	}
 
 	@Override
-	public void run() {
+	public void run() { // TODO usaglasavanje brzina vozova
 
-		while (!prethodnaStanica.equals(odrediste)) // ako ne bude radilo provjeriti reference i uraditi sa
+		while (GUI.btnFlagStart && !prethodnaStanica.equals(odrediste)) // ako ne bude radilo provjeriti reference i uraditi sa
 													// koordinatama
 		{
+			synchronized(this)
+			{
+				radSaRampom();				
+			}
+			
 				ZeljeznickaStanica susjed = odrediSusjeda();
 				if (kretanjeKompozicije()) // kompozicija usla u stanicu
 				{
@@ -63,6 +70,7 @@ public class Kompozicija extends Thread /* implements Serializable */ {
 							synchronized (this) 
 							{
 								prethodnaStanica.redUStanici.add(this);
+								brzinaKretanja = tmpBrzina;
 								wait();
 							}
 						} 
@@ -74,7 +82,15 @@ public class Kompozicija extends Thread /* implements Serializable */ {
 				}
 				synchronized (GUI.guiMapa) 
 				{
-					SwingUtilities.updateComponentTreeUI(GUI.frame);
+					//SwingUtilities.updateComponentTreeUI(GUI.frame);
+					GUI.frame.invalidate();
+					GUI.frame.validate();
+					GUI.frame.repaint();
+				}
+				
+				synchronized(this)
+				{
+					radSaRampom();				
 				}
 			try 
 			{
@@ -85,6 +101,7 @@ public class Kompozicija extends Thread /* implements Serializable */ {
 				e.printStackTrace();
 			}
 		}
+		
 	}
 
 	synchronized ZeljeznickaStanica odrediSusjeda() { // vrati referencu susjedne stanice ka kojoj se kompozicija krece
@@ -162,24 +179,113 @@ public class Kompozicija extends Thread /* implements Serializable */ {
 		int granicaVAG=0;
 		while(granicaLOK!=lokomotive.size() || granicaVAG!=vagoni.size()) 
 		{
+			/////
+			synchronized(this)
+			{
+				radSaRampom();				
+			}
 			for (int i = granicaLOK; i < lokomotive.size(); i++)
 			{
 				if(!lokomotive.get(i).move()) granicaLOK=i+1;
-				SwingUtilities.updateComponentTreeUI(GUI.frame);
-				try { Thread.sleep(brzinaKretanja); } catch (InterruptedException e) { e.printStackTrace(); }
+				synchronized(GUI.frame)
+				{
+					//SwingUtilities.updateComponentTreeUI(GUI.frame);	
+					GUI.frame.invalidate();
+					GUI.frame.validate();
+					GUI.frame.repaint();
+				}
+				//try { Thread.sleep(brzinaKretanja); } catch (InterruptedException e) { e.printStackTrace(); }
 			}
-			
 			
 			for (int i = granicaVAG; i < vagoni.size(); i++)
 			{
 				if(!vagoni.get(i).move()) granicaVAG=i+1;
-				SwingUtilities.updateComponentTreeUI(GUI.frame);
-				try { Thread.sleep(brzinaKretanja); } catch (InterruptedException e) { e.printStackTrace(); }
+				synchronized(GUI.frame)
+				{
+					//SwingUtilities.updateComponentTreeUI(GUI.frame);
+					GUI.frame.invalidate();
+					GUI.frame.validate();
+					GUI.frame.repaint();
+				}
+				//try { Thread.sleep(brzinaKretanja); } catch (InterruptedException e) { e.printStackTrace(); }
 			}	
-			
+			try { Thread.sleep(brzinaKretanja); } catch (InterruptedException e) { e.printStackTrace(); }
 		}
 	}
 
+	
+	synchronized void radSaRampom()
+	{
+		//spustanje rampe
+		boolean flag = true; //treba spustiti rampu
+		for (int i = 18; i < 24; i++) {
+			if(GUI.guiMapa[i][2].getComponents().length ==1)
+			{
+				if( (GUI.guiMapa[i][2].getComponents()[0]) != null)
+				{
+					String s = ((JLabel)(GUI.guiMapa[i][2].getComponents()[0])).getName(); //Prelaz a
+					if(s != null && s.contains("k"))
+					flag = false;
+				}
+			}
+		}
+		
+		synchronized(GUI.guiMapa)
+		{
+			obojiRampu(flag,20,2,21,2);
+		}
+		flag = true;
+		for (int j = 11; j < 17; j++) {
+			if(GUI.guiMapa[6][j].getComponents().length ==1)
+			{
+				if( (GUI.guiMapa[6][j].getComponents()[0]) != null)
+				{
+					String s = ((JLabel)(GUI.guiMapa[6][j].getComponents()[0])).getName(); //Prelaz a
+					if(s != null && s.contains("k"))
+					flag = false;
+				}
+			}
+		}
+		
+		synchronized(GUI.guiMapa)
+		{
+			obojiRampu(flag,6,13,6,14);
+			
+		}
+		flag = true;
+		for (int i = 18; i < 24; i++) {
+			if(GUI.guiMapa[i][26].getComponents().length ==1)
+			{
+				if( (GUI.guiMapa[i][26].getComponents()[0]) != null)
+				{
+					String s = ((JLabel)(GUI.guiMapa[i][26].getComponents()[0])).getName(); //Prelaz a
+					if(s != null && s.contains("k"))
+					flag = false;
+				}
+			}
+		}
+		synchronized(GUI.guiMapa)
+		{
+			obojiRampu(flag,20,26,21,26);
+		}
+		
+	}
+	
+	synchronized private void obojiRampu(boolean flag,int i1, int j1, int i2,int j2)
+	{
+		if(flag)
+		{
+			GUI.guiMapa[i1][j1].setBackground(Color.orange);
+			GUI.guiMapa[i2][j2].setBackground(Color.orange);
+		}
+		else {
+			GUI.guiMapa[i1][j1].setBackground(Color.red);
+			GUI.guiMapa[i2][j2].setBackground(Color.red);
+		}
+	}
+	
+	
+	
 	synchronized boolean kretanjeKompozicije() // true kad udje u stanicu
 	{
 		for (int i = 0; i < lokomotive.size(); i++) 
@@ -189,6 +295,8 @@ public class Kompozicija extends Thread /* implements Serializable */ {
 			{
 				lokomotive.get(i).trKoo = new Koordinate(lokomotive.get(i-1).preKoo);
 				GUI.guiMapa[lokomotive.get(i).trKoo.i][lokomotive.get(i).trKoo.j].add(new JLabel(new ImageIcon("lokomotiva.png")));
+				((JLabel)GUI.guiMapa[lokomotive.get(i).trKoo.i][lokomotive.get(i).trKoo.j].getComponent(0)).setName(brzinaKretanja+"k");
+				
 			}
 			
 			else if(i!=0 && GUI.guiMapa[lokomotive.get(i - 1).preKoo.i][lokomotive.get(i - 1).preKoo.j].getComponents().length != 0) 
@@ -197,8 +305,14 @@ public class Kompozicija extends Thread /* implements Serializable */ {
 			{	
 					boolean flag = lokomotive.get(i).move();
 				 
-					SwingUtilities.updateComponentTreeUI(GUI.frame);
-
+					synchronized(GUI.frame)
+					{
+						//SwingUtilities.updateComponentTreeUI(GUI.frame);					
+						GUI.frame.invalidate();
+						GUI.frame.validate();
+						GUI.frame.repaint();
+					}
+					
 					if(!flag)
 					{
 						udjiUStanicu();
@@ -215,7 +329,11 @@ public class Kompozicija extends Thread /* implements Serializable */ {
 			{
 				vagoni.get(i).trKoo = new Koordinate(lokomotive.get(lokomotive.size()-1).preKoo);
 				GUI.guiMapa[vagoni.get(i).trKoo.i][vagoni.get(i).trKoo.j].add(new JLabel(new ImageIcon("vagon.png")));
-				SwingUtilities.updateComponentTreeUI(GUI.frame);
+				((JLabel)GUI.guiMapa[vagoni.get(i).trKoo.i][vagoni.get(i).trKoo.j].getComponent(0)).setName(brzinaKretanja+"k");
+				synchronized(GUI.frame)
+				{
+					SwingUtilities.updateComponentTreeUI(GUI.frame);					
+				}
 				try {
 					Thread.sleep(brzinaKretanja);
 				} catch (InterruptedException e) {
@@ -230,15 +348,11 @@ public class Kompozicija extends Thread /* implements Serializable */ {
 				//vagoni.get(i).trKoo = new Koordinate(lokomotive.get(lokomotive.size()-1).preKoo);
 				if(!vagoni.get(i).move()) 
 				{
-					SwingUtilities.updateComponentTreeUI(GUI.frame);
-					try 
+					synchronized(GUI.frame)
 					{
-						Thread.sleep(brzinaKretanja);
-					} 
-					catch (InterruptedException e) 
-					{
-						e.printStackTrace();
+						SwingUtilities.updateComponentTreeUI(GUI.frame);					
 					}
+
 					udjiUStanicu();
 					return true; // vagon uso u stanicu
 				}
@@ -249,7 +363,11 @@ public class Kompozicija extends Thread /* implements Serializable */ {
 			{
 				vagoni.get(i).trKoo = new Koordinate(vagoni.get(i-1).preKoo);
 				GUI.guiMapa[vagoni.get(i).trKoo.i][vagoni.get(i).trKoo.j].add(new JLabel(new ImageIcon("vagon.png")));
-				SwingUtilities.updateComponentTreeUI(GUI.frame);
+				((JLabel)GUI.guiMapa[vagoni.get(i).trKoo.i][vagoni.get(i).trKoo.j].getComponent(0)).setName(brzinaKretanja+"k");
+				synchronized(GUI.frame)
+				{
+					SwingUtilities.updateComponentTreeUI(GUI.frame);					
+				}
 				try {
 					Thread.sleep(brzinaKretanja);
 				} catch (InterruptedException e) {
@@ -260,19 +378,19 @@ public class Kompozicija extends Thread /* implements Serializable */ {
 			
 			else if (i > 0 && GUI.guiMapa[vagoni.get(i - 1).preKoo.i][vagoni.get(i - 1).preKoo.j].getComponents().length == 0  && !vagoni.get(i).move())
 			{
-				SwingUtilities.updateComponentTreeUI(GUI.frame);
-				try {
-					Thread.sleep(brzinaKretanja);
-				} catch (InterruptedException e) {
-					
-					e.printStackTrace();
+				synchronized(GUI.frame)
+				{
+					SwingUtilities.updateComponentTreeUI(GUI.frame);					
 				}
+
 				udjiUStanicu();
 				return true; // vagon uso u stanicu
 			}
 		}
-
-
 		return false;
 	}
+	
 }
+
+
+
