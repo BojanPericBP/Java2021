@@ -77,7 +77,7 @@ public class ZeljeznickaStanica extends Thread {
 						susjed.dolazneKompozicije.add(kompozicija);
 						synchronized (GUI.frame) 
 						{
-							GUI.guiMapa[kompozicija.lokomotive.get(0).trKoo.i][kompozicija.lokomotive.get(0).trKoo.j].add(new JLabel(new ImageIcon(kompozicija.path)));
+							GUI.guiMapa[kompozicija.lokomotive.get(0).trKoo.i][kompozicija.lokomotive.get(0).trKoo.j].add(new JLabel(new ImageIcon("lokomotiva.png")));
 							SwingUtilities.updateComponentTreeUI(GUI.frame);
 						}
 

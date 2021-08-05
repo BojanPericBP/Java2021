@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -7,7 +8,6 @@ import javax.swing.SwingUtilities;
 public class Kompozicija extends Thread /* implements Serializable */ {
 
 	private static final long serialVersionUID = 1L;
-	public String path;
 	final int maxLokomotiva = 5;
 	final int maxVagona = 5;
 
@@ -22,7 +22,7 @@ public class Kompozicija extends Thread /* implements Serializable */ {
 	Object lock = new Object();
 
 	public Kompozicija(int _brLokomotiva, int _brVagona, String _raspored, long _brzina, ZeljeznickaStanica _polazak,
-			ZeljeznickaStanica _odrediste, String _path) throws Exception 
+			ZeljeznickaStanica _odrediste) throws Exception 
 	{
 		if (_brLokomotiva > maxLokomotiva || _brLokomotiva < 1 || _brVagona > maxVagona)
 			throw new Exception("Kompozicija nije validna!");
@@ -32,9 +32,7 @@ public class Kompozicija extends Thread /* implements Serializable */ {
 		vagoni = new ArrayList<>(_brVagona);
 		lokomotive = new ArrayList<>(_brLokomotiva);
 		prethodnaStanica = polazak;
-
-		path = _path;
-
+		
 		kreirajKompoziciju(_raspored);
 	}
 
@@ -56,7 +54,7 @@ public class Kompozicija extends Thread /* implements Serializable */ {
 					if (odrediste.koordinate.contains(lokomotive.get(0).trKoo)) // da li je u odredisnoj stanici
 					{
 						// TODO serijalizacija
-						System.out.println("USAO U STANICU");
+						System.out.println("USAO U STANICU "+odrediste.nazivStanice);
 					} 
 					else // da li je u bilo kojoj stanici koja nije odredisna
 					{
@@ -64,7 +62,7 @@ public class Kompozicija extends Thread /* implements Serializable */ {
 						{
 							synchronized (this) 
 							{
-								prethodnaStanica.redUStanici.add(this);//TODO kada zadnji vagon udje onda se doda u red cekanja sledece stanice
+								prethodnaStanica.redUStanici.add(this);
 								wait();
 							}
 						} 
@@ -89,9 +87,7 @@ public class Kompozicija extends Thread /* implements Serializable */ {
 		}
 	}
 
-	synchronized ZeljeznickaStanica odrediSusjeda() { // vrati referencu susjedne stanice kak
-		// kojoj se
-		// kompozicija krece
+	synchronized ZeljeznickaStanica odrediSusjeda() { // vrati referencu susjedne stanice ka kojoj se kompozicija krece
 
 		if (prethodnaStanica.nazivStanice == 'A') {
 			return GUI.stanice.get(1);
@@ -160,75 +156,53 @@ public class Kompozicija extends Thread /* implements Serializable */ {
 		}
 	}
 
-	synchronized void udjiUStanicu() {
-		for (int i = 1; i < lokomotive.size(); i++)
+	synchronized void udjiUStanicu() 
+	{
+		int granicaLOK=1;
+		int granicaVAG=0;
+		while(granicaLOK!=lokomotive.size() || granicaVAG!=vagoni.size()) 
 		{
-			while (lokomotive.get(i).move()) 
+			for (int i = granicaLOK; i < lokomotive.size(); i++)
 			{
+				if(!lokomotive.get(i).move()) granicaLOK=i+1;
 				SwingUtilities.updateComponentTreeUI(GUI.frame);
-				try {
-					Thread.sleep(brzinaKretanja);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+				try { Thread.sleep(brzinaKretanja); } catch (InterruptedException e) { e.printStackTrace(); }
 			}
-		}
-		
-		for (int i = 1; i < vagoni.size(); i++)
-		{
-			while (vagoni.get(i).move())
+			
+			
+			for (int i = granicaVAG; i < vagoni.size(); i++)
 			{
+				if(!vagoni.get(i).move()) granicaVAG=i+1;
 				SwingUtilities.updateComponentTreeUI(GUI.frame);
-				try {
-					Thread.sleep(brzinaKretanja);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
+				try { Thread.sleep(brzinaKretanja); } catch (InterruptedException e) { e.printStackTrace(); }
+			}	
+			
 		}
-		
-
-	
 	}
 
 	synchronized boolean kretanjeKompozicije() // true kad udje u stanicu
 	{
 		for (int i = 0; i < lokomotive.size(); i++) 
 		{
-			//Da li (jeUStanici && jePrethodni na prvom polju pruge)
+			//Da li (jeUStanici && nijePrethodni na prvom polju pruge)
 			if (prethodnaStanica.koordinate.contains(lokomotive.get(i).trKoo) && !prethodnaStanica.koordinate.contains(lokomotive.get(i-1).preKoo))  // U prvom koraku se nece ispitivati drgui uslov
 			{
 				lokomotive.get(i).trKoo = new Koordinate(lokomotive.get(i-1).preKoo);
-				GUI.guiMapa[lokomotive.get(i).trKoo.i][lokomotive.get(i).trKoo.j].add(new JLabel(new ImageIcon(path)));
+				GUI.guiMapa[lokomotive.get(i).trKoo.i][lokomotive.get(i).trKoo.j].add(new JLabel(new ImageIcon("lokomotiva.png")));
 			}
 			
+			else if(i!=0 && GUI.guiMapa[lokomotive.get(i - 1).preKoo.i][lokomotive.get(i - 1).preKoo.j].getComponents().length != 0) 
+				continue;
 			else 
-			{
-				if(i!=0) 
-				{
-					if(GUI.guiMapa[lokomotive.get(i - 1).preKoo.i][lokomotive.get(i - 1).preKoo.j].getComponents().length == 0)
+			{	
+					boolean flag = lokomotive.get(i).move();
+				 
+					SwingUtilities.updateComponentTreeUI(GUI.frame);
+
+					if(!flag)
 					{
-						boolean flag = lokomotive.get(i).move();
-				 
-						SwingUtilities.updateComponentTreeUI(GUI.frame);
-
-						if(!flag)
-						{
-							udjiUStanicu();
-							return true;
-						}
-					}
-				}
-				else {
-						boolean flag = lokomotive.get(i).move();
-				 
-						SwingUtilities.updateComponentTreeUI(GUI.frame);
-
-						if(!flag)
-						{
-							udjiUStanicu();
-							return true;
-						}
+						udjiUStanicu();
+						return true;
 					}
 			}
 		}
@@ -236,6 +210,7 @@ public class Kompozicija extends Thread /* implements Serializable */ {
 		for (int i = 0; i < vagoni.size(); i++) 
 		{
 			
+			//prvi vagon, u stanici je  i nije zadnja lokomotiva zauzela mjesto gdje on treba ici
 			if(i==0 && prethodnaStanica.koordinate.contains(vagoni.get(i).trKoo) && !prethodnaStanica.koordinate.contains(lokomotive.get(lokomotive.size()-1).preKoo))
 			{
 				vagoni.get(i).trKoo = new Koordinate(lokomotive.get(lokomotive.size()-1).preKoo);
@@ -249,8 +224,28 @@ public class Kompozicija extends Thread /* implements Serializable */ {
 				}
 			}
 			
-			//Da li (jeUStanici && jePrethodni na prvom polju pruge)
-			else if ((prethodnaStanica.koordinate.contains(vagoni.get(i).trKoo) && !prethodnaStanica.koordinate.contains(vagoni.get(i-1).preKoo)))
+			//prvi vagon, nije u stanici i nije zadnja lokomotiva zauzela mjesto gdje on treba ici
+			else if(i==0 && !prethodnaStanica.koordinate.contains(vagoni.get(i).trKoo) && !prethodnaStanica.koordinate.contains(lokomotive.get(lokomotive.size()-1).preKoo))
+			{
+				//vagoni.get(i).trKoo = new Koordinate(lokomotive.get(lokomotive.size()-1).preKoo);
+				if(!vagoni.get(i).move()) 
+				{
+					SwingUtilities.updateComponentTreeUI(GUI.frame);
+					try 
+					{
+						Thread.sleep(brzinaKretanja);
+					} 
+					catch (InterruptedException e) 
+					{
+						e.printStackTrace();
+					}
+					udjiUStanicu();
+					return true; // vagon uso u stanicu
+				}
+			}
+			
+			//Da li (jeUStanici && nijePrethodni na prvom polju pruge)
+			else if (i>0 && prethodnaStanica.koordinate.contains(vagoni.get(i).trKoo) && !prethodnaStanica.koordinate.contains(vagoni.get(i-1).preKoo))
 			{
 				vagoni.get(i).trKoo = new Koordinate(vagoni.get(i-1).preKoo);
 				GUI.guiMapa[vagoni.get(i).trKoo.i][vagoni.get(i).trKoo.j].add(new JLabel(new ImageIcon("vagon.png")));
