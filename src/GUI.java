@@ -56,6 +56,7 @@ public class GUI extends JFrame
 		
 		new GUI();
 		
+		
 		ZeljeznickaStanica a = stanice.get(0);
 		ZeljeznickaStanica b = stanice.get(1);
 		ZeljeznickaStanica c = stanice.get(2);
