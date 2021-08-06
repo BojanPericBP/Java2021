@@ -5,15 +5,12 @@ import javax.swing.JTextArea;
 import javax.swing.JLabel;
 import java.awt.Font;
 
-public class FormaPodaci {
+public class FormaPodaci
+{
 	static public JTextArea textArea;
 	public FormaPodaci() {
-		// TODO Auto-generated constructor stub
 	}
 
-	/**
-	 * @wbp.parser.entryPoint
-	 */
 	void showWindow()
 	{
 		JFrame frame = new JFrame("Podaci o kretanjima");

@@ -7,12 +7,10 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-
 
 public class GUI extends JFrame 
 {
@@ -127,9 +125,10 @@ public class GUI extends JFrame
 			}
 		}
 		
-		for (int i = 0; i < MAT_SIZE; i++) {
-			for (int j = 0; j < MAT_SIZE; j++) {
-				
+		for (int i = 0; i < MAT_SIZE; i++) 
+		{
+			for (int j = 0; j < MAT_SIZE; j++) 
+			{
 				//setovanje plavih polja
 				if(j==13)
 				{
@@ -211,7 +210,6 @@ public class GUI extends JFrame
 		guiMapa[16][4].setBackground(Color.green);
 		mapa[16][4]='p';
 		guiMapa[26][25].setBackground(Color.green);
-		//mapa[26][25]='p';
 		guiMapa[9][27].setBackground(Color.green);
 		mapa[9][27]='p';
 		guiMapa[3][23].setBackground(Color.green);
@@ -219,17 +217,11 @@ public class GUI extends JFrame
 		guiMapa[4][23].setBackground(Color.green);
 		mapa[4][23]='p';
 		guiMapa[2][26].setBackground(Color.green);
-		//mapa[2][26]='p';
 		guiMapa[2][27].setBackground(Color.green);
-		//mapa[2][27]='p';
 		guiMapa[27][1].setBackground(Color.green);
-		//mapa[27][1]='p';
 		guiMapa[28][1].setBackground(Color.green);
-		//mapa[28][1]='p';
 		guiMapa[5][6].setBackground(Color.green);
-		//mapa[5][6]='p';
 		guiMapa[5][7].setBackground(Color.green);
-		//mapa[5][7]='p';
 		
 		mapa[27][2] = 's';
 		
@@ -261,6 +253,7 @@ public class GUI extends JFrame
 		mapa[21][21] = mapa[21][8] = '0';
 		mapa[26][26]= mapa [25][25] = mapa [29][2] = mapa [25][27] = 0;
 		mapa[13][20] = mapa[13][19] = mapa[12][19] = 's';
+		
 		//setovanje pruznih prelaza
 		guiMapa[20][2].setBackground(Color.orange);
 		mapa[20][2]='x';
@@ -274,7 +267,6 @@ public class GUI extends JFrame
 		mapa [20][26] = 'x';
 		guiMapa[21][26].setBackground(Color.orange);
 		mapa [21][26] ='x';
-
 		
 		frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE );
 		frame.pack();

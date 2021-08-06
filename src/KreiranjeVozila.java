@@ -3,7 +3,9 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.TimerTask;
-
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
@@ -13,9 +15,20 @@ public class KreiranjeVozila extends TimerTask
 	ArrayList<Vozilo> vozilaNaCekanjuB;
 	ArrayList<Vozilo> vozilaNaCekanjuC;
 	ArrayList<ArrayList<Vozilo>> vozilaNaCekanju;
-
 	double[] maxBrzine = new double[3];
 	int[] maxBrVozila = new int[3];
+	
+	static 
+	{
+		try
+		{
+			Logger.getLogger(KreiranjeVozila.class.getName()).addHandler(new FileHandler("Error logs/KreiranjeVozila.log"));
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
 	
 	public KreiranjeVozila()
 	{
@@ -45,7 +58,7 @@ public class KreiranjeVozila extends TimerTask
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
+			Logger.getLogger(KreiranjeVozila.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 		}
 	}
 	
@@ -110,11 +123,4 @@ public class KreiranjeVozila extends TimerTask
 		postaviNaMapu();
 	}
 }
-
-
-//KORISTENJE U MAIN-U
-
-//Timer timer = new Timer();
-//timer.schedule(new KreiranjeVozila(), 2000, 2000);
-//timer.cancel();
 

@@ -1,5 +1,4 @@
 import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
-
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -12,7 +11,6 @@ import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 
 public class KreiranjeKompozicija extends Thread
 {
