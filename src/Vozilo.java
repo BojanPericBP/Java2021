@@ -1,6 +1,10 @@
 import java.awt.Color;
 import java.awt.Component;
+import java.io.IOException;
 import java.util.Random;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
@@ -17,6 +21,18 @@ public class Vozilo extends Thread
 	Koordinate preKoo;
 	char smjer;
 	char put;
+	
+	static 
+	{
+		try
+		{
+			Logger.getLogger(Vozilo.class.getName()).addHandler(new FileHandler("Error logs/Vozila.log"));
+		}
+		catch (SecurityException | IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
 
 	public Vozilo(double _maxBrzina, char _put)
 	{
@@ -42,7 +58,7 @@ public class Vozilo extends Thread
 			}
 			catch (Exception e)
 			{
-				System.err.println("greska");
+				Logger.getLogger(Vozilo.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 			}
 
 			synchronized (GUI.frame)
