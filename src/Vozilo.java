@@ -1,11 +1,10 @@
 import java.awt.Color;
 import java.awt.Component;
-import java.io.IOException;
 import java.util.Random;
+import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
@@ -29,7 +28,7 @@ public class Vozilo extends Thread
 		{
 			Logger.getLogger(Vozilo.class.getName()).addHandler(new FileHandler("Error logs/Vozila.log"));
 		}
-		catch (SecurityException | IOException e)
+		catch (Exception e)
 		{
 			e.printStackTrace();
 		}

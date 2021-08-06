@@ -3,6 +3,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -157,24 +158,24 @@ public class Kompozicija extends Thread implements Serializable  {
 		List<String> kom = Arrays.asList(niz);
 		
 		if(kom.get(0).startsWith("V"))
-			throw new Exception("Puko sam brate nema me 0");
+			throw new Exception("Pogresan format kompozicije! ");
 		
 		if(kom.size() == 1 && !(kom.get(0).startsWith("L")))
 		{
-			throw new Exception("Puko sam brate nema me 1");
+			throw new Exception("Pogresan format kompozicije! ");
 		}
 		
 		else if(kom.size() > 1 && kom.contains("LM") )
 		{
-			throw new Exception("Puko sam brate nema me 2");
+			throw new Exception("Pogresan format kompozicije! ");
 		}
 		
 		else if(kom.contains("LP") && (kom.contains("LT") || kom.contains("VT")))
 		{
-			throw new Exception("Puko sam brate nema me 3");
+			throw new Exception("Pogresan format kompozicije! ");
 		}
 		else if(kom.contains("LT") && (kom.contains("LP") || kom.contains("VPS") || kom.contains("VPR")))
-			throw new Exception("Puko sam brate nema me 3");
+			throw new Exception("Pogresan format kompozicije! ");
 		
 		int br = 0;
 		boolean flag=true;
@@ -187,7 +188,7 @@ public class Kompozicija extends Thread implements Serializable  {
 			}
 		}
 		for (int i = br; i < niz.length && br>0; i++) {
-			if(niz[i].startsWith("L")) throw new Exception("Puko sam brate nema me 4");
+			if(niz[i].startsWith("L")) throw new Exception("Pogresan format kompozicije! ");
 		}
 		
 		

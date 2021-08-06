@@ -94,12 +94,14 @@ public class KreiranjeKompozicija extends Thread
 			char pocetnaStanica = podaci[4].trim().charAt(0);
 			char krajnjaStanica = podaci[5].trim().charAt(0);
 			
-			try {
+			try 
+			{
 				Kompozicija tmp = new Kompozicija(brLokomotiva,  brVagona,  raspored,  brzina,  GUI.stanice.get(pocetnaStanica-'A'),  GUI.stanice.get(krajnjaStanica-'A'));
 				GUI.stanice.get(pocetnaStanica-'A').redUStanici.add(tmp);				
 			}
-			catch (Exception e) {
-				e.printStackTrace();
+			catch (Exception e) 
+			{
+				Logger.getLogger(KreiranjeKompozicija.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 			}
 			
 		}

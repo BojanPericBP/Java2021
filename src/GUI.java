@@ -3,6 +3,8 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.Timer;
+import java.util.logging.Logger;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -11,6 +13,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 
 public class GUI extends JFrame 
 {
@@ -62,13 +65,17 @@ public class GUI extends JFrame
 	public GUI() 
 	{
 		frame = new JFrame("NASLOV");
-		frame.addWindowListener(new WindowAdapter() {
+		frame.addWindowListener(new WindowAdapter() 
+		{
 			@Override
-			public void windowClosing(WindowEvent e) {
+			public void windowClosing(WindowEvent e) 
+			{
+				if(timer!=null) timer.cancel();
 				simulacijaUToku=false;
-				 if(timer!=null) timer.cancel();
-				 e.getWindow().dispose();
-				 System.exit(0);
+				
+				//e.getWindow().dispose();
+				//System.exit(0);
+				//Runtime.getRuntime().exit(0);
 			}
 		});
 		frame.setSize(213,68);
