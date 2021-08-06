@@ -10,7 +10,7 @@ import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.util.List;
 
-public class KreiranjeKompozicija
+public class KreiranjeKompozicija extends Thread
 {
 	WatchService watcher;
 	Path dir;
@@ -50,7 +50,6 @@ public class KreiranjeKompozicija
 					@SuppressWarnings("unchecked")
 					WatchEvent<Path> ev = (WatchEvent<Path>) event;
 					Path fileName = ev.context();
-					// System.out.println(kind.name() + ": " + fileName);
 					if (fileName.toString().trim().endsWith(".txt"))
 					{
 						List<String>content = Files.readAllLines(dir.resolve(fileName));
@@ -82,7 +81,7 @@ public class KreiranjeKompozicija
 			char krajnjaStanica = podaci[5].trim().charAt(0);
 			
 			GUI.stanice.get(pocetnaStanica-'A').redUStanici.add(new Kompozicija(brLokomotiva,  brVagona,  raspored,  brzina,  GUI.stanice.get(pocetnaStanica-'A'),  GUI.stanice.get(krajnjaStanica-'A')));
-
+			
 		}
 		catch (Exception e)
 		{
@@ -90,14 +89,11 @@ public class KreiranjeKompozicija
 		}
 		
 	}
-
-	/*
-	public static void main(String[] args)
+	
+	@Override
+	public void run()
 	{
-		GUI g=new GUI();
-		new KreiranjeKompozicija().pokreni();
-
+		pokreni();
 	}
-*/
 	
 }
