@@ -21,6 +21,7 @@ public class Vozilo extends Thread
 	Koordinate preKoo;
 	char smjer;
 	char put;
+	String putanjaSlike;
 	
 	static 
 	{
@@ -34,7 +35,7 @@ public class Vozilo extends Thread
 		}
 	}
 
-	public Vozilo(double _maxBrzina, char _put)
+	public Vozilo(double _maxBrzina, char _put, String _putanjaSlike)
 	{
 		maxBrzina = _maxBrzina;
 		trenutnaBrzina = (0.5 + Math.random() * (maxBrzina - 0.5)) * 1000;
@@ -45,6 +46,7 @@ public class Vozilo extends Thread
 		trKoo = new Koordinate(-3, -3);
 		preKoo = new Koordinate(-3, -3);
 		smjer = (char) ('0' + new Random().nextInt(2));
+		putanjaSlike=_putanjaSlike;
 	}
 
 	@Override
