@@ -9,12 +9,27 @@ import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.util.List;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class KreiranjeKompozicija extends Thread
 {
 	WatchService watcher;
 	Path dir;
+	
+	static 
+	{
+		try
+		{
+			Logger.getLogger(KreiranjeKompozicija.class.getName()).addHandler(new FileHandler("Error logs/KreiranjeKompozicija.log"));
+		}
+		catch (SecurityException | IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
 
 	public KreiranjeKompozicija()
 	{
@@ -26,7 +41,7 @@ public class KreiranjeKompozicija extends Thread
 		}
 		catch (IOException e)
 		{
-			e.printStackTrace();
+			Logger.getLogger(KreiranjeKompozicija.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 		}
 	}
 	
@@ -64,7 +79,7 @@ public class KreiranjeKompozicija extends Thread
 		}
 		catch (Exception ex)
 		{
-			System.out.println(ex);
+			Logger.getLogger(KreiranjeKompozicija.class.getName()).log(Level.WARNING, ex.fillInStackTrace().toString());
 		}
 	}
 	
@@ -92,7 +107,7 @@ public class KreiranjeKompozicija extends Thread
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
+			Logger.getLogger(KreiranjeKompozicija.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 		}
 		
 	}
