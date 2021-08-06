@@ -1,12 +1,12 @@
 import java.util.Random;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
 
 import javax.swing.JLabel;
 
-
-public class Lokomotiva{
-
+public class Lokomotiva
+{
 	static private int count = 0;
-	
 	char pogon; //dizel-1, parni-2, elektricni-3
 	boolean jeUniverzalna;
 	boolean jePutnicka;
@@ -17,7 +17,21 @@ public class Lokomotiva{
 	Koordinate trKoo;
 	Koordinate preKoo;
 	
-	public Lokomotiva(String tipLokomotive) {
+	
+	static 
+	{
+		try
+		{
+			Logger.getLogger(Lokomotiva.class.getName()).addHandler(new FileHandler("Error logs/Lokomotiva.log"));
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public Lokomotiva(String tipLokomotive) 
+	{
 		pogon = (char) (new Random().nextInt(2)+49);
 		snaga = Math.random()*10;
 		idLokomotive = count++;
