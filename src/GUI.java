@@ -4,11 +4,16 @@ import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.Timer;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JWindow;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 
 public class GUI extends JFrame 
@@ -27,7 +32,9 @@ public class GUI extends JFrame
 	JButton btnKretanje;
 	JButton btnStart;
 	static public JPanel[][] guiMapa;
-	
+	KreiranjeKompozicija kreiranjeKompozicija;
+	static boolean simulacijaUToku;
+	Timer timer;
 
 	private void initialize()
 	{
@@ -53,160 +60,22 @@ public class GUI extends JFrame
 	
 	public static void main(String[] args) throws Exception
 	{
-		
 		new GUI();
-		
-		
-		ZeljeznickaStanica a = stanice.get(0);
-		ZeljeznickaStanica b = stanice.get(1);
-		ZeljeznickaStanica c = stanice.get(2);
-		ZeljeznickaStanica d = stanice.get(3);
-		ZeljeznickaStanica e = stanice.get(4);
-		
-		
-		//ZeljeznickaStanica polazak = a;
-		//ZeljeznickaStanica odrediste = c;
-		
-		
-		Kompozicija komp1 = new Kompozicija(2, 2, "LU;LU;VN;VPS", 700, b, d);
-		Kompozicija komp2 = new Kompozicija(2, 2, "LU;LU;VPS;VT", 200, b, e);
-		//Kompozicija komp3 = new Kompozicija(2, 3, "LU;LU;VPS;VPR;VN", 300, e, b);
-		//Kompozicija komp4 = new Kompozicija(1, 0, "LM", 300, b, c);
-		
-		b.redUStanici.add(komp1);
-		b.redUStanici.add(komp2);
-		//e.redUStanici.add(komp3);
-		//b.redUStanici.add(komp4);
-		
-		//Kompozicija komp2 = new Kompozicija(1, 0, "LU", 500, a, e);
-		//a.redUStanici.add(komp2);
-		
-		/*for (int i = 0; i < 20; i++) {
-			a.run();
-			b.run();
-		}*/
-		
-		a.start();
-		b.start();
-		c.start();
-		d.start();
-		e.start();
-		
-		//c.run();
-		//b.run();
-		
-		//stanice.get(0).redUStanici.add(komp1);
-		/*
-		a.run();
-		b.run();
-		c.run();
-		d.run();
-		e.run();
-		*/
-		/*a.run();
-		for (int i = 0; i < 1; i++) {
-			b.run();
-		}*/
-		//a.wait();
-		//b.wait();
-		
-		/*
-		for (int i = 0; i < 1; i++) {
-			SwingUtilities.updateComponentTreeUI(gui);
-			b.run();
-			SwingUtilities.updateComponentTreeUI(gui);
-		}*/
-		
-		//b.start();
-		
-		Timer timer = new Timer();
-		timer.schedule(new KreiranjeVozila(), 0, 500);
-	
-		/*Thread.sleep(5000);
-		timer.cancel();*/
-/*		
-		Vozilo v1 = new Vozilo(1, 'C');
-		Vozilo v2 = new Vozilo(1, 'C');
-		Vozilo v3 = new Vozilo(1, 'C');
-		
-		v1.trKoo.i = 20;
-		v1.trKoo.j = 23;
-		v1.preKoo.i = 20;
-		v1.preKoo.j = 24;
-		v1.smjer = '0';
-		v1.trenutnaBrzina = 500;
-		
-		v2.trKoo.i = 20;
-		v2.trKoo.j = 24;
-		v2.preKoo.i = 20;
-		v2.preKoo.j = 25;
-		v2.smjer = '0';
-		v2.trenutnaBrzina = 400;
-		
-		v3.trKoo.i = 20;
-		v3.trKoo.j = 25;
-		v3.preKoo.i = 20;
-		v3.preKoo.j = 26;
-		v3.smjer = '0';
-		v3.trenutnaBrzina = 400;
-		
-		/*v4.trKoo.i = 15;
-		v4.trKoo.j = 14;
-		v4.preKoo.i = 16;
-		v4.preKoo.j = 14;
-		v4.smjer = '0';
-		v4.trenutnaBrzina = 1200;
-		
-		v5.trKoo.i = 22;
-		v5.trKoo.j = 14;
-		v5.preKoo.i = 23;
-		v5.preKoo.j = 14;
-		v5.smjer = '0';
-		v5.trenutnaBrzina = 900;*/
-		
-/*
-		guiMapa[v1.trKoo.i][v1.trKoo.j].add(new JLabel(new ImageIcon("car.png")));
-		((JLabel)guiMapa[v1.trKoo.i][v1.trKoo.j].getComponents()[0]).setName(""+(long)v1.trenutnaBrzina);
-		
-		guiMapa[v2.trKoo.i][v2.trKoo.j].add(new JLabel(new ImageIcon("car.png")));
-		((JLabel)guiMapa[v2.trKoo.i][v2.trKoo.j].getComponents()[0]).setName(""+(long)v2.trenutnaBrzina);
-		
-		guiMapa[v3.trKoo.i][v3.trKoo.j].add(new JLabel(new ImageIcon("car.png")));
-		((JLabel)guiMapa[v3.trKoo.i][v3.trKoo.j].getComponents()[0]).setName(""+(long)v3.trenutnaBrzina);
-		
-		/*guiMapa[v4.trKoo.i][v4.trKoo.j].add(new JLabel(new ImageIcon("car.png")));
-		((JLabel)guiMapa[v4.trKoo.i][v4.trKoo.j].getComponents()[0]).setName(""+(long)v4.trenutnaBrzina);
-		
-		guiMapa[v5.trKoo.i][v5.trKoo.j].add(new JLabel(new ImageIcon("car.png")));
-		((JLabel)guiMapa[v5.trKoo.i][v5.trKoo.j].getComponents()[0]).setName(""+(long)v5.trenutnaBrzina);*/
-/*		v1.start();
-		v2.start();
-		v3.start();
-		//v4.start();
-		//v5.start();
-		
-		
-		//TOOD pomjeranje automobila kod
-		/*JLabel test1 = new JLabel(new ImageIcon("C:\\Users\\Bojan\\Desktop\\matrica.png"));
-		JLabel test2 = new JLabel(new ImageIcon("C:\\Users\\Bojan\\Desktop\\matrica.png"));
-	
-		
-		
-		guiMapa[20][i].add(test1);
-		Thread.sleep(2000);
-		guiMapa[20][i-1].add(test1);
-		SwingUtilities.updateComponentTreeUI(frame);*/
-		
 	}
 
-	/**
-	 * Create the frame.
-	 */
-	
-	public GUI() {
-
+	public GUI() 
+	{
 		frame = new JFrame("NASLOV");
-		frame.setSize(450,348);
+		frame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				simulacijaUToku=false;
+				 if(timer!=null) timer.cancel();
+				 e.getWindow().dispose();
+				 System.exit(0);
+			}
+		});
+		frame.setSize(213,68);
 		
 		contentPanel= new JPanel();
 		gridLayout = new GridLayout(30,30,1,1);
@@ -223,13 +92,28 @@ public class GUI extends JFrame
 		btnStart = new JButton("Start");
 		btnStart.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				btnFlagStart = true;
+				simulacijaUToku=true;
+				stanice.get(0).start();
+				stanice.get(1).start();
+				stanice.get(2).start();
+				stanice.get(3).start();
+				stanice.get(4).start();
+				kreiranjeKompozicija=new KreiranjeKompozicija();
+				kreiranjeKompozicija.start();
+				timer=new Timer();
+				timer.schedule(new KreiranjeVozila(), 0, 500);
 			}
 		});
 		leftPanel.add(btnStart);
 		btnStart.setBounds(5, 5, 15, 30);
 		
 		btnKretanje = new JButton("Podaci");
+		btnKretanje.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				 //TODO napraviti dialog window
+	
+			}
+		});
 		
 		
 		leftPanel.add(btnKretanje);

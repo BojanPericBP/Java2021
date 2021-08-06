@@ -34,7 +34,7 @@ public class Vozilo extends Thread
 	@Override
 	public void run()
 	{
-		while (trKoo.i != -1 || trKoo.j != -1)
+		while (GUI.simulacijaUToku && (trKoo.i != -1 || trKoo.j != -1))
 		{
 			try
 			{
@@ -167,7 +167,7 @@ public class Vozilo extends Thread
 			trenutnaBrzina = Integer.parseInt(((JLabel) cmp[0]).getName());
 	}
 
-	synchronized Koordinate sledeciKorak()// TODO uraditi i za pruzne prelaze
+	synchronized Koordinate sledeciKorak()//
 	{
 
 		if (trKoo.j < 29 && ((GUI.mapa[trKoo.i][trKoo.j + 1] == smjer || GUI.mapa[trKoo.i][trKoo.j + 1] == 'x') && trKoo.j + 1 != preKoo.j)) // provjera desno

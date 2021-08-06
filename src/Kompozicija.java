@@ -1,6 +1,9 @@
 import java.awt.Color;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
@@ -11,6 +14,8 @@ public class Kompozicija extends Thread implements Serializable  {
 	final int maxLokomotiva = 5;
 	final int maxVagona = 5;
 
+	ArrayList<Koordinate> istorijaKretanja;
+	
 	ArrayList<Lokomotiva> lokomotive;
 	ArrayList<Vagon> vagoni;
 	long brzinaKretanja;
@@ -35,13 +40,16 @@ public class Kompozicija extends Thread implements Serializable  {
 		prethodnaStanica = polazak;
 		tmpBrzina = brzinaKretanja;
 		
+		istorijaKretanja = new ArrayList<Koordinate>();
+		
 		kreirajKompoziciju(_raspored);
 	}
-
+	
 	@Override
-	public void run() { // TODO usaglasavanje brzina vozova
+	public void run()
+	{
 
-		while (!prethodnaStanica.equals(odrediste)) // ako ne bude radilo provjeriti reference i uraditi sa
+		while (GUI.simulacijaUToku && !prethodnaStanica.equals(odrediste)) // ako ne bude radilo provjeriti reference i uraditi sa
 													// koordinatama
 		{
 			synchronized(this)
@@ -61,7 +69,7 @@ public class Kompozicija extends Thread implements Serializable  {
 					if (odrediste.koordinate.contains(lokomotive.get(0).trKoo)) // da li je u odredisnoj stanici
 					{
 						// TODO serijalizacija
-						System.out.println("USAO U STANICU "+odrediste.nazivStanice);
+						istorijaKretanja.forEach(System.out::println);
 					} 
 					else // da li je u bilo kojoj stanici koja nije odredisna
 					{
@@ -127,10 +135,46 @@ public class Kompozicija extends Thread implements Serializable  {
 		}
 	}
 
-	private void kreirajKompoziciju(String raspored) 
+	private void kreirajKompoziciju(String raspored) throws Exception
 	{
 		String[] niz = raspored.split(";");
-
+		List<String> kom = Arrays.asList(niz);
+		
+		if(kom.get(0).startsWith("V"))
+			throw new Exception("Puko sam brate nema me 0");
+		
+		if(kom.size() == 1 && !(kom.get(0).startsWith("L")))
+		{
+			throw new Exception("Puko sam brate nema me 1");
+		}
+		
+		else if(kom.size() > 1 && kom.contains("LM") )
+		{
+			throw new Exception("Puko sam brate nema me 2");
+		}
+		
+		else if(kom.contains("LP") && (kom.contains("LT") || kom.contains("VT")))
+		{
+			throw new Exception("Puko sam brate nema me 3");
+		}
+		else if(kom.contains("LT") && (kom.contains("LP") || kom.contains("VPS") || kom.contains("VPR")))
+			throw new Exception("Puko sam brate nema me 3");
+		
+		int br = 0;
+		boolean flag=true;
+		for (int i = 0; i < niz.length && flag; i++) 
+		{
+			if(!niz[i].startsWith("L")) 
+			{
+				flag = false;
+				br=i+1;
+			}
+		}
+		for (int i = br; i < niz.length && br>0; i++) {
+			if(niz[i].startsWith("L")) throw new Exception("Puko sam brate nema me 4");
+		}
+		
+		
 		for (String string : niz) {
 
 			if ('V' == string.charAt(0)) // vagoni
@@ -305,6 +349,10 @@ public class Kompozicija extends Thread implements Serializable  {
 			else 
 			{	
 					boolean flag = lokomotive.get(i).move();
+					if(i == 0)
+					{
+						istorijaKretanja.add(new Koordinate(lokomotive.get(0).trKoo));
+					}
 				 
 					synchronized(GUI.frame)
 					{

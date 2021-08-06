@@ -42,7 +42,7 @@ public class ZeljeznickaStanica extends Thread
 	public void run() // sinhronizacija// kompozicija je vec na prvom polju izvan pruge tj lokomotiva
 	{
 
-		while (true)
+		while (GUI.simulacijaUToku)
 		{
 
 			Iterator<Kompozicija> iteratorKompozicija = redUStanici.iterator();
@@ -94,6 +94,7 @@ public class ZeljeznickaStanica extends Thread
 					}
 
 					kompozicija.lokomotive.get(0).trKoo = usmjeriKompoziciju(kompozicija)[1];
+					kompozicija.istorijaKretanja.add(new Koordinate(kompozicija.lokomotive.get(0).trKoo));
 					synchronized (this)
 					{
 						matricaSusjedstva[nazivStanice - 'A'][susjed.nazivStanice - 'A']++;

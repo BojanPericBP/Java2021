@@ -8,3 +8,4 @@ LP - lokomotiva putnicka
 LT - lokomotiva transportna
 LU - lokomotiva univerzalna
 LM - lokomotiva manevarska
+

@@ -33,16 +33,10 @@ public class Koordinate {
 		return i == other.i && j == other.j;
 	}
 	
-	/*@Override
-	public boolean equals(Object obj) {
-		if(obj instanceof Koordinate)
-		{
-			if(i == ((Koordinate)obj).i && j == ((Koordinate)obj).j)
-			{
-				return true;
-			}
-		}
-		return false;
-	}*/
+@Override
+public String toString() {
+	
+	return "("+i+","+j+")";
+}
 
 }
