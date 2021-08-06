@@ -86,7 +86,6 @@ public class Kompozicija extends Thread implements Serializable  {
 					{
 						// TODO serijalizacija
 						vrijemeKretanja = System.currentTimeMillis() - vrijemeKretanja;
-						System.out.println(vrijemeKretanja/1000);
 					} 
 					else // da li je u bilo kojoj stanici koja nije odredisna
 					{

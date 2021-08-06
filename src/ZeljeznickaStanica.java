@@ -1,25 +1,34 @@
 import java.util.ArrayList;
 import java.util.Iterator;
-
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
 public class ZeljeznickaStanica extends Thread
 {
-
 	ArrayList<Kompozicija> redUStanici;
 	ArrayList<Kompozicija> dolazneKompozicije;
-	public static final long brzinaRasporedjivanja = 200;
-	/*
-	 * matrica susjedstva[i][j] = 0; putanja od stanice i ka stanici j je slobodna
-	 * 
-	 * matrica je konzistentna
-	 */
-	static int matricaSusjedstva[][];
-
+	public static final long brzinaRasporedjivanja = 200; 
+	static int matricaSusjedstva[][]; //matrica susjedstva[i][j] = 0; putanja od stanice i ka stanici j je slobodna
 	char nazivStanice;
 	ArrayList<Koordinate> koordinate;
+	
+	
+	
+	static 
+	{
+		try
+		{
+			Logger.getLogger(ZeljeznickaStanica.class.getName()).addHandler(new FileHandler("Error logs/ZeljeznickaStanica.log"));
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
 
 	public ZeljeznickaStanica(char _nazivStanice, ArrayList<Koordinate> _koordinate)
 	{
@@ -131,7 +140,7 @@ public class ZeljeznickaStanica extends Thread
 			}
 			catch (Exception e)
 			{
-				e.printStackTrace();
+				Logger.getLogger(ZeljeznickaStanica.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 			}
 		}
 
