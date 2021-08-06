@@ -3,6 +3,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -26,6 +29,18 @@ public class Kompozicija extends Thread implements Serializable  {
 	// ide a ne iz koje je krenula npr A-B-C sledecaStanica = B
 	ZeljeznickaStanica prethodnaStanica;
 	Object lock = new Object();
+	
+	static 
+	{
+		try
+		{
+			Logger.getLogger(Kompozicija.class.getName()).addHandler(new FileHandler("Error logs/Kompozicija.log"));
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
 
 	public Kompozicija(int _brLokomotiva, int _brVagona, String _raspored, long _brzina, ZeljeznickaStanica _polazak,
 			ZeljeznickaStanica _odrediste) throws Exception 
@@ -84,7 +99,7 @@ public class Kompozicija extends Thread implements Serializable  {
 						} 
 						catch (Exception e)
 						{
-							e.printStackTrace();
+							Logger.getLogger(Kompozicija.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 						}
 					}
 				}
@@ -106,7 +121,7 @@ public class Kompozicija extends Thread implements Serializable  {
 			} 
 			catch (Exception e) 
 			{
-				e.printStackTrace();
+				Logger.getLogger(Kompozicija.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 			}
 		}
 		
@@ -239,7 +254,6 @@ public class Kompozicija extends Thread implements Serializable  {
 					GUI.frame.validate();
 					GUI.frame.repaint();
 				}
-				//try { Thread.sleep(brzinaKretanja); } catch (InterruptedException e) { e.printStackTrace(); }
 			}
 			
 			for (int i = granicaVAG; i < vagoni.size(); i++)
@@ -252,9 +266,8 @@ public class Kompozicija extends Thread implements Serializable  {
 					GUI.frame.validate();
 					GUI.frame.repaint();
 				}
-				//try { Thread.sleep(brzinaKretanja); } catch (InterruptedException e) { e.printStackTrace(); }
 			}	
-			try { Thread.sleep(brzinaKretanja); } catch (InterruptedException e) { e.printStackTrace(); }
+			try { Thread.sleep(brzinaKretanja); } catch (InterruptedException e) { Logger.getLogger(Kompozicija.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString()); }
 		}
 	}
 
@@ -387,7 +400,7 @@ public class Kompozicija extends Thread implements Serializable  {
 					Thread.sleep(brzinaKretanja);
 				} catch (InterruptedException e) {
 					
-					e.printStackTrace();
+					Logger.getLogger(Kompozicija.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 				}
 			}
 			
@@ -421,7 +434,7 @@ public class Kompozicija extends Thread implements Serializable  {
 					Thread.sleep(brzinaKretanja);
 				} catch (InterruptedException e) {
 					
-					e.printStackTrace();
+					Logger.getLogger(Kompozicija.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 				}
 			}
 			
