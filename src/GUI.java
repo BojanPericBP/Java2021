@@ -110,7 +110,8 @@ public class GUI extends JFrame
 		btnKretanje = new JButton("Podaci");
 		btnKretanje.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				 //TODO napraviti dialog window
+				 FormaPodaci formaPodaci = new FormaPodaci();
+				 formaPodaci.showWindow();
 	
 			}
 		});

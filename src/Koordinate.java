@@ -33,10 +33,10 @@ public class Koordinate {
 		return i == other.i && j == other.j;
 	}
 	
-@Override
-public String toString() {
-	
-	return "("+i+","+j+")";
-}
+	@Override
+	public String toString() 
+	{
+		return "("+i+","+j+")";
+	}
 
 }
