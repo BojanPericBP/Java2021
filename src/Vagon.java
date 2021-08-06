@@ -1,20 +1,32 @@
 import java.util.Random;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
 
 import javax.swing.JLabel;
 
-public class Vagon {
-	
+public class Vagon 
+{
 	static private int count = 0;
-
 	int duzinaVagona;
 	int IDVagona;
 	boolean jePosebneNamjene;
-	
-	
 	Koordinate trKoo;
 	Koordinate preKoo;
 	
-	public Vagon(boolean _jePosebneNamjene) {
+	static 
+	{
+		try
+		{
+			Logger.getLogger(Vagon.class.getName()).addHandler(new FileHandler("Error logs/Vagon.log"));
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public Vagon(boolean _jePosebneNamjene) 
+	{
 		IDVagona = count++;
 		duzinaVagona = new Random().nextInt(4)+1;
 		jePosebneNamjene = _jePosebneNamjene;
