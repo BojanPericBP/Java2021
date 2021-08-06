@@ -41,7 +41,7 @@ public class Kompozicija extends Thread implements Serializable  {
 	@Override
 	public void run() { // TODO usaglasavanje brzina vozova
 
-		while (GUI.btnFlagStart && !prethodnaStanica.equals(odrediste)) // ako ne bude radilo provjeriti reference i uraditi sa
+		while (!prethodnaStanica.equals(odrediste)) // ako ne bude radilo provjeriti reference i uraditi sa
 													// koordinatama
 		{
 			synchronized(this)
@@ -127,7 +127,8 @@ public class Kompozicija extends Thread implements Serializable  {
 		}
 	}
 
-	private void kreirajKompoziciju(String raspored) {
+	private void kreirajKompoziciju(String raspored) 
+	{
 		String[] niz = raspored.split(";");
 
 		for (String string : niz) {

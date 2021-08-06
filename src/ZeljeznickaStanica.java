@@ -5,7 +5,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
-public class ZeljeznickaStanica extends Thread {
+public class ZeljeznickaStanica extends Thread
+{
 
 	ArrayList<Kompozicija> redUStanici;
 	ArrayList<Kompozicija> dolazneKompozicije;
@@ -20,10 +21,13 @@ public class ZeljeznickaStanica extends Thread {
 	char nazivStanice;
 	ArrayList<Koordinate> koordinate;
 
-	public ZeljeznickaStanica(char _nazivStanice, ArrayList<Koordinate> _koordinate) {
+	public ZeljeznickaStanica(char _nazivStanice, ArrayList<Koordinate> _koordinate)
+	{
 		matricaSusjedstva = new int[5][5];
-		for (int i = 0; i < matricaSusjedstva.length; i++) {
-			for (int j = 0; j < matricaSusjedstva.length; j++) {
+		for (int i = 0; i < matricaSusjedstva.length; i++)
+		{
+			for (int j = 0; j < matricaSusjedstva.length; j++)
+			{
 				matricaSusjedstva[i][j] = 0;
 			}
 		}
@@ -38,7 +42,8 @@ public class ZeljeznickaStanica extends Thread {
 	public void run() // sinhronizacija// kompozicija je vec na prvom polju izvan pruge tj lokomotiva
 	{
 
-		while (GUI.btnFlagStart) {
+		while (true)
+		{
 
 			Iterator<Kompozicija> iteratorKompozicija = redUStanici.iterator();
 
@@ -49,23 +54,23 @@ public class ZeljeznickaStanica extends Thread {
 				ZeljeznickaStanica susjed;
 				boolean jeSlobodna;
 
-				synchronized (matricaSusjedstva) {
+				synchronized (matricaSusjedstva)
+				{
 
 					jeSlobodna = prugaJeSlobodna(kompozicija);
 				}
 
-				if (jeSlobodna) 
+				if (jeSlobodna)
 				{
 					susjed = kompozicija.odrediSusjeda();
 
-					
-					if(matricaSusjedstva[nazivStanice - 'A'][susjed.nazivStanice - 'A'] != 0)
+					if (matricaSusjedstva[nazivStanice - 'A'][susjed.nazivStanice - 'A'] != 0)
 					{
 						long min = kompozicija.brzinaKretanja;
-						//prodjikroz dolazne dolazneKompozicije susjeda i uzmi 
-						for(Kompozicija k:susjed.dolazneKompozicije)
+						// prodjikroz dolazne dolazneKompozicije susjeda i uzmi
+						for (Kompozicija k : susjed.dolazneKompozicije)
 						{
-							if(k.prethodnaStanica.nazivStanice == nazivStanice && k.brzinaKretanja > min)
+							if (k.prethodnaStanica.nazivStanice == nazivStanice && k.brzinaKretanja > min)
 							{
 								min = k.brzinaKretanja;
 							}
@@ -73,13 +78,15 @@ public class ZeljeznickaStanica extends Thread {
 						kompozicija.tmpBrzina = kompozicija.brzinaKretanja;
 						kompozicija.brzinaKretanja = min;
 					}
-					
-					for (int i = 0; i < kompozicija.lokomotive.size(); ++i) {
+
+					for (int i = 0; i < kompozicija.lokomotive.size(); ++i)
+					{
 						kompozicija.lokomotive.get(i).preKoo = usmjeriKompoziciju(kompozicija)[0];
 						kompozicija.lokomotive.get(i).trKoo = new Koordinate(usmjeriKompoziciju(kompozicija)[0]);
 					}
 
-					for (int i = 0; i < kompozicija.vagoni.size(); ++i) {
+					for (int i = 0; i < kompozicija.vagoni.size(); ++i)
+					{
 						kompozicija.vagoni.get(i).preKoo = new Koordinate(
 								kompozicija.lokomotive.get(kompozicija.lokomotive.size() - 1).preKoo);
 						kompozicija.vagoni.get(i).trKoo = new Koordinate(
@@ -87,32 +94,41 @@ public class ZeljeznickaStanica extends Thread {
 					}
 
 					kompozicija.lokomotive.get(0).trKoo = usmjeriKompoziciju(kompozicija)[1];
-					synchronized (this) {
+					synchronized (this)
+					{
 						matricaSusjedstva[nazivStanice - 'A'][susjed.nazivStanice - 'A']++;
 					}
 					susjed.dolazneKompozicije.add(kompozicija);
-					synchronized (GUI.frame) {
+					synchronized (GUI.frame)
+					{
 						GUI.guiMapa[kompozicija.lokomotive.get(0).trKoo.i][kompozicija.lokomotive.get(0).trKoo.j]
 								.add(new JLabel(new ImageIcon("lokomotiva.png")));
 						((JLabel) GUI.guiMapa[kompozicija.lokomotive.get(0).trKoo.i][kompozicija.lokomotive
 								.get(0).trKoo.j].getComponent(0)).setName(kompozicija.brzinaKretanja + "k");
 						SwingUtilities.updateComponentTreeUI(GUI.frame);
 					}
-					
-					if (kompozicija.isAlive()) {
-						synchronized (kompozicija) {
+
+					if (kompozicija.isAlive())
+					{
+						synchronized (kompozicija)
+						{
 							kompozicija.notify();
 						}
-					} else {
+					}
+					else
+					{
 						kompozicija.start();
 					}
 					iteratorKompozicija.remove();
 				}
 			}
 
-			try {
+			try
+			{
 				Thread.sleep(brzinaRasporedjivanja);
-			} catch (Exception e) {
+			}
+			catch (Exception e)
+			{
 				e.printStackTrace();
 			}
 		}
@@ -125,7 +141,8 @@ public class ZeljeznickaStanica extends Thread {
 		ZeljeznickaStanica susjed = komp.odrediSusjeda();
 		// susjed i naziv stanice dovoljan za provjeru matrice
 
-		if (matricaSusjedstva[susjed.nazivStanice - 'A'][(nazivStanice - 'A')] == 0) {
+		if (matricaSusjedstva[susjed.nazivStanice - 'A'][(nazivStanice - 'A')] == 0)
+		{
 			Koordinate kord0 = usmjeriKompoziciju(komp)[1];
 			Koordinate kord1 = usmjeriKompoziciju(komp)[2];
 
@@ -136,22 +153,25 @@ public class ZeljeznickaStanica extends Thread {
 		return false;
 	}
 
-	synchronized Koordinate[] usmjeriKompoziciju(Kompozicija komp) {
+	synchronized Koordinate[] usmjeriKompoziciju(Kompozicija komp)
+	{
 		if (nazivStanice == 'A')
-			return (new Koordinate[] { new Koordinate(27, 2), new Koordinate(26, 2), new Koordinate(25, 2) });// vraca
-																												// niz
-																												// od
-																												// dvije
-																												// koordinate
+			return (new Koordinate[]
+			{ new Koordinate(27, 2), new Koordinate(26, 2), new Koordinate(25, 2) });// vraca
+																						// niz
+																						// od
+																						// dvije
+																						// koordinate
 
 		// else if (nazivStanice == 'B' && komp.odrediste.koordinate.contains(new
 		// Koordinate(27, 2))) // ka A
 		else if (nazivStanice == 'B' && komp.odrediSusjeda().nazivStanice == 'A')
-			return (new Koordinate[] { new Koordinate(6, 6), new Koordinate(6, 5), new Koordinate(7, 5) }); // prva
-																											// koordinata
-																											// je
-																											// pozicija
-																											// na
+			return (new Koordinate[]
+			{ new Koordinate(6, 6), new Koordinate(6, 5), new Koordinate(7, 5) }); // prva
+																					// koordinata
+																					// je
+																					// pozicija
+																					// na
 		// koju smjestam kompoziciju, a
 		// druga je za provjeru
 		// razmaka..
@@ -159,27 +179,31 @@ public class ZeljeznickaStanica extends Thread {
 		// odredi susjeda.odrediste.koordinate.contains(new Koordinate(27, 2))
 
 		else if (nazivStanice == 'B' && komp.odrediSusjeda().nazivStanice == 'C') // ka C
-			return (new Koordinate[] { new Koordinate(6, 7), new Koordinate(6, 8), new Koordinate(6, 9) });
+			return (new Koordinate[]
+			{ new Koordinate(6, 7), new Koordinate(6, 8), new Koordinate(6, 9) });
 
 		else if (nazivStanice == 'C' && (komp.odrediSusjeda().nazivStanice == 'B')) // ka B
-			return (new Koordinate[] { new Koordinate(12, 19), new Koordinate(11, 19), new Koordinate(10, 19) });
+			return (new Koordinate[]
+			{ new Koordinate(12, 19), new Koordinate(11, 19), new Koordinate(10, 19) });
 
 		else if (nazivStanice == 'C' && komp.odrediSusjeda().nazivStanice == 'D') // ka D
-			return (new Koordinate[] { new Koordinate(12, 20), new Koordinate(12, 21), new Koordinate(12, 22) });
+			return (new Koordinate[]
+			{ new Koordinate(12, 20), new Koordinate(12, 21), new Koordinate(12, 22) });
 
 		else if (nazivStanice == 'C' && komp.odrediSusjeda().nazivStanice == 'E') // ka E
-			return (new Koordinate[] { new Koordinate(13, 20), new Koordinate(14, 20), new Koordinate(15, 20) });
+			return (new Koordinate[]
+			{ new Koordinate(13, 20), new Koordinate(14, 20), new Koordinate(15, 20) });
 
 		else if (nazivStanice == 'D')
-			return (new Koordinate[] { new Koordinate(1, 26), new Koordinate(1, 25), new Koordinate(1, 24) }); // ka C
+			return (new Koordinate[]
+			{ new Koordinate(1, 26), new Koordinate(1, 25), new Koordinate(1, 24) }); // ka C
 
 		else if (nazivStanice == 'E')
-			return (new Koordinate[] { new Koordinate(25, 26), new Koordinate(24, 26), new Koordinate(23, 26) }); // ka
-																													// C
+			return (new Koordinate[]
+			{ new Koordinate(25, 26), new Koordinate(24, 26), new Koordinate(23, 26) }); // ka
+																							// C
 
 		return null;
 	}
 
-	
-	
 }
