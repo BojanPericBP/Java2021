@@ -2,7 +2,7 @@ import java.util.Random;
 
 import javax.swing.JLabel;
 
-public class Vagon implements IMoveable{
+public class Vagon {
 	
 	static private int count = 0;
 
@@ -21,8 +21,7 @@ public class Vagon implements IMoveable{
 		trKoo = new Koordinate(-1,-1);
 		preKoo = new Koordinate(-1,-1);
 	}
-	
-	@Override
+
 	synchronized public boolean move() {
 		
 		 if((GUI.mapa[trKoo.i-1][trKoo.j] == 'p' || GUI.mapa[trKoo.i-1][trKoo.j] == 'x' || GUI.mapa[trKoo.i-1][trKoo.j] == 's')

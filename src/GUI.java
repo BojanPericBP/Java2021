@@ -4,11 +4,9 @@ import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.Timer;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JWindow;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;

@@ -3,7 +3,7 @@ import java.util.Random;
 import javax.swing.JLabel;
 
 
-public class Lokomotiva implements IMoveable{
+public class Lokomotiva{
 
 	static private int count = 0;
 	
@@ -37,8 +37,7 @@ public class Lokomotiva implements IMoveable{
 			System.out.println("Tip lokomotive uz datoteci nije ispravno naveden! ");
 	}
 
-	@Override
-	synchronized public boolean move() {//TODO malo srediti ovaj kod pls
+	synchronized public boolean move() {
 		if((GUI.mapa[trKoo.i-1][trKoo.j] == 'p' || GUI.mapa[trKoo.i-1][trKoo.j] == 'x' || GUI.mapa[trKoo.i-1][trKoo.j] == 's')
 				&& (trKoo.i-1 != preKoo.i))//provjerava gore// == 0
 		 {
