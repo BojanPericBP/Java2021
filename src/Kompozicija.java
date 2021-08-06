@@ -17,6 +17,7 @@ public class Kompozicija extends Thread implements Serializable  {
 	final int maxLokomotiva = 5;
 	final int maxVagona = 5;
 
+	public long vrijemeKretanja;
 	ArrayList<Koordinate> istorijaKretanja;
 	
 	ArrayList<Lokomotiva> lokomotive;
@@ -84,7 +85,8 @@ public class Kompozicija extends Thread implements Serializable  {
 					if (odrediste.koordinate.contains(lokomotive.get(0).trKoo)) // da li je u odredisnoj stanici
 					{
 						// TODO serijalizacija
-						istorijaKretanja.forEach(System.out::println);
+						vrijemeKretanja = System.currentTimeMillis() - vrijemeKretanja;
+						System.out.println(vrijemeKretanja/1000);
 					} 
 					else // da li je u bilo kojoj stanici koja nije odredisna
 					{

@@ -92,7 +92,8 @@ public class ZeljeznickaStanica extends Thread
 						kompozicija.vagoni.get(i).trKoo = new Koordinate(
 								kompozicija.lokomotive.get(kompozicija.lokomotive.size() - 1).trKoo);
 					}
-
+					if(kompozicija.polazak.koordinate.contains(kompozicija.lokomotive.get(0).trKoo))
+						kompozicija.vrijemeKretanja = System.currentTimeMillis();
 					kompozicija.lokomotive.get(0).trKoo = usmjeriKompoziciju(kompozicija)[1];
 					kompozicija.istorijaKretanja.add(new Koordinate(kompozicija.lokomotive.get(0).trKoo));
 					synchronized (this)
