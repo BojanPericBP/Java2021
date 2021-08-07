@@ -1,4 +1,3 @@
-import java.awt.Point;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -52,7 +51,6 @@ public class ZeljeznickaStanica extends Thread implements Serializable
 
 		while (GUI.simulacijaUToku)
 		{
-
 			Iterator<Kompozicija> iteratorKompozicija = redUStanici.iterator();
 
 			while (iteratorKompozicija.hasNext()) // pronalazi kompoziciju za koju je slobodna odredjena pruga i
@@ -64,7 +62,6 @@ public class ZeljeznickaStanica extends Thread implements Serializable
 
 				synchronized (matricaSusjedstva)
 				{
-
 					jeSlobodna = prugaJeSlobodna(kompozicija);
 				}
 

@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
-public class Vozilo extends Thread
+public abstract class Vozilo extends Thread
 {
 	static private int count = 0;
 	String marka;
@@ -63,6 +63,7 @@ public class Vozilo extends Thread
 				Logger.getLogger(Vozilo.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 			}
 
+			
 			synchronized (GUI.frame)
 			{
 				Koordinate k = sledeciKorak();

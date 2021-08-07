@@ -81,7 +81,6 @@ public class Kompozicija extends Thread implements Serializable
 				ZeljeznickaStanica susjed = odrediSusjeda();
 				if (kretanjeKompozicije()) // kompozicija usla u stanicu
 				{
-
 					ZeljeznickaStanica.matricaSusjedstva[prethodnaStanica.nazivStanice - 'A'][susjed.nazivStanice- 'A']--;
 					prethodnaStanica = susjed; // npr prethodna je A ovo vrati B
 
