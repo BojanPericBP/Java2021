@@ -255,7 +255,6 @@ public class Kompozicija extends Thread implements Serializable
 		int granicaVAG=0;
 		while(granicaLOK!=lokomotive.size() || granicaVAG!=vagoni.size()) 
 		{
-			/////
 			synchronized(this)
 			{
 				radSaRampom();				
@@ -321,7 +320,6 @@ public class Kompozicija extends Thread implements Serializable
 		synchronized(GUI.guiMapa)
 		{
 			obojiRampu(flag,6,13,6,14);
-			
 		}
 		flag = true;
 		for (int i = 18; i < 24; i++) {
@@ -367,7 +365,6 @@ public class Kompozicija extends Thread implements Serializable
 				lokomotive.get(i).trKoo = new Koordinate(lokomotive.get(i-1).preKoo);
 				GUI.guiMapa[lokomotive.get(i).trKoo.i][lokomotive.get(i).trKoo.j].add(new JLabel(new ImageIcon("lokomotiva.png")));
 				((JLabel)GUI.guiMapa[lokomotive.get(i).trKoo.i][lokomotive.get(i).trKoo.j].getComponent(0)).setName(brzinaKretanja+"k");
-				
 			}
 			
 			else if(i!=0 && GUI.guiMapa[lokomotive.get(i - 1).preKoo.i][lokomotive.get(i - 1).preKoo.j].getComponents().length != 0) 

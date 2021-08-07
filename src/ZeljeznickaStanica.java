@@ -1,3 +1,4 @@
+import java.awt.Point;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -13,11 +14,9 @@ public class ZeljeznickaStanica extends Thread implements Serializable
 	private static final long serialVersionUID = 1L;
 	ArrayList<Kompozicija> redUStanici;
 	ArrayList<Kompozicija> dolazneKompozicije;
-	public static final long brzinaRasporedjivanja = 200;
 	static int matricaSusjedstva[][]; //matrica susjedstva[i][j] = 0; putanja od stanice i ka stanici j je slobodna, matrica je konzistentna
 	char nazivStanice;
 	ArrayList<Koordinate> koordinate;
-	
 	static 
 	{
 		try
@@ -141,7 +140,7 @@ public class ZeljeznickaStanica extends Thread implements Serializable
 
 			try
 			{
-				Thread.sleep(brzinaRasporedjivanja);
+				Thread.sleep(300);
 			}
 			catch (Exception e)
 			{
@@ -176,11 +175,9 @@ public class ZeljeznickaStanica extends Thread implements Serializable
 			{ new Koordinate(27, 2), new Koordinate(26, 2), new Koordinate(25, 2) });// vraca
 																						// niz
 																						// od
-																						// dvije
+																						// tri
 																						// koordinate
-
-		// else if (nazivStanice == 'B' && komp.odrediste.koordinate.contains(new
-		// Koordinate(27, 2))) // ka A
+ // ka A
 		else if (nazivStanice == 'B' && komp.odrediSusjeda().nazivStanice == 'A')
 			return (new Koordinate[]
 			{ new Koordinate(6, 6), new Koordinate(6, 5), new Koordinate(7, 5) }); // prva
