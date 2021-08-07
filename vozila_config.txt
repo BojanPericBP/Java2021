@@ -1,4 +1,4 @@
 nazivPuta , maxBrzina , maxBrojVozila
- A , 1 , 25
- B , 1 , 25
- C , 1 , 35
+ A , 200 , 5
+ B , 500 , 3
+ C , 1000 , 4

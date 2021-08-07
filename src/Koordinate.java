@@ -1,7 +1,10 @@
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Koordinate {
-
+public class Koordinate implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
+	
 	int i;
 	int j;
 	

@@ -1,11 +1,13 @@
+import java.io.Serializable;
 import java.util.Random;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 
 import javax.swing.JLabel;
 
-public class Vagon 
+public class Vagon implements Serializable 
 {
+	private static final long serialVersionUID = 1L;
 	static private int count = 0;
 	int duzinaVagona;
 	int IDVagona;
@@ -25,8 +27,7 @@ public class Vagon
 		}
 	}
 	
-	public Vagon(boolean _jePosebneNamjene) 
-	{
+	public Vagon(boolean _jePosebneNamjene) {
 		IDVagona = count++;
 		duzinaVagona = new Random().nextInt(4)+1;
 		jePosebneNamjene = _jePosebneNamjene;

@@ -3,8 +3,6 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.Timer;
-import java.util.logging.Logger;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -13,7 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.File;
+
 
 public class GUI extends JFrame 
 {
@@ -65,17 +63,13 @@ public class GUI extends JFrame
 	public GUI() 
 	{
 		frame = new JFrame("NASLOV");
-		frame.addWindowListener(new WindowAdapter() 
-		{
+		frame.addWindowListener(new WindowAdapter() {
 			@Override
-			public void windowClosing(WindowEvent e) 
-			{
-				if(timer!=null) timer.cancel();
+			public void windowClosing(WindowEvent e) {
 				simulacijaUToku=false;
-				
-				//e.getWindow().dispose();
-				//System.exit(0);
-				//Runtime.getRuntime().exit(0);
+				 if(timer!=null) timer.cancel();
+				 e.getWindow().dispose();
+				 System.exit(0);
 			}
 		});
 		frame.setSize(213,68);
@@ -94,7 +88,9 @@ public class GUI extends JFrame
 		
 		btnStart = new JButton("Start");
 		btnStart.addActionListener(new ActionListener() {
+			
 			public void actionPerformed(ActionEvent e) {
+				btnStart.setEnabled(false);
 				simulacijaUToku=true;
 				stanice.get(0).start();
 				stanice.get(1).start();
@@ -132,10 +128,9 @@ public class GUI extends JFrame
 			}
 		}
 		
-		for (int i = 0; i < MAT_SIZE; i++) 
-		{
-			for (int j = 0; j < MAT_SIZE; j++) 
-			{
+		for (int i = 0; i < MAT_SIZE; i++) {
+			for (int j = 0; j < MAT_SIZE; j++) {
+				
 				//setovanje plavih polja
 				if(j==13)
 				{
@@ -261,6 +256,7 @@ public class GUI extends JFrame
 		mapa[26][26]= mapa [25][25] = mapa [29][2] = mapa [25][27] = 0;
 		mapa[13][20] = mapa[13][19] = mapa[12][19] = 's';
 		
+		
 		//setovanje pruznih prelaza
 		guiMapa[20][2].setBackground(Color.orange);
 		mapa[20][2]='x';
@@ -274,6 +270,7 @@ public class GUI extends JFrame
 		mapa [20][26] = 'x';
 		guiMapa[21][26].setBackground(Color.orange);
 		mapa [21][26] ='x';
+
 		
 		frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE );
 		frame.pack();

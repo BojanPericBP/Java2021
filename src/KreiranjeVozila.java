@@ -6,6 +6,7 @@ import java.util.TimerTask;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
@@ -15,6 +16,7 @@ public class KreiranjeVozila extends TimerTask
 	ArrayList<Vozilo> vozilaNaCekanjuB;
 	ArrayList<Vozilo> vozilaNaCekanjuC;
 	ArrayList<ArrayList<Vozilo>> vozilaNaCekanju;
+
 	double[] maxBrzine = new double[3];
 	int[] maxBrVozila = new int[3];
 	

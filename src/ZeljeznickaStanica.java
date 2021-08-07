@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.logging.FileHandler;
@@ -7,16 +8,15 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
-public class ZeljeznickaStanica extends Thread
+public class ZeljeznickaStanica extends Thread implements Serializable
 {
+	private static final long serialVersionUID = 1L;
 	ArrayList<Kompozicija> redUStanici;
 	ArrayList<Kompozicija> dolazneKompozicije;
-	public static final long brzinaRasporedjivanja = 200; 
-	static int matricaSusjedstva[][]; //matrica susjedstva[i][j] = 0; putanja od stanice i ka stanici j je slobodna
+	public static final long brzinaRasporedjivanja = 200;
+	static int matricaSusjedstva[][]; //matrica susjedstva[i][j] = 0; putanja od stanice i ka stanici j je slobodna, matrica je konzistentna
 	char nazivStanice;
 	ArrayList<Koordinate> koordinate;
-	
-	
 	
 	static 
 	{
@@ -48,7 +48,7 @@ public class ZeljeznickaStanica extends Thread
 	}
 
 	@Override
-	public void run() // sinhronizacija// kompozicija je vec na prvom polju izvan pruge tj lokomotiva
+	public void run() // kompozicija je vec na prvom polju izvan pruge tj lokomotiva
 	{
 
 		while (GUI.simulacijaUToku)
@@ -119,6 +119,11 @@ public class ZeljeznickaStanica extends Thread
 						SwingUtilities.updateComponentTreeUI(GUI.frame);
 					}
 
+					synchronized(this)
+					{
+						iteratorKompozicija.remove();
+					}
+					
 					if (kompozicija.isAlive())
 					{
 						synchronized (kompozicija)
@@ -130,7 +135,7 @@ public class ZeljeznickaStanica extends Thread
 					{
 						kompozicija.start();
 					}
-					iteratorKompozicija.remove();
+					
 				}
 			}
 

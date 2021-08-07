@@ -1,10 +1,11 @@
 import java.awt.Color;
 import java.awt.Component;
+import java.io.IOException;
 import java.util.Random;
-import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
@@ -28,7 +29,7 @@ public class Vozilo extends Thread
 		{
 			Logger.getLogger(Vozilo.class.getName()).addHandler(new FileHandler("Error logs/Vozila.log"));
 		}
-		catch (Exception e)
+		catch (SecurityException | IOException e)
 		{
 			e.printStackTrace();
 		}
@@ -37,7 +38,7 @@ public class Vozilo extends Thread
 	public Vozilo(double _maxBrzina, char _put, String _putanjaSlike)
 	{
 		maxBrzina = _maxBrzina;
-		trenutnaBrzina = (0.5 + Math.random() * (maxBrzina - 0.5)) * 1000;
+		trenutnaBrzina = (0.5 + Math.random() * (maxBrzina - 0.5));
 		marka = "marka" + count;
 		model = "model" + count;
 		godiste = 1990 + count++;
