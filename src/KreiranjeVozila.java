@@ -48,14 +48,14 @@ public class KreiranjeVozila extends TimerTask
 	{
 		try
 		{
-			Scanner dat = new Scanner(new File("vozila_config.txt"));
+			Scanner dat = new Scanner(new File("carConfigFile.txt"));
 			dat.nextLine();
 			for (int i = 0; i < 3 ; i++)
 			{
-				String redUFajlu = dat.nextLine().trim();
-				String[] podaciUReduFajla = redUFajlu.split(",");
-				maxBrzine[i] = Double.parseDouble(podaciUReduFajla[1].trim());
-				maxBrVozila[i] = Integer.parseInt(podaciUReduFajla[2].trim());
+				String redUFajlu = dat.nextLine();
+				String[] podaciUReduFajla = redUFajlu.split(" ");
+				maxBrVozila[i] = Integer.parseInt(podaciUReduFajla[1]);
+				maxBrzine[i] = Double.parseDouble(podaciUReduFajla[2]);
 			}
 			dat.close();
 		}
@@ -75,12 +75,12 @@ public class KreiranjeVozila extends TimerTask
 		if(rand.nextBoolean()) //TRUE: kreira se auto, FALSE: kreira se kamion
 		{
 			if((GUI.trenutniBrVozilaNaPutevima[randomPut] + vozilaNaCekanju.get(randomPut).size()) < maxBrVozila[randomPut]) 
-				vozilaNaCekanju.get(randomPut).add(new Automobil(maxBrzine[randomPut], naziviPuteva[randomPut],"car.png"));
+				vozilaNaCekanju.get(randomPut).add(new Automobil(maxBrzine[randomPut], naziviPuteva[randomPut],"resource/car.png"));
 		}
 		else
 		{
 			if((GUI.trenutniBrVozilaNaPutevima[randomPut] + vozilaNaCekanju.get(randomPut).size()) < maxBrVozila[randomPut])
-				vozilaNaCekanju.get(randomPut).add(new Kamion(maxBrzine[randomPut], naziviPuteva[randomPut],"kamion.png"));
+				vozilaNaCekanju.get(randomPut).add(new Kamion(maxBrzine[randomPut], naziviPuteva[randomPut],"resource/truck.png"));
 		}
 	}
 

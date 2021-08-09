@@ -63,7 +63,7 @@ public class KreiranjeKompozicija extends Thread
 
 				for (WatchEvent<?> event : key.pollEvents())
 				{
-					@SuppressWarnings("unchecked")
+					@SuppressWarnings("unchecked")//TODO sta je ovo brteyy
 					WatchEvent<Path> ev = (WatchEvent<Path>) event;
 					Path fileName = ev.context();
 					if (fileName.toString().trim().endsWith(".txt"))
@@ -100,15 +100,13 @@ public class KreiranjeKompozicija extends Thread
 				GUI.stanice.get(pocetnaStanica-'A').redUStanici.add(tmp);				
 			}
 			catch (Exception e) {
-				e.printStackTrace();
+				Logger.getLogger(KreiranjeKompozicija.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 			}
-			
 		}
 		catch (Exception e)
 		{
 			Logger.getLogger(KreiranjeKompozicija.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 		}
-		
 	}
 	
 	@Override

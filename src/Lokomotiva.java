@@ -10,10 +10,6 @@ public class Lokomotiva implements Serializable{
 	static private int count = 0;
 	private static final long serialVersionUID = 1L;
 	char pogon; //dizel-1, parni-2, elektricni-3
-//	boolean jeUniverzalna;
-//	boolean jePutnicka;
-//	boolean jeTeretna;
-//	boolean jeManevarska;
 	String typeTrain;
 	double snaga;
 	int idLokomotive;

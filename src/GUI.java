@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
@@ -249,30 +250,29 @@ public class GUI extends JFrame
 		
 		mapa[27][2] = 's';
 		
-		guiMapa[27][1].add(new JLabel("A"));
-		guiMapa[28][1].add(new JLabel("A"));
-		guiMapa[27][2].add(new JLabel("A"));
-		guiMapa[28][2].add(new JLabel("A"));
+		guiMapa[5][7].add(new JLabel(new ImageIcon("resource/station.png")));
+		guiMapa[2][27].add(new JLabel(new ImageIcon("resource/station.png")));
+		guiMapa[26][25].add(new JLabel(new ImageIcon("resource/station.png")));
+		
+		guiMapa[27][1].add(new JLabel(new ImageIcon("resource/a.png")));
+		guiMapa[27][2].add(new JLabel(new ImageIcon("resource/stop.png")));
+		guiMapa[28][1].add(new JLabel(new ImageIcon("resource/station.png")));
 		mapa[27][2] = mapa[28][2] = 's';
-		guiMapa[6][6].add(new JLabel("B"));
-		guiMapa[6][7].add(new JLabel("B"));
-		guiMapa[5][6].add(new JLabel("B"));
-		guiMapa[5][7].add(new JLabel("B"));
+		guiMapa[6][6].add(new JLabel(new ImageIcon("resource/stop.png")));
+		guiMapa[6][7].add(new JLabel(new ImageIcon("resource/stop.png")));
+		guiMapa[5][6].add(new JLabel(new ImageIcon("resource/b.png")));
 		mapa[6][6] = 's'; mapa[6][7] = 's';
-		guiMapa[12][19].add(new JLabel("C"));
-		guiMapa[13][19].add(new JLabel("C"));
-		guiMapa[12][20].add(new JLabel("C"));
-		guiMapa[13][20].add(new JLabel("C"));
+		guiMapa[12][19].add(new JLabel(new ImageIcon("resource/stop.png")));
+		guiMapa[13][19].add(new JLabel(new ImageIcon("resource/c.png")));
+		guiMapa[12][20].add(new JLabel(new ImageIcon("resource/stop.png")));
+		guiMapa[13][20].add(new JLabel(new ImageIcon("resource/stop.png")));
 		mapa[12][20]='s';
-		guiMapa[1][26].add(new JLabel("D"));
-		guiMapa[1][27].add(new JLabel("D"));
-		guiMapa[2][26].add(new JLabel("D"));
-		guiMapa[2][27].add(new JLabel("D"));
+		
+		guiMapa[1][26].add(new JLabel(new ImageIcon("resource/stop.png")));
+		guiMapa[2][26].add(new JLabel(new ImageIcon("resource/d.png")));
 		mapa[1][26] = mapa[1][27] = 's';
-		guiMapa[25][25].add(new JLabel("E"));
-		guiMapa[25][26].add(new JLabel("E"));
-		guiMapa[26][25].add(new JLabel("E"));
-		guiMapa[26][26].add(new JLabel("E"));
+		guiMapa[25][25].add(new JLabel(new ImageIcon("resource/e.png")));
+		guiMapa[25][26].add(new JLabel(new ImageIcon("resource/stop.png")));
 		mapa[25][26] = 's';
 		mapa[21][21] = mapa[21][8] = '0';
 		mapa[26][26]= mapa [25][25] = mapa [29][2] = mapa [25][27] = 0;

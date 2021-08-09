@@ -29,7 +29,6 @@ public class Kompozicija extends Thread implements Serializable
 	long tmpBrzina;
 	ZeljeznickaStanica odrediste; // odredisna stanica na koju kompozicija treba da stigne
 	ZeljeznickaStanica polazak;
-	// ZeljeznickaStanica sledecaStanica; // sledeca stanica prema kojoj kompozicija
 	// ide a ne iz koje je krenula npr A-B-C sledecaStanica = B
 	ZeljeznickaStanica prethodnaStanica;
 	
@@ -349,7 +348,7 @@ public class Kompozicija extends Thread implements Serializable
 			if (prethodnaStanica.koordinate.contains(lokomotive.get(i).trKoo) && !prethodnaStanica.koordinate.contains(lokomotive.get(i-1).preKoo))  // U prvom koraku se nece ispitivati drgui uslov
 			{
 				lokomotive.get(i).trKoo = new Point(lokomotive.get(i-1).preKoo);
-				GUI.guiMapa[lokomotive.get(i).trKoo.x][lokomotive.get(i).trKoo.y].add(new JLabel(new ImageIcon("lokomotiva.png")));
+				GUI.guiMapa[lokomotive.get(i).trKoo.x][lokomotive.get(i).trKoo.y].add(new JLabel(new ImageIcon("resource/train.png")));
 				((JLabel)GUI.guiMapa[lokomotive.get(i).trKoo.x][lokomotive.get(i).trKoo.y].getComponent(0)).setName(brzinaKretanja+"k");
 			}
 			
@@ -365,9 +364,7 @@ public class Kompozicija extends Thread implements Serializable
 				 
 					synchronized(GUI.frame)
 					{				
-						GUI.frame.invalidate();
-						GUI.frame.validate();
-						GUI.frame.repaint();
+						GUI.refreshGui();
 					}
 					
 					if(!flag)
@@ -385,11 +382,11 @@ public class Kompozicija extends Thread implements Serializable
 			if(i==0 && prethodnaStanica.koordinate.contains(vagoni.get(i).trKoo) && !prethodnaStanica.koordinate.contains(lokomotive.get(lokomotive.size()-1).preKoo))
 			{
 				vagoni.get(i).trKoo = new Point(lokomotive.get(lokomotive.size()-1).preKoo);
-				GUI.guiMapa[vagoni.get(i).trKoo.x][vagoni.get(i).trKoo.y].add(new JLabel(new ImageIcon("vagon.png")));
+				GUI.guiMapa[vagoni.get(i).trKoo.x][vagoni.get(i).trKoo.y].add(new JLabel(new ImageIcon("resource/traincar.png")));
 				((JLabel)GUI.guiMapa[vagoni.get(i).trKoo.x][vagoni.get(i).trKoo.y].getComponent(0)).setName(brzinaKretanja+"k");
 				synchronized(GUI.frame)
 				{
-					SwingUtilities.updateComponentTreeUI(GUI.frame);					
+					GUI.refreshGui();				
 				}
 				try {
 					Thread.sleep(brzinaKretanja);
@@ -406,7 +403,7 @@ public class Kompozicija extends Thread implements Serializable
 				{
 					synchronized(GUI.frame)
 					{
-						SwingUtilities.updateComponentTreeUI(GUI.frame);					
+						GUI.refreshGui();					
 					}
 
 					udjiUStanicu();
@@ -418,11 +415,11 @@ public class Kompozicija extends Thread implements Serializable
 			else if (i>0 && prethodnaStanica.koordinate.contains(vagoni.get(i).trKoo) && !prethodnaStanica.koordinate.contains(vagoni.get(i-1).preKoo))
 			{
 				vagoni.get(i).trKoo = new Point(vagoni.get(i-1).preKoo);
-				GUI.guiMapa[vagoni.get(i).trKoo.x][vagoni.get(i).trKoo.y].add(new JLabel(new ImageIcon("vagon.png")));
+				GUI.guiMapa[vagoni.get(i).trKoo.x][vagoni.get(i).trKoo.y].add(new JLabel(new ImageIcon("resource/traincar.png")));
 				((JLabel)GUI.guiMapa[vagoni.get(i).trKoo.x][vagoni.get(i).trKoo.y].getComponent(0)).setName(brzinaKretanja+"k");
 				synchronized(GUI.frame)
 				{
-					SwingUtilities.updateComponentTreeUI(GUI.frame);					
+					GUI.refreshGui();					
 				}
 				try {
 					Thread.sleep(brzinaKretanja);
@@ -436,7 +433,7 @@ public class Kompozicija extends Thread implements Serializable
 			{
 				synchronized(GUI.frame)
 				{
-					SwingUtilities.updateComponentTreeUI(GUI.frame);					
+					GUI.refreshGui();						
 				}
 
 				udjiUStanicu();

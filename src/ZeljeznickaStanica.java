@@ -110,7 +110,7 @@ public class ZeljeznickaStanica extends Thread implements Serializable
 					synchronized (GUI.frame)
 					{
 						GUI.guiMapa[kompozicija.lokomotive.get(0).trKoo.x][kompozicija.lokomotive.get(0).trKoo.y]
-								.add(new JLabel(new ImageIcon("lokomotiva.png")));
+								.add(new JLabel(new ImageIcon("resource/train.png")));
 						((JLabel) GUI.guiMapa[kompozicija.lokomotive.get(0).trKoo.x][kompozicija.lokomotive
 								.get(0).trKoo.y].getComponent(0)).setName(kompozicija.brzinaKretanja + "k");
 						SwingUtilities.updateComponentTreeUI(GUI.frame);
@@ -132,7 +132,6 @@ public class ZeljeznickaStanica extends Thread implements Serializable
 					{
 						kompozicija.start();
 					}
-					
 				}
 			}
 
