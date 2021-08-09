@@ -18,8 +18,6 @@ public class Kompozicija extends Thread implements Serializable
 	static int count=0;
 	int idKompozicije;
 	private static final long serialVersionUID = 1L;
-	final int maxLokomotiva = 5;
-	final int maxVagona = 5;
 
 	public long vrijemeKretanja;
 	ArrayList<Point> istorijaKretanja;
@@ -47,25 +45,22 @@ public class Kompozicija extends Thread implements Serializable
 		}
 	}
 
-	public Kompozicija(int _brLokomotiva, int _brVagona, String _raspored, long _brzina, ZeljeznickaStanica _polazak,
+	public Kompozicija(String _rasporedL, String rasporedV, long _brzina, ZeljeznickaStanica _polazak,
 			ZeljeznickaStanica _odrediste) throws Exception 
 	{
-		
 		idKompozicije = count++;
-		if (_brLokomotiva > maxLokomotiva || _brLokomotiva < 1 || _brVagona > maxVagona)
-			throw new Exception("Kompozicija nije validna!");
 
 		brzinaKretanja = _brzina <= 500 ? 500: _brzina;
 		polazak = _polazak;
 		odrediste = _odrediste;
-		vagoni = new ArrayList<>(_brVagona);
-		lokomotive = new ArrayList<>(_brLokomotiva);
+		vagoni = new ArrayList<>();
+		lokomotive = new ArrayList<>();
 		prethodnaStanica = polazak;
 		tmpBrzina = brzinaKretanja;
 		
 		istorijaKretanja = new ArrayList<Point>();
 		usputneStanice = _polazak.nazivStanice+" ";
-		kreirajKompoziciju(_raspored);
+		kreirajKompoziciju(_rasporedL,rasporedV);
 	}
 	
 	@Override
@@ -121,10 +116,7 @@ public class Kompozicija extends Thread implements Serializable
 				}
 				synchronized (GUI.guiMapa) 
 				{
-					
-					GUI.frame.invalidate();
-					GUI.frame.validate();
-					GUI.frame.repaint();
+					GUI.refreshGui();
 				}
 				
 				synchronized(this)
@@ -166,88 +158,79 @@ public class Kompozicija extends Thread implements Serializable
 		}
 	}
 
-	private void kreirajKompoziciju(String raspored) throws Exception
+	private void kreirajKompoziciju(String rasporedLokomotiva, String rasporedVagona) throws Exception
 	{
-		String[] niz = raspored.split(";");
-		List<String> kom = Arrays.asList(niz);
+		//lokomotive vagoni //null vagoni // lokomotive null
+		Exception e = new Exception("Wrong train format");
+		List<String> trains = new ArrayList<>();
+		List<String> trainCar = new ArrayList<>();
 		
-		if(kom.get(0).startsWith("V"))
-			throw new Exception("Puko sam brate nema me 0");
+		if(rasporedLokomotiva.equals("null"))
+			throw e;
 		
-		if(kom.size() == 1 && !(kom.get(0).startsWith("L")))
+		if(!rasporedVagona.equals("null"))
 		{
-			throw new Exception("Puko sam brate nema me 1");
+			trainCar = Arrays.asList(rasporedVagona.split(","));
 		}
 		
-		else if(kom.size() > 1 && kom.contains("LM") )
-		{
-			throw new Exception("Puko sam brate nema me 2");
-		}
+		trains = Arrays.asList(rasporedLokomotiva.split(","));
 		
-		else if(kom.contains("LP") && (kom.contains("LT") || kom.contains("VT")))
-		{
-			throw new Exception("Puko sam brate nema me 3");
-		}
-		else if(kom.contains("LT") && (kom.contains("LP") || kom.contains("VPS") || kom.contains("VPR")))
-			throw new Exception("Puko sam brate nema me 3");
+		if(trains.size() > 1 && trains.contains("ml"))
+			throw e;
+		else if(trains.contains("ml") && trainCar.size()>0)
+			throw e;
 		
-		int br = 0;
-		boolean flag=true;
-		for (int i = 0; i < niz.length && flag; i++) 
+		else if(trains.contains("pl") && (trains.contains("tl") || trainCar.contains("tv")))
+			throw e;
+		
+		else if(trains.contains("tl") && (trains.contains("pl") || trainCar.contains("pvs") || trainCar.contains("pvr")))
+			throw e;
+		
+		else if(trainCar.contains("tv") && (trainCar.contains("pvr") || trainCar.contains("pvs")) && !trains.contains("ul"))
+			throw e;
+		
+		for(String s : trains)
 		{
-			if(!niz[i].startsWith("L")) 
-			{
-				flag = false;
-				br=i+1;
+			switch (s) {
+			case "tl": {
+				lokomotive.add(new Lokomotiva("Teretna"));
+				break;
+			}
+			case "pl":{
+				lokomotive.add(new Lokomotiva("Putnicka"));
+				break;
+			}
+			case "ul":{
+				lokomotive.add(new Lokomotiva("Univerzalna"));
+				break;
+			}
 			}
 		}
-		for (int i = br; i < niz.length && br>0; i++) {
-			if(niz[i].startsWith("L")) throw new Exception("Puko sam brate nema me 4");
-		}
 		
-		for (String string : niz) {
-
-			if ('V' == string.charAt(0)) // vagoni
-			{
-				if ('P' == string.charAt(1))// putnicki vagoni
-				{
-					if ('S' == string.charAt(2))// spavaci
-					{
-						vagoni.add(new PutnickiVagonSpavaci());
-					}
-
-					else {// restoran
-						vagoni.add(new PutnickiVagonRestoran());
-					}
-				}
-
-				else if ('T' == string.charAt(1)) {// teretni
-					vagoni.add(new TeretniVagon());
-				}
-
-				else {// posebne namjene
-					vagoni.add(new Vagon(true));
-				}
-
-			} else { // lokomotive
-				if ('P' == string.charAt(1))// putnicka lokomotiva
-				{
-					lokomotive.add(new Lokomotiva("putnicka"));
-				} else if ('T' == string.charAt(1))// teretna lokomotiva
-				{
-					lokomotive.add(new Lokomotiva("teretna"));
-				} else if ('U' == string.charAt(1)) {// univerzalna lokomotiva
-					lokomotive.add(new Lokomotiva("univerzalna"));
-				}
-
-				else if (string.equals("LM"))// manevarska lokomotiva
-				{
-					lokomotive.add(new Lokomotiva("manevarska"));
-				}
+		for(String s : trainCar)
+		{
+			switch (s) {
+			case "pvr": {
+				vagoni.add(new PutnickiVagonRestoran());
+				break;
+			}
+			case "pvs":{
+				vagoni.add(new PutnickiVagonSpavaci());
+				break;
+			}
+			case "vpn":{
+				vagoni.add(new Vagon(false));
+				break;
+			}
+			case "tv":{
+				vagoni.add(new TeretniVagon());
+				break;
+			}
 			}
 		}
+		
 	}
-
+	
 	synchronized void udjiUStanicu() 
 	{
 		int granicaLOK=1;

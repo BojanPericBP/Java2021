@@ -1,5 +1,4 @@
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Point;
 import java.util.Random;
 import java.util.logging.FileHandler;
@@ -7,7 +6,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JLabel;
-import javax.swing.SwingUtilities;
 
 public abstract class Vozilo extends Thread
 {
@@ -38,7 +36,7 @@ public abstract class Vozilo extends Thread
 	public Vozilo(double _maxBrzina, char _put, String _putanjaSlike)
 	{
 		maxBrzina = _maxBrzina;
-		trenutnaBrzina = (maxBrzina + Math.random() * (3000-maxBrzina));
+		trenutnaBrzina = (maxBrzina + Math.random() * (1500-maxBrzina));
 		marka = "marka" + count;
 		model = "model" + count;
 		godiste = 1990 + count++;
@@ -54,25 +52,21 @@ public abstract class Vozilo extends Thread
 	{
 		while (GUI.simulacijaUToku && (trKoo.x != -1 || trKoo.y != -1))
 		{
-			try
-			{
-				Thread.sleep((long) trenutnaBrzina);
-			}
-			catch (Exception e)
-			{
-				Logger.getLogger(Vozilo.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
-			}
 
-			
-			synchronized (GUI.frame)
-			{
 				Point k = sledeciKorak(trKoo,preKoo);
 				
 				if (k.x == -1 && k.y == -1)
 				{
+					synchronized(GUI.frame)
+					{
 					GUI.guiMapa[trKoo.x][trKoo.y].remove((JLabel) GUI.guiMapa[trKoo.x][trKoo.y].getComponents()[0]);
 					trKoo = k;
 					GUI.trenutniBrVozilaNaPutevima[put - 'A']--;
+					GUI.refreshGui();
+					 }
+					try{Thread.sleep((long) trenutnaBrzina);}
+					catch (Exception e)
+					{Logger.getLogger(Vozilo.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());}
 				}
 				
 				else if (trKoo.equals(k) || (GUI.mapa[k.x][k.y] == 'x' && GUI.guiMapa[k.x][k.y].getBackground() == Color.red))
@@ -89,7 +83,7 @@ public abstract class Vozilo extends Thread
 					if(!k.equals(k2))
 					{
 						GUI.guiMapa[k.x][k.y].add((JLabel) GUI.guiMapa[trKoo.x][trKoo.y].getComponents()[0]);
-						SwingUtilities.updateComponentTreeUI(GUI.frame);
+						GUI.refreshGui();
 						
 						preKoo.x = trKoo.x;
 						preKoo.y = trKoo.y;
@@ -97,9 +91,8 @@ public abstract class Vozilo extends Thread
 						
 						try {sleep((long)maxBrzina/2);} catch (InterruptedException e) {e.printStackTrace();}
 						
-						
 						GUI.guiMapa[k2.x][k2.y].add((JLabel) GUI.guiMapa[k.x][k.y].getComponents()[0]);
-						SwingUtilities.updateComponentTreeUI(GUI.frame);	
+						GUI.refreshGui();
 						try {sleep((long)maxBrzina/2);} catch (InterruptedException e) {e.printStackTrace();}
 						
 						preKoo.x = trKoo.x;
@@ -110,30 +103,23 @@ public abstract class Vozilo extends Thread
 				}
 				else
 				{
-					usaglasavanjeBrzine(k);
+					synchronized(GUI.frame)
+					{
+					//usaglasavanjeBrzine(k);
 					GUI.guiMapa[k.x][k.y].add((JLabel) GUI.guiMapa[trKoo.x][trKoo.y].getComponents()[0]);
 					preKoo.x = trKoo.x;
 					preKoo.y = trKoo.y;
 					trKoo = k;
+					GUI.refreshGui();
+					}
+					try{Thread.sleep((long) trenutnaBrzina);}
+					catch (Exception e)
+					{Logger.getLogger(Vozilo.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());}
 				}
 
-				synchronized(GUI.frame)
-				{
-					SwingUtilities.updateComponentTreeUI(GUI.frame);					
-				}
 			}
 		}
-	}
 
-
-	private synchronized void usaglasavanjeBrzine(Point preKoo)
-	{
-		Component[] cmp;
-		cmp = GUI.guiMapa[preKoo.x][preKoo.y].getComponents();
-
-		if (cmp.length == 1)// ako je vece od nula onda se na toj poziciji nalazi vozilo
-			trenutnaBrzina = Integer.parseInt(((JLabel) cmp[0]).getName());
-	}
 
 	synchronized Point sledeciKorak(Point p, Point q)//
 	{

@@ -10,10 +10,11 @@ public class Lokomotiva implements Serializable{
 	static private int count = 0;
 	private static final long serialVersionUID = 1L;
 	char pogon; //dizel-1, parni-2, elektricni-3
-	boolean jeUniverzalna;
-	boolean jePutnicka;
-	boolean jeTeretna;
-	boolean jeManevarska;
+//	boolean jeUniverzalna;
+//	boolean jePutnicka;
+//	boolean jeTeretna;
+//	boolean jeManevarska;
+	String typeTrain;
 	double snaga;
 	int idLokomotive;
 	Point trKoo;
@@ -27,16 +28,7 @@ public class Lokomotiva implements Serializable{
 		trKoo = new Point(-1,-1);
 		preKoo = new Point(-1,-1);
 		
-		if(tipLokomotive == "univerzalna")
-			jeUniverzalna = true;
-		else if(tipLokomotive == "putnicka")
-			jePutnicka = true;
-		else if(tipLokomotive == "teretna")
-			jeTeretna = true;
-		else if(tipLokomotive == "manevarska")
-			jeManevarska = true;
-		else 
-			System.out.println("Tip lokomotive uz datoteci nije ispravno naveden! ");
+		typeTrain = tipLokomotive;
 	}
 
 	synchronized public boolean move() {

@@ -75,6 +75,13 @@ public class GUI extends JFrame
 		
 	}
 
+	public static void refreshGui()
+	{
+		GUI.frame.invalidate();
+		GUI.frame.validate();
+		GUI.frame.repaint();
+	}
+	
 	public GUI() 
 	{
 		frame = new JFrame("NASLOV");

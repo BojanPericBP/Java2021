@@ -47,7 +47,6 @@ public class Vagon implements Serializable
 			 if(GUI.mapa[trKoo.x][trKoo.y]!='s') 
 				 GUI.guiMapa[trKoo.x][trKoo.y].add((JLabel) GUI.guiMapa[preKoo.x][preKoo.y].getComponents()[0]);
 			 
-			 
 			 else if(GUI.mapa[trKoo.x][trKoo.y] == 's') {
 				 GUI.guiMapa[preKoo.x][preKoo.y].remove((JLabel) GUI.guiMapa[preKoo.x][preKoo.y].getComponents()[0]);
 				 return false;
@@ -82,7 +81,6 @@ public class Vagon implements Serializable
 				 GUI.guiMapa[preKoo.x][preKoo.y].remove((JLabel) GUI.guiMapa[preKoo.x][preKoo.y].getComponents()[0]);
 				 return false;
 			}
-			 
 			 return true;
 		 }
 		 else if((GUI.mapa[trKoo.x][trKoo.y-1] == 'p' || GUI.mapa[trKoo.x][trKoo.y-1] == 'x' || GUI.mapa[trKoo.x][trKoo.y-1] == 's')

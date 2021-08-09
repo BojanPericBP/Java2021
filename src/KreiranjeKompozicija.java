@@ -87,17 +87,16 @@ public class KreiranjeKompozicija extends Thread
 	{
 		try
 		{
-			String[] podaci=podaciOKompoziciji.trim().split(",");
-		
-			int brLokomotiva = Integer.parseInt(podaci[0].trim());
-			int brVagona = Integer.parseInt(podaci[1].trim());
-			String raspored = podaci[2].trim();
-			long brzina = Long.parseLong(podaci[3].trim());
-			char pocetnaStanica = podaci[4].trim().charAt(0);
-			char krajnjaStanica = podaci[5].trim().charAt(0);
+			String[] podaci=podaciOKompoziciji.split(" ");
+
+			String rasporedL = podaci[0];
+			String rasporedV = podaci[1];
+			long brzina = Long.parseLong(podaci[2]);
+			char pocetnaStanica = podaci[3].charAt(0);
+			char krajnjaStanica = podaci[4].charAt(0);
 			
 			try {
-				Kompozicija tmp = new Kompozicija(brLokomotiva,  brVagona,  raspored,  brzina,  GUI.stanice.get(pocetnaStanica-'A'),  GUI.stanice.get(krajnjaStanica-'A'));
+				Kompozicija tmp = new Kompozicija(rasporedL, rasporedV, brzina, GUI.stanice.get(pocetnaStanica-'A'), GUI.stanice.get(krajnjaStanica-'A'));
 				GUI.stanice.get(pocetnaStanica-'A').redUStanici.add(tmp);				
 			}
 			catch (Exception e) {
