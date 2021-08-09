@@ -10,18 +10,20 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 public class FormaPodaci 
 {
 	static public JTextArea textArea;
 	JFrame frame;
-	static FileHandler handler;
+	static FileHandler handlerFajl;
+	JTable j;
 	
 	static {
 		
 		try {
-			handler=new FileHandler("Error logs/FormaPodaci.log");
-			Logger.getLogger(FormaPodaci.class.getName()).addHandler(handler);
+			handlerFajl=new FileHandler("Error logs/FormaPodaci.log");
+			Logger.getLogger(FormaPodaci.class.getName()).addHandler(handlerFajl);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -36,7 +38,6 @@ public class FormaPodaci
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(43, 85, 774, 372);
 		frame.getContentPane().add(scrollPane);
-		
 		textArea = new JTextArea();
 		textArea.setFont(new Font("Monospaced", Font.PLAIN, 16));
 		scrollPane.setViewportView(textArea);
@@ -44,6 +45,7 @@ public class FormaPodaci
 		textArea.setBackground(new Color(255,255,255));
 		frame.setVisible(false);
 	}
+	
 	
 	public void prikaziPodatke() 
 	{
@@ -54,13 +56,15 @@ public class FormaPodaci
 			File[] fajlovi = folder.listFiles();
 			for(File f : fajlovi)
 			{
+				StringBuffer crta = new StringBuffer("");
+				crta.append("===================");
 				ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f.getAbsoluteFile()));
 				Kompozicija k = (Kompozicija)ois.readObject();
 				ois.close();
-				textArea.append(" Kompozicija"+k.idKompozicije+"\n"+" Broj lokomotiva: "+k.lokomotive.size()+", Broj vagona: "+k.vagoni.size()+", Ukupno vrijeme kretanja: "+k.vrijemeKretanja+"s, "+
-						" Usputne stanice: "+k.usputneStanice+"\n Istorija kretanja: ");
-				k.istorijaKretanja.forEach( e -> textArea.append(e.toString()+" "));
-				textArea.append("\n\n");
+				textArea.append(" Kompozicija"+k.idKompozicije+"\n"+" Broj lokomotiva: "+k.lokomotive.size()+"\n Broj vagona: "+k.vagoni.size()+"\n Ukupno vrijeme kretanja: "+k.vrijemeKretanja+"s\n"
+				+" Usputne stanice: "+k.usputneStanice+"\n Istorija kretanja: ");
+				k.istorijaKretanja.forEach( e -> {String tmp=e.toString(); textArea.append(tmp+" "); for(int i=0;i<tmp.length()+1;i++)crta.append("=");});
+				textArea.append("\n"+crta.toString()+"\n");
 			}
 		}
 		catch (Exception e) 

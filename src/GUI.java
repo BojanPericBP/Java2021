@@ -67,7 +67,7 @@ public class GUI extends JFrame
 				if(timer!=null) timer.cancel();
 				simulacijaUToku=false;
 				Kompozicija.handler.close();
-				FormaPodaci.handler.close();
+				FormaPodaci.handlerFajl.close();
 				Vozilo.handler.close();
 				Kamion.handler.close();
 				Automobil.handler.close();
