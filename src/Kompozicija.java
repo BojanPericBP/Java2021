@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Point;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -21,7 +22,7 @@ public class Kompozicija extends Thread implements Serializable
 	final int maxVagona = 5;
 
 	public long vrijemeKretanja;
-	ArrayList<Koordinate> istorijaKretanja;
+	ArrayList<Point> istorijaKretanja;
 	String usputneStanice;
 	
 	ArrayList<Lokomotiva> lokomotive;
@@ -62,7 +63,7 @@ public class Kompozicija extends Thread implements Serializable
 		prethodnaStanica = polazak;
 		tmpBrzina = brzinaKretanja;
 		
-		istorijaKretanja = new ArrayList<Koordinate>();
+		istorijaKretanja = new ArrayList<Point>();
 		usputneStanice = _polazak.nazivStanice+" ";
 		kreirajKompoziciju(_raspored);
 	}
@@ -360,19 +361,19 @@ public class Kompozicija extends Thread implements Serializable
 			//Da li (jeUStanici && nijePrethodni na prvom polju pruge)
 			if (prethodnaStanica.koordinate.contains(lokomotive.get(i).trKoo) && !prethodnaStanica.koordinate.contains(lokomotive.get(i-1).preKoo))  // U prvom koraku se nece ispitivati drgui uslov
 			{
-				lokomotive.get(i).trKoo = new Koordinate(lokomotive.get(i-1).preKoo);
-				GUI.guiMapa[lokomotive.get(i).trKoo.i][lokomotive.get(i).trKoo.j].add(new JLabel(new ImageIcon("lokomotiva.png")));
-				((JLabel)GUI.guiMapa[lokomotive.get(i).trKoo.i][lokomotive.get(i).trKoo.j].getComponent(0)).setName(brzinaKretanja+"k");
+				lokomotive.get(i).trKoo = new Point(lokomotive.get(i-1).preKoo);
+				GUI.guiMapa[lokomotive.get(i).trKoo.x][lokomotive.get(i).trKoo.y].add(new JLabel(new ImageIcon("lokomotiva.png")));
+				((JLabel)GUI.guiMapa[lokomotive.get(i).trKoo.x][lokomotive.get(i).trKoo.y].getComponent(0)).setName(brzinaKretanja+"k");
 			}
 			
-			else if(i!=0 && GUI.guiMapa[lokomotive.get(i - 1).preKoo.i][lokomotive.get(i - 1).preKoo.j].getComponents().length != 0) 
+			else if(i!=0 && GUI.guiMapa[lokomotive.get(i - 1).preKoo.x][lokomotive.get(i - 1).preKoo.y].getComponents().length != 0) 
 				continue;
 			else 
 			{	
 					boolean flag = lokomotive.get(i).move();
 					if(i == 0)
 					{
-						istorijaKretanja.add(new Koordinate(lokomotive.get(0).trKoo));
+						istorijaKretanja.add(new Point(lokomotive.get(0).trKoo));
 					}
 				 
 					synchronized(GUI.frame)
@@ -396,9 +397,9 @@ public class Kompozicija extends Thread implements Serializable
 			//prvi vagon, u stanici je  i nije zadnja lokomotiva zauzela mjesto gdje on treba ici
 			if(i==0 && prethodnaStanica.koordinate.contains(vagoni.get(i).trKoo) && !prethodnaStanica.koordinate.contains(lokomotive.get(lokomotive.size()-1).preKoo))
 			{
-				vagoni.get(i).trKoo = new Koordinate(lokomotive.get(lokomotive.size()-1).preKoo);
-				GUI.guiMapa[vagoni.get(i).trKoo.i][vagoni.get(i).trKoo.j].add(new JLabel(new ImageIcon("vagon.png")));
-				((JLabel)GUI.guiMapa[vagoni.get(i).trKoo.i][vagoni.get(i).trKoo.j].getComponent(0)).setName(brzinaKretanja+"k");
+				vagoni.get(i).trKoo = new Point(lokomotive.get(lokomotive.size()-1).preKoo);
+				GUI.guiMapa[vagoni.get(i).trKoo.x][vagoni.get(i).trKoo.y].add(new JLabel(new ImageIcon("vagon.png")));
+				((JLabel)GUI.guiMapa[vagoni.get(i).trKoo.x][vagoni.get(i).trKoo.y].getComponent(0)).setName(brzinaKretanja+"k");
 				synchronized(GUI.frame)
 				{
 					SwingUtilities.updateComponentTreeUI(GUI.frame);					
@@ -429,9 +430,9 @@ public class Kompozicija extends Thread implements Serializable
 			//Da li (jeUStanici && nijePrethodni na prvom polju pruge)
 			else if (i>0 && prethodnaStanica.koordinate.contains(vagoni.get(i).trKoo) && !prethodnaStanica.koordinate.contains(vagoni.get(i-1).preKoo))
 			{
-				vagoni.get(i).trKoo = new Koordinate(vagoni.get(i-1).preKoo);
-				GUI.guiMapa[vagoni.get(i).trKoo.i][vagoni.get(i).trKoo.j].add(new JLabel(new ImageIcon("vagon.png")));
-				((JLabel)GUI.guiMapa[vagoni.get(i).trKoo.i][vagoni.get(i).trKoo.j].getComponent(0)).setName(brzinaKretanja+"k");
+				vagoni.get(i).trKoo = new Point(vagoni.get(i-1).preKoo);
+				GUI.guiMapa[vagoni.get(i).trKoo.x][vagoni.get(i).trKoo.y].add(new JLabel(new ImageIcon("vagon.png")));
+				((JLabel)GUI.guiMapa[vagoni.get(i).trKoo.x][vagoni.get(i).trKoo.y].getComponent(0)).setName(brzinaKretanja+"k");
 				synchronized(GUI.frame)
 				{
 					SwingUtilities.updateComponentTreeUI(GUI.frame);					
@@ -444,7 +445,7 @@ public class Kompozicija extends Thread implements Serializable
 				}
 			}
 			
-			else if (i > 0 && GUI.guiMapa[vagoni.get(i - 1).preKoo.i][vagoni.get(i - 1).preKoo.j].getComponents().length == 0  && !vagoni.get(i).move())
+			else if (i > 0 && GUI.guiMapa[vagoni.get(i - 1).preKoo.x][vagoni.get(i - 1).preKoo.y].getComponents().length == 0  && !vagoni.get(i).move())
 			{
 				synchronized(GUI.frame)
 				{

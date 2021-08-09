@@ -38,7 +38,7 @@ public abstract class Vozilo extends Thread
 	public Vozilo(double _maxBrzina, char _put, String _putanjaSlike)
 	{
 		maxBrzina = _maxBrzina;
-		trenutnaBrzina = (0.5 + Math.random() * (maxBrzina - 0.5));
+		trenutnaBrzina = (maxBrzina + Math.random() * (3000-maxBrzina));
 		marka = "marka" + count;
 		model = "model" + count;
 		godiste = 1990 + count++;
@@ -66,10 +66,8 @@ public abstract class Vozilo extends Thread
 			
 			synchronized (GUI.frame)
 			{
-				Point k = sledeciKorak();
-
+				Point k = sledeciKorak(trKoo,preKoo);
 				
-
 				if (k.x == -1 && k.y == -1)
 				{
 					GUI.guiMapa[trKoo.x][trKoo.y].remove((JLabel) GUI.guiMapa[trKoo.x][trKoo.y].getComponents()[0]);
@@ -81,7 +79,35 @@ public abstract class Vozilo extends Thread
 				{
 					continue;
 				}
-				
+				else if(GUI.mapa[k.x][k.y]=='x')//prelazak preko pruznog prelaza bez zadrzavanja
+				{
+					synchronized(this)
+					{
+						
+					//ako na k2 nema nikoga napravi dva koraka bez da gubi monitor i sleep na svakom polju da bude /2
+					Point k2 = sledeciKorak(k, trKoo);
+					if(!k.equals(k2))
+					{
+						GUI.guiMapa[k.x][k.y].add((JLabel) GUI.guiMapa[trKoo.x][trKoo.y].getComponents()[0]);
+						SwingUtilities.updateComponentTreeUI(GUI.frame);
+						
+						preKoo.x = trKoo.x;
+						preKoo.y = trKoo.y;
+						trKoo = k;
+						
+						try {sleep((long)maxBrzina/2);} catch (InterruptedException e) {e.printStackTrace();}
+						
+						
+						GUI.guiMapa[k2.x][k2.y].add((JLabel) GUI.guiMapa[k.x][k.y].getComponents()[0]);
+						SwingUtilities.updateComponentTreeUI(GUI.frame);	
+						try {sleep((long)maxBrzina/2);} catch (InterruptedException e) {e.printStackTrace();}
+						
+						preKoo.x = trKoo.x;
+						preKoo.y = trKoo.y;
+						trKoo = k2;
+					}
+					}
+				}
 				else
 				{
 					usaglasavanjeBrzine(k);
@@ -109,44 +135,44 @@ public abstract class Vozilo extends Thread
 			trenutnaBrzina = Integer.parseInt(((JLabel) cmp[0]).getName());
 	}
 
-	synchronized Point sledeciKorak()//
+	synchronized Point sledeciKorak(Point p, Point q)//
 	{
-		if (trKoo.y < 29 && (GUI.mapa[trKoo.x][trKoo.y + 1] == smjer || (GUI.mapa[trKoo.x][trKoo.y] == smjer && GUI.mapa[trKoo.x][trKoo.y + 1] == 'x'
-				|| GUI.mapa[trKoo.x][trKoo.y] == 'x' && GUI.mapa[trKoo.x][trKoo.y + 1] == smjer ))
-				&& trKoo.y + 1 != preKoo.y) // provjera desno
+		if (p.y < 29 && (GUI.mapa[p.x][p.y + 1] == smjer || (GUI.mapa[p.x][p.y] == smjer && GUI.mapa[p.x][p.y + 1] == 'x'
+				|| GUI.mapa[p.x][p.y] == 'x' && GUI.mapa[p.x][p.y + 1] == smjer ))
+				&& p.y + 1 != q.y) // provjera desno
 		{
-			if (GUI.guiMapa[trKoo.x][trKoo.y + 1].getComponents().length == 1)
+			if (GUI.guiMapa[p.x][p.y + 1].getComponents().length == 1)
 			{
-				return trKoo;
+				return p;
 			}
-			return /*(GUI.mapa[trKoo.x][trKoo.y + 1] == 'x') ? new Koordinate(-2, -2) :*/ new Point(trKoo.x, trKoo.y + 1);
+			return  new Point(p.x, p.y + 1);
 		}
 
-		else if (trKoo.y > 0 && (GUI.mapa[trKoo.x][trKoo.y - 1] == smjer || (GUI.mapa[trKoo.x][trKoo.y] == smjer && GUI.mapa[trKoo.x][trKoo.y - 1] == 'x'
-				|| GUI.mapa[trKoo.x][trKoo.y] == 'x' && GUI.mapa[trKoo.x][trKoo.y - 1] == smjer))
-				&& trKoo.y - 1 != preKoo.y) // provjera lijevo
+		else if (p.y > 0 && (GUI.mapa[p.x][p.y - 1] == smjer || (GUI.mapa[p.x][p.y] == smjer && GUI.mapa[p.x][p.y - 1] == 'x'
+				|| GUI.mapa[p.x][p.y] == 'x' && GUI.mapa[p.x][p.y - 1] == smjer))
+				&& p.y - 1 != q.y) // provjera lijevo
 		{
-			if (GUI.guiMapa[trKoo.x][trKoo.y - 1].getComponents().length == 1)
-				return trKoo;
-			return /*(GUI.mapa[trKoo.x][trKoo.y - 1] == 'x') ? new Koordinate(-2, -2) : */new Point(trKoo.x, trKoo.y - 1);
+			if (GUI.guiMapa[p.x][p.y - 1].getComponents().length == 1)
+				return p;
+			return new Point(p.x, p.y - 1);
 		}
 
-		else if (trKoo.x > 0 && (GUI.mapa[trKoo.x - 1][trKoo.y] == smjer || (GUI.mapa[trKoo.x][trKoo.y] == smjer && GUI.mapa[trKoo.x - 1][trKoo.y] == 'x'
-				|| GUI.mapa[trKoo.x][trKoo.y] == 'x' && GUI.mapa[trKoo.x - 1][trKoo.y] == smjer))
-				&& trKoo.x - 1 != preKoo.x) // provjera gore
+		else if (p.x > 0 && (GUI.mapa[p.x - 1][p.y] == smjer || (GUI.mapa[p.x][p.y] == smjer && GUI.mapa[p.x - 1][p.y] == 'x'
+				|| GUI.mapa[p.x][p.y] == 'x' && GUI.mapa[p.x - 1][p.y] == smjer))
+				&& p.x - 1 != q.x) // provjera gore
 		{
-			if (GUI.guiMapa[trKoo.x - 1][trKoo.y].getComponents().length == 1)
-				return trKoo;
-			return /*(GUI.mapa[trKoo.x - 1][trKoo.y] == 'x') ? new Koordinate(-2, -2) :*/ new Point(trKoo.x - 1, trKoo.y);
+			if (GUI.guiMapa[p.x - 1][p.y].getComponents().length == 1)
+				return p;
+			return new Point(p.x - 1, p.y);
 		}
 
-		else if (trKoo.x < 29 && (GUI.mapa[trKoo.x + 1][trKoo.y] == smjer || (GUI.mapa[trKoo.x][trKoo.y] == 'x' && GUI.mapa[trKoo.x + 1][trKoo.y] == smjer
-				|| GUI.mapa[trKoo.x][trKoo.y] == smjer && GUI.mapa[trKoo.x + 1][trKoo.y] == 'x'))
-				&& trKoo.x + 1 != preKoo.x) // provjera dole
+		else if (p.x < 29 && (GUI.mapa[p.x + 1][p.y] == smjer || (GUI.mapa[p.x][p.y] == 'x' && GUI.mapa[p.x + 1][p.y] == smjer
+				|| GUI.mapa[p.x][p.y] == smjer && GUI.mapa[p.x + 1][p.y] == 'x'))
+				&& p.x + 1 != q.x) // provjera dole
 		{
-			if (GUI.guiMapa[trKoo.x + 1][trKoo.y].getComponents().length == 1)
-				return trKoo;
-			return /*(GUI.mapa[trKoo.x + 1][trKoo.y] == 'x') ? new Koordinate(-2, -2) :*/ new Point(trKoo.x + 1, trKoo.y);
+			if (GUI.guiMapa[p.x + 1][p.y].getComponents().length == 1)
+				return p;
+			return  new Point(p.x + 1, p.y);
 		}
 		else
 		{

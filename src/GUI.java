@@ -1,6 +1,7 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Timer;
 
@@ -37,30 +38,41 @@ public class GUI extends JFrame
 
 	private void initialize()
 	{
-		stanice.add(new ZeljeznickaStanica('A', new ArrayList<Koordinate>()));
-		stanice.get(0).koordinate.add(new Koordinate(27,2));
+		stanice.add(new ZeljeznickaStanica('A', new ArrayList<Point>()));
+		stanice.get(0).koordinate.add(new Point(27,2));
 		
-		stanice.add(new ZeljeznickaStanica('B', new ArrayList<Koordinate>()));
-		stanice.get(1).koordinate.add(new Koordinate(6,6));
-		stanice.get(1).koordinate.add(new Koordinate(6,7));
+		stanice.add(new ZeljeznickaStanica('B', new ArrayList<Point>()));
+		stanice.get(1).koordinate.add(new Point(6,6));
+		stanice.get(1).koordinate.add(new Point(6,7));
 		
-		stanice.add(new ZeljeznickaStanica('C', new ArrayList<Koordinate>()));
-		stanice.get(2).koordinate.add(new Koordinate(12,19));
-		stanice.get(2).koordinate.add(new Koordinate(12,20));
-		stanice.get(2).koordinate.add(new Koordinate(13,20));
-		stanice.get(2).koordinate.add(new Koordinate(13,19));
+		stanice.add(new ZeljeznickaStanica('C', new ArrayList<Point>()));
+		stanice.get(2).koordinate.add(new Point(12,19));
+		stanice.get(2).koordinate.add(new Point(12,20));
+		stanice.get(2).koordinate.add(new Point(13,20));
+		stanice.get(2).koordinate.add(new Point(13,19));
 		
-		stanice.add(new ZeljeznickaStanica('D', new ArrayList<Koordinate>()));
-		stanice.get(3).koordinate.add(new Koordinate(1,26));
+		stanice.add(new ZeljeznickaStanica('D', new ArrayList<Point>()));
+		stanice.get(3).koordinate.add(new Point(1,26));
 		
-		stanice.add(new ZeljeznickaStanica('E', new ArrayList<Koordinate>()));
-		stanice.get(4).koordinate.add(new Koordinate(25,26));
+		stanice.add(new ZeljeznickaStanica('E', new ArrayList<Point>()));
+		stanice.get(4).koordinate.add(new Point(25,26));
 	}
 	
 	public static void main(String[] args) throws Exception
 	{
 		new GUI();
 
+		/*Automobil v1 = new Automobil(10,'A',"car.png");
+		guiMapa[21][0].add(new JLabel(new ImageIcon(v1.putanjaSlike)));
+		Automobil v2 = new Automobil(10,'A',"car.png");
+		guiMapa[21][3].add(new JLabel(new ImageIcon(v1.putanjaSlike)));
+		v2.trKoo.x = v2.preKoo.x = 21;
+		v2.trKoo.y = v2.preKoo.y =0;
+		
+		v2.smjer = '1';
+		simulacijaUToku = true;
+		v2.run();*/
+		
 	}
 
 	public GUI() 
