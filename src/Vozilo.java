@@ -1,6 +1,6 @@
 import java.awt.Color;
 import java.awt.Component;
-import java.io.IOException;
+import java.awt.Point;
 import java.util.Random;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -17,8 +17,8 @@ public abstract class Vozilo extends Thread
 	int godiste;
 	double maxBrzina;
 	double trenutnaBrzina;
-	Koordinate trKoo;
-	Koordinate preKoo;
+	Point trKoo;
+	Point preKoo;
 	char smjer;
 	char put;
 	String putanjaSlike;
@@ -29,7 +29,7 @@ public abstract class Vozilo extends Thread
 		{
 			Logger.getLogger(Vozilo.class.getName()).addHandler(new FileHandler("Error logs/Vozila.log"));
 		}
-		catch (SecurityException | IOException e)
+		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -43,8 +43,8 @@ public abstract class Vozilo extends Thread
 		model = "model" + count;
 		godiste = 1990 + count++;
 		put = _put;
-		trKoo = new Koordinate(-3, -3);
-		preKoo = new Koordinate(-3, -3);
+		trKoo = new Point();
+		preKoo = new Point();
 		smjer = (char) ('0' + new Random().nextInt(2));
 		putanjaSlike=_putanjaSlike;
 	}
@@ -52,7 +52,7 @@ public abstract class Vozilo extends Thread
 	@Override
 	public void run()
 	{
-		while (GUI.simulacijaUToku && (trKoo.i != -1 || trKoo.j != -1))
+		while (GUI.simulacijaUToku && (trKoo.x != -1 || trKoo.y != -1))
 		{
 			try
 			{
@@ -66,39 +66,28 @@ public abstract class Vozilo extends Thread
 			
 			synchronized (GUI.frame)
 			{
-				Koordinate k = sledeciKorak();
+				Point k = sledeciKorak();
 
-				if (trKoo.equals(k))
-				{
-					continue;
-				}
+				
 
-				if (k.i == -1 && k.j == -1)
+				if (k.x == -1 && k.y == -1)
 				{
-					GUI.guiMapa[trKoo.i][trKoo.j].remove((JLabel) GUI.guiMapa[trKoo.i][trKoo.j].getComponents()[0]);
+					GUI.guiMapa[trKoo.x][trKoo.y].remove((JLabel) GUI.guiMapa[trKoo.x][trKoo.y].getComponents()[0]);
 					trKoo = k;
 					GUI.trenutniBrVozilaNaPutevima[put - 'A']--;
 				}
-				else if (k.i == -2)
+				
+				else if (trKoo.equals(k) || (GUI.mapa[k.x][k.y] == 'x' && GUI.guiMapa[k.x][k.y].getBackground() == Color.red))
 				{
-					Koordinate tmpKoord = prelazakPruznogPrelaza();
-					if (tmpKoord != null)
-					{
-						GUI.guiMapa[tmpKoord.i][tmpKoord.j].add((JLabel) GUI.guiMapa[trKoo.i][trKoo.j].getComponents()[0]);
-						trKoo = tmpKoord;
-					}
-					else
-					{
-						continue; 
-					}
+					continue;
 				}
+				
 				else
 				{
 					usaglasavanjeBrzine(k);
-					GUI.guiMapa[k.i][k.j].add((JLabel) GUI.guiMapa[trKoo.i][trKoo.j].getComponents()[0]);
-
-					preKoo.i = trKoo.i;
-					preKoo.j = trKoo.j;
+					GUI.guiMapa[k.x][k.y].add((JLabel) GUI.guiMapa[trKoo.x][trKoo.y].getComponents()[0]);
+					preKoo.x = trKoo.x;
+					preKoo.y = trKoo.y;
 					trKoo = k;
 				}
 
@@ -110,117 +99,58 @@ public abstract class Vozilo extends Thread
 		}
 	}
 
-	private synchronized Koordinate prelazakPruznogPrelaza() // provjerava da li se moze preci preko pruge i vraca: koordinate
-												// sledeceg polja ako se moze preci, null ako ne moze
-	{
 
-		if (put == 'A' && smjer == '0' && GUI.guiMapa[20][2].getBackground() == Color.orange)
-		{
-			if (GUI.guiMapa[20][1].getComponents().length == 0)
-			{
-				preKoo.i = 20;
-				preKoo.j = 2;
-				return new Koordinate(20, 1);
-			}
-		}
-
-		else if (put == 'A' && smjer == '1' && GUI.guiMapa[21][2].getBackground() == Color.orange)
-		{
-			if (GUI.guiMapa[21][3].getComponents().length == 0)
-			{
-				preKoo.i = 21;
-				preKoo.j = 2;
-				return new Koordinate(21, 3);
-			}
-		}
-
-		else if (put == 'B' && smjer == '0' && GUI.guiMapa[6][14].getBackground() == Color.orange)
-		{
-			if (GUI.guiMapa[5][14].getComponents().length == 0)
-			{
-				preKoo.i = 6;
-				preKoo.j = 14;
-				return new Koordinate(5, 14);
-			}
-		}
-
-		else if (put == 'B' && smjer == '1' && GUI.guiMapa[6][13].getBackground() == Color.orange)
-		{
-			if (GUI.guiMapa[7][13].getComponents().length == 0)
-			{
-				preKoo.i = 6;
-				preKoo.j = 13;
-				return new Koordinate(7, 13);
-			}
-		}
-
-		else if (put == 'C' && smjer == '0' && GUI.guiMapa[20][26].getBackground() == Color.orange)
-		{
-			if (GUI.guiMapa[20][25].getComponents().length == 0)
-			{
-				preKoo.i = 20;
-				preKoo.j = 26;
-				return new Koordinate(20, 25);
-			}
-		}
-
-		else if (put == 'C' && smjer == '1' && GUI.guiMapa[21][26].getBackground() == Color.orange)
-		{
-			if (GUI.guiMapa[21][27].getComponents().length == 0)
-			{
-				preKoo.i = 21;
-				preKoo.j = 26;
-				return new Koordinate(21, 27);
-			}
-		}
-
-		return null;
-	}
-
-	private synchronized void usaglasavanjeBrzine(Koordinate preKoo)
+	private synchronized void usaglasavanjeBrzine(Point preKoo)
 	{
 		Component[] cmp;
-		cmp = GUI.guiMapa[preKoo.i][preKoo.j].getComponents();
+		cmp = GUI.guiMapa[preKoo.x][preKoo.y].getComponents();
 
 		if (cmp.length == 1)// ako je vece od nula onda se na toj poziciji nalazi vozilo
 			trenutnaBrzina = Integer.parseInt(((JLabel) cmp[0]).getName());
 	}
 
-	synchronized Koordinate sledeciKorak()//
+	synchronized Point sledeciKorak()//
 	{
-
-		if (trKoo.j < 29 && ((GUI.mapa[trKoo.i][trKoo.j + 1] == smjer || GUI.mapa[trKoo.i][trKoo.j + 1] == 'x') && trKoo.j + 1 != preKoo.j)) // provjera desno
+		if (trKoo.y < 29 && (GUI.mapa[trKoo.x][trKoo.y + 1] == smjer || (GUI.mapa[trKoo.x][trKoo.y] == smjer && GUI.mapa[trKoo.x][trKoo.y + 1] == 'x'
+				|| GUI.mapa[trKoo.x][trKoo.y] == 'x' && GUI.mapa[trKoo.x][trKoo.y + 1] == smjer ))
+				&& trKoo.y + 1 != preKoo.y) // provjera desno
 		{
-			if (GUI.guiMapa[trKoo.i][trKoo.j + 1].getComponents().length == 1)
+			if (GUI.guiMapa[trKoo.x][trKoo.y + 1].getComponents().length == 1)
 			{
 				return trKoo;
 			}
-			return (GUI.mapa[trKoo.i][trKoo.j + 1] == 'x') ? new Koordinate(-2, -2) : new Koordinate(trKoo.i, trKoo.j + 1);
+			return /*(GUI.mapa[trKoo.x][trKoo.y + 1] == 'x') ? new Koordinate(-2, -2) :*/ new Point(trKoo.x, trKoo.y + 1);
 		}
 
-		else if (trKoo.j > 0 && ((GUI.mapa[trKoo.i][trKoo.j - 1] == smjer || GUI.mapa[trKoo.i][trKoo.j - 1] == 'x') && trKoo.j - 1 != preKoo.j)) // provjera lijevo
+		else if (trKoo.y > 0 && (GUI.mapa[trKoo.x][trKoo.y - 1] == smjer || (GUI.mapa[trKoo.x][trKoo.y] == smjer && GUI.mapa[trKoo.x][trKoo.y - 1] == 'x'
+				|| GUI.mapa[trKoo.x][trKoo.y] == 'x' && GUI.mapa[trKoo.x][trKoo.y - 1] == smjer))
+				&& trKoo.y - 1 != preKoo.y) // provjera lijevo
 		{
-			if (GUI.guiMapa[trKoo.i][trKoo.j - 1].getComponents().length == 1)
+			if (GUI.guiMapa[trKoo.x][trKoo.y - 1].getComponents().length == 1)
 				return trKoo;
-			return (GUI.mapa[trKoo.i][trKoo.j - 1] == 'x') ? new Koordinate(-2, -2) : new Koordinate(trKoo.i, trKoo.j - 1);
+			return /*(GUI.mapa[trKoo.x][trKoo.y - 1] == 'x') ? new Koordinate(-2, -2) : */new Point(trKoo.x, trKoo.y - 1);
 		}
 
-		else if (trKoo.i > 0 && ((GUI.mapa[trKoo.i - 1][trKoo.j] == smjer || GUI.mapa[trKoo.i - 1][trKoo.j] == 'x') && trKoo.i - 1 != preKoo.i)) // provjera gore
+		else if (trKoo.x > 0 && (GUI.mapa[trKoo.x - 1][trKoo.y] == smjer || (GUI.mapa[trKoo.x][trKoo.y] == smjer && GUI.mapa[trKoo.x - 1][trKoo.y] == 'x'
+				|| GUI.mapa[trKoo.x][trKoo.y] == 'x' && GUI.mapa[trKoo.x - 1][trKoo.y] == smjer))
+				&& trKoo.x - 1 != preKoo.x) // provjera gore
 		{
-			if (GUI.guiMapa[trKoo.i - 1][trKoo.j].getComponents().length == 1)
+			if (GUI.guiMapa[trKoo.x - 1][trKoo.y].getComponents().length == 1)
 				return trKoo;
-			return (GUI.mapa[trKoo.i - 1][trKoo.j] == 'x') ? new Koordinate(-2, -2) : new Koordinate(trKoo.i - 1, trKoo.j);
+			return /*(GUI.mapa[trKoo.x - 1][trKoo.y] == 'x') ? new Koordinate(-2, -2) :*/ new Point(trKoo.x - 1, trKoo.y);
 		}
 
-		else if (trKoo.i < 29 && ((GUI.mapa[trKoo.i + 1][trKoo.j] == smjer || GUI.mapa[trKoo.i + 1][trKoo.j] == 'x') && trKoo.i + 1 != preKoo.i)) // provjera dole
+		else if (trKoo.x < 29 && (GUI.mapa[trKoo.x + 1][trKoo.y] == smjer || (GUI.mapa[trKoo.x][trKoo.y] == 'x' && GUI.mapa[trKoo.x + 1][trKoo.y] == smjer
+				|| GUI.mapa[trKoo.x][trKoo.y] == smjer && GUI.mapa[trKoo.x + 1][trKoo.y] == 'x'))
+				&& trKoo.x + 1 != preKoo.x) // provjera dole
 		{
-			if (GUI.guiMapa[trKoo.i + 1][trKoo.j].getComponents().length == 1)
+			if (GUI.guiMapa[trKoo.x + 1][trKoo.y].getComponents().length == 1)
 				return trKoo;
-			return (GUI.mapa[trKoo.i + 1][trKoo.j] == 'x') ? new Koordinate(-2, -2) : new Koordinate(trKoo.i + 1, trKoo.j);
+			return /*(GUI.mapa[trKoo.x + 1][trKoo.y] == 'x') ? new Koordinate(-2, -2) :*/ new Point(trKoo.x + 1, trKoo.y);
 		}
 		else
 		{
-			return new Koordinate(-1, -1);
+			return new Point(-1, -1);
 		}
 	}
 

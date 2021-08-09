@@ -204,7 +204,6 @@ public class Kompozicija extends Thread implements Serializable
 			if(niz[i].startsWith("L")) throw new Exception("Puko sam brate nema me 4");
 		}
 		
-		
 		for (String string : niz) {
 
 			if ('V' == string.charAt(0)) // vagoni

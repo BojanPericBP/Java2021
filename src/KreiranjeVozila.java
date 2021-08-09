@@ -1,3 +1,4 @@
+import java.awt.Point;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
@@ -85,33 +86,33 @@ public class KreiranjeVozila extends TimerTask
 
 	private void postaviNaMapu()
 	{
-		Koordinate[][] kordStart = 
+		Point[][] kordStart = 
 		{ 
-			{ new Koordinate(29, 8), new Koordinate(21, 0) },   //A
-			{ new Koordinate(29, 14), new Koordinate(0, 13) },  //B
-			{ new Koordinate(20, 29), new Koordinate(29, 22) }	//C
+			{ new Point(29, 8), new Point(21, 0) },   //A
+			{ new Point(29, 14), new Point(0, 13) },  //B
+			{ new Point(20, 29), new Point(29, 22) }	//C
 		};
 		
 		for(int i=0; i<3; ++i) //na svaki put pokusa po jedno vozilo postaviti po jedno vozilo
 		{
-			if(vozilaNaCekanju.get(i).size()>0 && vozilaNaCekanju.get(i).get(0).smjer == '0' && GUI.guiMapa[ kordStart[i][0].i ][ kordStart[i][0].j ].getComponents().length == 0)
+			if(vozilaNaCekanju.get(i).size()>0 && vozilaNaCekanju.get(i).get(0).smjer == '0' && GUI.guiMapa[ kordStart[i][0].x ][ kordStart[i][0].y ].getComponents().length == 0)
 			{
 				Vozilo tmpVozilo = vozilaNaCekanju.get(i).remove(0);
-				tmpVozilo.trKoo.i = kordStart[i][0].i;
-				tmpVozilo.trKoo.j = kordStart[i][0].j;
+				tmpVozilo.trKoo.x = kordStart[i][0].x;
+				tmpVozilo.trKoo.y = kordStart[i][0].y;
 				GUI.trenutniBrVozilaNaPutevima[i]++; 
-				GUI.guiMapa[tmpVozilo.trKoo.i][tmpVozilo.trKoo.j].add(new JLabel(new ImageIcon(tmpVozilo.putanjaSlike)));
-				((JLabel)GUI.guiMapa[tmpVozilo.trKoo.i][tmpVozilo.trKoo.j].getComponents()[0]).setName(""+(long)tmpVozilo.trenutnaBrzina);
+				GUI.guiMapa[tmpVozilo.trKoo.x][tmpVozilo.trKoo.y].add(new JLabel(new ImageIcon(tmpVozilo.putanjaSlike)));
+				((JLabel)GUI.guiMapa[tmpVozilo.trKoo.x][tmpVozilo.trKoo.y].getComponents()[0]).setName(""+(long)tmpVozilo.trenutnaBrzina);
 				tmpVozilo.start();
 			}
-			else if(vozilaNaCekanju.get(i).size()>0 && vozilaNaCekanju.get(i).get(0).smjer == '1' && GUI.guiMapa[ kordStart[i][1].i ][ kordStart[i][1].j ].getComponents().length == 0) //ako nema niko na pocetku smijera 1
+			else if(vozilaNaCekanju.get(i).size()>0 && vozilaNaCekanju.get(i).get(0).smjer == '1' && GUI.guiMapa[ kordStart[i][1].x ][ kordStart[i][1].y ].getComponents().length == 0) //ako nema niko na pocetku smijera 1
 			{
 				Vozilo tmpVozilo = vozilaNaCekanju.get(i).remove(0);
-				tmpVozilo.trKoo.i = kordStart[i][1].i;
-				tmpVozilo.trKoo.j = kordStart[i][1].j;
+				tmpVozilo.trKoo.x = kordStart[i][1].x;
+				tmpVozilo.trKoo.y = kordStart[i][1].y;
 				GUI.trenutniBrVozilaNaPutevima[i]++; 
-				GUI.guiMapa[tmpVozilo.trKoo.i][tmpVozilo.trKoo.j].add(new JLabel(new ImageIcon(tmpVozilo.putanjaSlike)));
-				((JLabel)GUI.guiMapa[tmpVozilo.trKoo.i][tmpVozilo.trKoo.j].getComponents()[0]).setName(""+(long)tmpVozilo.trenutnaBrzina);
+				GUI.guiMapa[tmpVozilo.trKoo.x][tmpVozilo.trKoo.y].add(new JLabel(new ImageIcon(tmpVozilo.putanjaSlike)));
+				((JLabel)GUI.guiMapa[tmpVozilo.trKoo.x][tmpVozilo.trKoo.y].getComponents()[0]).setName(""+(long)tmpVozilo.trenutnaBrzina);
 				tmpVozilo.start();
 			}
 		}
