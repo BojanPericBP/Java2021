@@ -17,12 +17,14 @@ public class ZeljeznickaStanica extends Thread implements Serializable
 	static int matricaSusjedstva[][]; //matrica susjedstva[i][j] = 0; putanja od stanice i ka stanici j je slobodna, matrica je konzistentna
 	char nazivStanice;
 	ArrayList<Koordinate> koordinate;
+	static FileHandler handler;
 	
 	static 
 	{
 		try
 		{
-			Logger.getLogger(ZeljeznickaStanica.class.getName()).addHandler(new FileHandler("Error logs/ZeljeznickaStanica.log"));
+			handler = new FileHandler("Error logs/ZeljeznickaStanica.log");
+			Logger.getLogger(ZeljeznickaStanica.class.getName()).addHandler(handler);
 		}
 		catch (Exception e)
 		{
@@ -113,7 +115,7 @@ public class ZeljeznickaStanica extends Thread implements Serializable
 					synchronized (GUI.frame)
 					{
 						GUI.guiMapa[kompozicija.lokomotive.get(0).trKoo.i][kompozicija.lokomotive.get(0).trKoo.j]
-								.add(new JLabel(new ImageIcon("lokomotiva.png")));
+								.add(new JLabel(new ImageIcon("SLIKE/lokomotiva.png")));
 						((JLabel) GUI.guiMapa[kompozicija.lokomotive.get(0).trKoo.i][kompozicija.lokomotive
 								.get(0).trKoo.j].getComponent(0)).setName(kompozicija.brzinaKretanja + "k");
 						SwingUtilities.updateComponentTreeUI(GUI.frame);

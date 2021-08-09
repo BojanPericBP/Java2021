@@ -6,12 +6,14 @@ import java.util.logging.Logger;
 public class Kamion extends Vozilo
 {
 	double nosivost;
+	static FileHandler handler;
 	
 	static 
 	{
 		try
 		{
-			Logger.getLogger(Kamion.class.getName()).addHandler(new FileHandler("Error logs/Kamion.log"));
+			handler = new FileHandler("Error logs/Kamion.log");
+			Logger.getLogger(Kamion.class.getName()).addHandler(handler);
 		}
 		catch (SecurityException | IOException e)
 		{

@@ -1,43 +1,35 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
-
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
-
 import java.awt.Font;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.swing.JScrollPane;
 
-public class FormaPodaci {
+public class FormaPodaci 
+{
 	static public JTextArea textArea;
-	public FormaPodaci() {
-	}
+	JFrame frame;
+	static FileHandler handler;
 	
 	static {
 		
 		try {
-			Logger.getLogger(FormaPodaci.class.getName()).addHandler(new FileHandler("Error logs/FormaPodaci.log"));
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+			handler=new FileHandler("Error logs/FormaPodaci.log");
+			Logger.getLogger(FormaPodaci.class.getName()).addHandler(handler);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
 
-	/**
-	 * @wbp.parser.entryPoint
-	 */
-	void showWindow()
+	public FormaPodaci() 
 	{
-		JFrame frame = new JFrame("Podaci o kretanjima");
+		frame = new JFrame("PODACI O KRETANJIMA SVIH KOMPOZICIJA");
 		frame.setBounds(100,100,892,584);
 		frame.getContentPane().setLayout(new BorderLayout());
 		
@@ -49,30 +41,30 @@ public class FormaPodaci {
 		textArea.setFont(new Font("Monospaced", Font.PLAIN, 16));
 		scrollPane.setViewportView(textArea);
 		textArea.setEditable(false);
-		textArea.setBackground(Color.WHITE);
-		prikaziPodatke();
-		frame.setVisible(true);
+		textArea.setBackground(new Color(255,255,255));
+		frame.setVisible(false);
 	}
 	
-	private void prikaziPodatke() {
+	public void prikaziPodatke() 
+	{
 		try 
 		{
+			textArea.setText("");
 			File folder = new File("serijalizacija");
 			File[] fajlovi = folder.listFiles();
-		
 			for(File f : fajlovi)
 			{
-			
 				ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f.getAbsoluteFile()));
 				Kompozicija k = (Kompozicija)ois.readObject();
 				ois.close();
-				textArea.append("Kompozicija: "+k.idKompozicije+" Vrijeme kretanja: "+k.vrijemeKretanja+"s "+
-						" Usputne stanice: "+k.usputneStanice+" Istorija kretanja: ");
-				k.istorijaKretanja.forEach( e -> textArea.append(e.toString()));
-				textArea.append("\n");
+				textArea.append(" Kompozicija"+k.idKompozicije+"\n"+" Broj lokomotiva: "+k.lokomotive.size()+", Broj vagona: "+k.vagoni.size()+", Ukupno vrijeme kretanja: "+k.vrijemeKretanja+"s, "+
+						" Usputne stanice: "+k.usputneStanice+"\n Istorija kretanja: ");
+				k.istorijaKretanja.forEach( e -> textArea.append(e.toString()+" "));
+				textArea.append("\n\n");
 			}
 		}
-		catch (Exception e) {
+		catch (Exception e) 
+		{
 			Logger.getLogger(FormaPodaci.class.getName()).log(Level.WARNING,e.fillInStackTrace().toString());
 		}
 	}

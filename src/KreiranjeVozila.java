@@ -6,7 +6,6 @@ import java.util.TimerTask;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
@@ -15,16 +14,17 @@ public class KreiranjeVozila extends TimerTask
 	ArrayList<Vozilo> vozilaNaCekanjuA;
 	ArrayList<Vozilo> vozilaNaCekanjuB;
 	ArrayList<Vozilo> vozilaNaCekanjuC;
-	ArrayList<ArrayList<Vozilo>> vozilaNaCekanju;
-
+	static ArrayList<ArrayList<Vozilo>> vozilaNaCekanju;
 	double[] maxBrzine = new double[3];
 	int[] maxBrVozila = new int[3];
+	static FileHandler handler;
 	
 	static 
 	{
 		try
 		{
-			Logger.getLogger(KreiranjeVozila.class.getName()).addHandler(new FileHandler("Error logs/KreiranjeVozila.log"));
+			handler = new FileHandler("Error logs/KreiranjeVozila.log");
+			Logger.getLogger(KreiranjeVozila.class.getName()).addHandler(handler);
 		}
 		catch (Exception e)
 		{
@@ -48,13 +48,15 @@ public class KreiranjeVozila extends TimerTask
 		try
 		{
 			Scanner dat = new Scanner(new File("vozila_config.txt"));
-			dat.nextLine();
-			for (int i = 0; i < 3 ; i++)
+			dat.nextLine(); //preskace header fajla
+			
+			for (int i = 0; i < 3 ; i++) //fajl ce uvijek imati 3 reda, jer ima 3 puta. Brojac i je indeks puta (za A je 0, za B je 1, za C je 2)
 			{
 				String redUFajlu = dat.nextLine().trim();
 				String[] podaciUReduFajla = redUFajlu.split(",");
 				maxBrzine[i] = Double.parseDouble(podaciUReduFajla[1].trim());
-				maxBrVozila[i] = Integer.parseInt(podaciUReduFajla[2].trim());
+				int tmpMax = Integer.parseInt(podaciUReduFajla[2].trim());
+				maxBrVozila[i] = (maxBrVozila[i] > tmpMax) ? maxBrVozila[i] : tmpMax ; //ako je postavljen manji max br vozila ignorise ga
 			}
 			dat.close();
 		}
@@ -74,12 +76,12 @@ public class KreiranjeVozila extends TimerTask
 		if(rand.nextBoolean()) //TRUE: kreira se auto, FALSE: kreira se kamion
 		{
 			if((GUI.trenutniBrVozilaNaPutevima[randomPut] + vozilaNaCekanju.get(randomPut).size()) < maxBrVozila[randomPut]) 
-				vozilaNaCekanju.get(randomPut).add(new Automobil(maxBrzine[randomPut], naziviPuteva[randomPut],"car.png"));
+				vozilaNaCekanju.get(randomPut).add(new Automobil(maxBrzine[randomPut], naziviPuteva[randomPut],"SLIKE/auto.png"));
 		}
 		else
 		{
 			if((GUI.trenutniBrVozilaNaPutevima[randomPut] + vozilaNaCekanju.get(randomPut).size()) < maxBrVozila[randomPut])
-				vozilaNaCekanju.get(randomPut).add(new Kamion(maxBrzine[randomPut], naziviPuteva[randomPut],"kamion.png"));
+				vozilaNaCekanju.get(randomPut).add(new Kamion(maxBrzine[randomPut], naziviPuteva[randomPut],"SLIKE/kamion.png"));
 		}
 	}
 
@@ -92,7 +94,7 @@ public class KreiranjeVozila extends TimerTask
 			{ new Koordinate(20, 29), new Koordinate(29, 22) }	//C
 		};
 		
-		for(int i=0; i<3; ++i) //na svaki put pokusa po jedno vozilo postaviti po jedno vozilo
+		for(int i=0; i<3; ++i) //putevi indeksirani sa 0,1,2 za A,B,C puteve
 		{
 			if(vozilaNaCekanju.get(i).size()>0 && vozilaNaCekanju.get(i).get(0).smjer == '0' && GUI.guiMapa[ kordStart[i][0].i ][ kordStart[i][0].j ].getComponents().length == 0)
 			{
@@ -120,9 +122,9 @@ public class KreiranjeVozila extends TimerTask
 	@Override
 	public void run()
 	{
-		ucitajIzFajla();
-		kreiraj();
-		postaviNaMapu();
+		ucitajIzFajla(); //ucita nove podatke o max broju vozila na putevima i max brzinama
+		kreiraj(); //kreira jedno vozilo
+		postaviNaMapu(); //na svaki put pokusa postaviti po jedno vozilo
 	}
 }
 

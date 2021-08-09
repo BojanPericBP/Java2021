@@ -1,15 +1,10 @@
-import java.awt.Color;
 import java.awt.Component;
-import java.io.IOException;
 import java.util.Random;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import java.util.logging.*;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
-public class Vozilo extends Thread
+public abstract class Vozilo extends Thread
 {
 	static private int count = 0;
 	String marka;
@@ -22,14 +17,16 @@ public class Vozilo extends Thread
 	char smjer;
 	char put;
 	String putanjaSlike;
+	static FileHandler handler;
 	
 	static 
 	{
 		try
 		{
-			Logger.getLogger(Vozilo.class.getName()).addHandler(new FileHandler("Error logs/Vozila.log"));
+			handler = new FileHandler("Error logs/Vozila.log");
+			Logger.getLogger(Vozilo.class.getName()).addHandler(handler);
 		}
-		catch (SecurityException | IOException e)
+		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -38,7 +35,7 @@ public class Vozilo extends Thread
 	public Vozilo(double _maxBrzina, char _put, String _putanjaSlike)
 	{
 		maxBrzina = _maxBrzina;
-		trenutnaBrzina = (0.5 + Math.random() * (maxBrzina - 0.5));
+		trenutnaBrzina = (maxBrzina + Math.random() * (1800-maxBrzina));
 		marka = "marka" + count;
 		model = "model" + count;
 		godiste = 1990 + count++;
@@ -101,19 +98,16 @@ public class Vozilo extends Thread
 					trKoo = k;
 				}
 
-				synchronized(GUI.frame)
-				{
-					SwingUtilities.updateComponentTreeUI(GUI.frame);					
-				}
+				SwingUtilities.updateComponentTreeUI(GUI.frame);					
+				
 			}
 		}
 	}
 
-	private synchronized Koordinate prelazakPruznogPrelaza() // provjerava da li se moze preci preko pruge i vraca: koordinate
-												// sledeceg polja ako se moze preci, null ako ne moze
+	private synchronized Koordinate prelazakPruznogPrelaza() // provjerava da li se moze preci preko pruge. Vraca koordinate sledeceg polja ako se moze preci ili null ako ne moze
 	{
 
-		if (put == 'A' && smjer == '0' && GUI.guiMapa[20][2].getBackground() == Color.orange)
+		if (put == 'A' && smjer == '0' && GUI.guiMapa[20][2].getBackground() == GUI.DIGNUTA_RAMPA)
 		{
 			if (GUI.guiMapa[20][1].getComponents().length == 0)
 			{
@@ -123,7 +117,7 @@ public class Vozilo extends Thread
 			}
 		}
 
-		else if (put == 'A' && smjer == '1' && GUI.guiMapa[21][2].getBackground() == Color.orange)
+		else if (put == 'A' && smjer == '1' && GUI.guiMapa[21][2].getBackground() == GUI.DIGNUTA_RAMPA)
 		{
 			if (GUI.guiMapa[21][3].getComponents().length == 0)
 			{
@@ -133,7 +127,7 @@ public class Vozilo extends Thread
 			}
 		}
 
-		else if (put == 'B' && smjer == '0' && GUI.guiMapa[6][14].getBackground() == Color.orange)
+		else if (put == 'B' && smjer == '0' && GUI.guiMapa[6][14].getBackground() == GUI.DIGNUTA_RAMPA)
 		{
 			if (GUI.guiMapa[5][14].getComponents().length == 0)
 			{
@@ -143,7 +137,7 @@ public class Vozilo extends Thread
 			}
 		}
 
-		else if (put == 'B' && smjer == '1' && GUI.guiMapa[6][13].getBackground() == Color.orange)
+		else if (put == 'B' && smjer == '1' && GUI.guiMapa[6][13].getBackground() == GUI.DIGNUTA_RAMPA)
 		{
 			if (GUI.guiMapa[7][13].getComponents().length == 0)
 			{
@@ -153,7 +147,7 @@ public class Vozilo extends Thread
 			}
 		}
 
-		else if (put == 'C' && smjer == '0' && GUI.guiMapa[20][26].getBackground() == Color.orange)
+		else if (put == 'C' && smjer == '0' && GUI.guiMapa[20][26].getBackground() == GUI.DIGNUTA_RAMPA)
 		{
 			if (GUI.guiMapa[20][25].getComponents().length == 0)
 			{
@@ -163,7 +157,7 @@ public class Vozilo extends Thread
 			}
 		}
 
-		else if (put == 'C' && smjer == '1' && GUI.guiMapa[21][26].getBackground() == Color.orange)
+		else if (put == 'C' && smjer == '1' && GUI.guiMapa[21][26].getBackground() == GUI.DIGNUTA_RAMPA)
 		{
 			if (GUI.guiMapa[21][27].getComponents().length == 0)
 			{
@@ -185,7 +179,7 @@ public class Vozilo extends Thread
 			trenutnaBrzina = Integer.parseInt(((JLabel) cmp[0]).getName());
 	}
 
-	synchronized Koordinate sledeciKorak()//
+	synchronized Koordinate sledeciKorak()
 	{
 
 		if (trKoo.j < 29 && ((GUI.mapa[trKoo.i][trKoo.j + 1] == smjer || GUI.mapa[trKoo.i][trKoo.j + 1] == 'x') && trKoo.j + 1 != preKoo.j)) // provjera desno
@@ -222,5 +216,5 @@ public class Vozilo extends Thread
 			return new Koordinate(-1, -1);
 		}
 	}
-
+	
 }

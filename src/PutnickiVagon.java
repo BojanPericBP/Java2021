@@ -1,8 +1,10 @@
 
-public class PutnickiVagon extends Vagon{
+public class PutnickiVagon extends Vagon
+{
 	private static final long serialVersionUID = 1L;
 	
-	public PutnickiVagon() {
+	public PutnickiVagon() 
+	{
 		super(false);
 	}
 

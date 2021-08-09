@@ -6,12 +6,14 @@ import java.util.logging.Logger;
 public class Automobil extends Vozilo
 {
 	int brojVrata;
+	static FileHandler handler;
 	
 	static 
 	{
 		try
 		{
-			Logger.getLogger(Automobil.class.getName()).addHandler(new FileHandler("Error logs/Automobili.log"));
+			handler = new FileHandler("Error logs/Automobili.log");
+			Logger.getLogger(Automobil.class.getName()).addHandler(handler);
 		}
 		catch (SecurityException | IOException e)
 		{

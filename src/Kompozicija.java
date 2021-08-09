@@ -1,4 +1,3 @@
-import java.awt.Color;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -14,31 +13,29 @@ import javax.swing.SwingUtilities;
 
 public class Kompozicija extends Thread implements Serializable  
 {
+	final static int MAX_BROJ_LOKOMOTIVA = 5;
+	final static int MAX_BR_VAGONA = 5;
 	static int count=0;
 	int idKompozicije;
 	private static final long serialVersionUID = 1L;
-	final int maxLokomotiva = 5;
-	final int maxVagona = 5;
-
 	public long vrijemeKretanja;
 	ArrayList<Koordinate> istorijaKretanja;
 	String usputneStanice;
-	
 	ArrayList<Lokomotiva> lokomotive;
 	ArrayList<Vagon> vagoni;
 	long brzinaKretanja;
 	long tmpBrzina;
 	ZeljeznickaStanica odrediste; // odredisna stanica na koju kompozicija treba da stigne
 	ZeljeznickaStanica polazak;
-	// ZeljeznickaStanica sledecaStanica; // sledeca stanica prema kojoj kompozicija
-	// ide a ne iz koje je krenula npr A-B-C sledecaStanica = B
 	ZeljeznickaStanica prethodnaStanica;
+	static FileHandler handler;
 	
 	static 
 	{
 		try
 		{
-			Logger.getLogger(Kompozicija.class.getName()).addHandler(new FileHandler("Error logs/Kompozicija.log"));
+			handler = new FileHandler("Error logs/Kompozicija.log");
+			Logger.getLogger(Kompozicija.class.getName()).addHandler(handler);
 		}
 		catch (Exception e)
 		{
@@ -46,12 +43,11 @@ public class Kompozicija extends Thread implements Serializable
 		}
 	}
 
-	public Kompozicija(int _brLokomotiva, int _brVagona, String _raspored, long _brzina, ZeljeznickaStanica _polazak,
-			ZeljeznickaStanica _odrediste) throws Exception 
+	public Kompozicija(int _brLokomotiva, int _brVagona, String _raspored, long _brzina, ZeljeznickaStanica _polazak, ZeljeznickaStanica _odrediste) throws Exception 
 	{
 		
 		idKompozicije = count++;
-		if (_brLokomotiva > maxLokomotiva || _brLokomotiva < 1 || _brVagona > maxVagona)
+		if (_brLokomotiva > MAX_BROJ_LOKOMOTIVA || _brLokomotiva < 1 || _brVagona > MAX_BR_VAGONA || _brVagona < 0)
 			throw new Exception("Kompozicija nije validna!");
 
 		brzinaKretanja = _brzina <= 500 ? 500: _brzina;
@@ -73,11 +69,6 @@ public class Kompozicija extends Thread implements Serializable
 
 		while (GUI.simulacijaUToku && !prethodnaStanica.equals(odrediste)) 
 		{
-			synchronized(this)
-			{
-				radSaRampom();				
-			}
-			
 				ZeljeznickaStanica susjed = odrediSusjeda();
 				if (kretanjeKompozicije()) // kompozicija usla u stanicu
 				{
@@ -172,24 +163,24 @@ public class Kompozicija extends Thread implements Serializable
 		List<String> kom = Arrays.asList(niz);
 		
 		if(kom.get(0).startsWith("V"))
-			throw new Exception("Puko sam brate nema me 0");
+			throw new Exception("Neispravan format kompozicije");
 		
 		if(kom.size() == 1 && !(kom.get(0).startsWith("L")))
 		{
-			throw new Exception("Puko sam brate nema me 1");
+			throw new Exception("Neispravan format kompozicije");
 		}
 		
 		else if(kom.size() > 1 && kom.contains("LM") )
 		{
-			throw new Exception("Puko sam brate nema me 2");
+			throw new Exception("Neispravan format kompozicije");
 		}
 		
 		else if(kom.contains("LP") && (kom.contains("LT") || kom.contains("VT")))
 		{
-			throw new Exception("Puko sam brate nema me 3");
+			throw new Exception("Neispravan format kompozicije");
 		}
 		else if(kom.contains("LT") && (kom.contains("LP") || kom.contains("VPS") || kom.contains("VPR")))
-			throw new Exception("Puko sam brate nema me 3");
+			throw new Exception("Neispravan format kompozicije");
 		
 		int br = 0;
 		boolean flag=true;
@@ -202,12 +193,12 @@ public class Kompozicija extends Thread implements Serializable
 			}
 		}
 		for (int i = br; i < niz.length && br>0; i++) {
-			if(niz[i].startsWith("L")) throw new Exception("Puko sam brate nema me 4");
+			if(niz[i].startsWith("L")) throw new Exception("Neispravan format kompozicije");
 		}
 		
 		
-		for (String string : niz) {
-
+		for (String string : niz) 
+		{
 			if ('V' == string.charAt(0)) // vagoni
 			{
 				if ('P' == string.charAt(1))// putnicki vagoni
@@ -221,7 +212,6 @@ public class Kompozicija extends Thread implements Serializable
 						vagoni.add(new PutnickiVagonRestoran());
 					}
 				}
-
 				else if ('T' == string.charAt(1)) {// teretni
 					vagoni.add(new TeretniVagon());
 				}
@@ -230,7 +220,9 @@ public class Kompozicija extends Thread implements Serializable
 					vagoni.add(new Vagon(true));
 				}
 
-			} else { // lokomotive
+			} 
+			else // lokomotive
+			{ 
 				if ('P' == string.charAt(1))// putnicka lokomotiva
 				{
 					lokomotive.add(new Lokomotiva("putnicka"));
@@ -346,12 +338,12 @@ public class Kompozicija extends Thread implements Serializable
 	{
 		if(flag)
 		{
-			GUI.guiMapa[i1][j1].setBackground(Color.orange);
-			GUI.guiMapa[i2][j2].setBackground(Color.orange);
+			GUI.guiMapa[i1][j1].setBackground(GUI.DIGNUTA_RAMPA);
+			GUI.guiMapa[i2][j2].setBackground(GUI.DIGNUTA_RAMPA);
 		}
 		else {
-			GUI.guiMapa[i1][j1].setBackground(Color.red);
-			GUI.guiMapa[i2][j2].setBackground(Color.red);
+			GUI.guiMapa[i1][j1].setBackground(GUI.SPUSTENA_RAMPA);
+			GUI.guiMapa[i2][j2].setBackground(GUI.SPUSTENA_RAMPA);
 		}
 	}
 	
@@ -365,7 +357,7 @@ public class Kompozicija extends Thread implements Serializable
 			if (prethodnaStanica.koordinate.contains(lokomotive.get(i).trKoo) && !prethodnaStanica.koordinate.contains(lokomotive.get(i-1).preKoo))  // U prvom koraku se nece ispitivati drgui uslov
 			{
 				lokomotive.get(i).trKoo = new Koordinate(lokomotive.get(i-1).preKoo);
-				GUI.guiMapa[lokomotive.get(i).trKoo.i][lokomotive.get(i).trKoo.j].add(new JLabel(new ImageIcon("lokomotiva.png")));
+				GUI.guiMapa[lokomotive.get(i).trKoo.i][lokomotive.get(i).trKoo.j].add(new JLabel(new ImageIcon("SLIKE/lokomotiva.png")));
 				((JLabel)GUI.guiMapa[lokomotive.get(i).trKoo.i][lokomotive.get(i).trKoo.j].getComponent(0)).setName(brzinaKretanja+"k");
 				
 			}
@@ -402,7 +394,7 @@ public class Kompozicija extends Thread implements Serializable
 			if(i==0 && prethodnaStanica.koordinate.contains(vagoni.get(i).trKoo) && !prethodnaStanica.koordinate.contains(lokomotive.get(lokomotive.size()-1).preKoo))
 			{
 				vagoni.get(i).trKoo = new Koordinate(lokomotive.get(lokomotive.size()-1).preKoo);
-				GUI.guiMapa[vagoni.get(i).trKoo.i][vagoni.get(i).trKoo.j].add(new JLabel(new ImageIcon("vagon.png")));
+				GUI.guiMapa[vagoni.get(i).trKoo.i][vagoni.get(i).trKoo.j].add(new JLabel(new ImageIcon("SLIKE/vagon.png")));
 				((JLabel)GUI.guiMapa[vagoni.get(i).trKoo.i][vagoni.get(i).trKoo.j].getComponent(0)).setName(brzinaKretanja+"k");
 				synchronized(GUI.frame)
 				{
@@ -435,7 +427,7 @@ public class Kompozicija extends Thread implements Serializable
 			else if (i>0 && prethodnaStanica.koordinate.contains(vagoni.get(i).trKoo) && !prethodnaStanica.koordinate.contains(vagoni.get(i-1).preKoo))
 			{
 				vagoni.get(i).trKoo = new Koordinate(vagoni.get(i-1).preKoo);
-				GUI.guiMapa[vagoni.get(i).trKoo.i][vagoni.get(i).trKoo.j].add(new JLabel(new ImageIcon("vagon.png")));
+				GUI.guiMapa[vagoni.get(i).trKoo.i][vagoni.get(i).trKoo.j].add(new JLabel(new ImageIcon("SLIKE/vagon.png")));
 				((JLabel)GUI.guiMapa[vagoni.get(i).trKoo.i][vagoni.get(i).trKoo.j].getComponent(0)).setName(brzinaKretanja+"k");
 				synchronized(GUI.frame)
 				{

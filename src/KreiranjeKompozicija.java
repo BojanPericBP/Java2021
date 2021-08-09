@@ -1,5 +1,4 @@
 import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
-
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -18,12 +17,14 @@ public class KreiranjeKompozicija extends Thread
 {
 	WatchService watcher;
 	Path dir;
+	static FileHandler handler;
 	
 	static 
 	{
 		try
 		{
-			Logger.getLogger(KreiranjeKompozicija.class.getName()).addHandler(new FileHandler("Error logs/KreiranjeKompozicija.log"));
+			handler = new FileHandler("Error logs/KreiranjeKompozicija.log");
+			Logger.getLogger(KreiranjeKompozicija.class.getName()).addHandler(handler);
 		}
 		catch (SecurityException | IOException e)
 		{
@@ -96,12 +97,14 @@ public class KreiranjeKompozicija extends Thread
 			char pocetnaStanica = podaci[4].trim().charAt(0);
 			char krajnjaStanica = podaci[5].trim().charAt(0);
 			
-			try {
+			try 
+			{
 				Kompozicija tmp = new Kompozicija(brLokomotiva,  brVagona,  raspored,  brzina,  GUI.stanice.get(pocetnaStanica-'A'),  GUI.stanice.get(krajnjaStanica-'A'));
 				GUI.stanice.get(pocetnaStanica-'A').redUStanici.add(tmp);				
 			}
-			catch (Exception e) {
-				e.printStackTrace();
+			catch (Exception ex) 
+			{
+				Logger.getLogger(KreiranjeKompozicija.class.getName()).log(Level.WARNING, ex.fillInStackTrace().toString());
 			}
 			
 		}

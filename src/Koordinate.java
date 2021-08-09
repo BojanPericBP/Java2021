@@ -25,14 +25,15 @@ public class Koordinate implements Serializable{
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
+	public boolean equals(Object obj) 
+	{
 		if (obj == null)
 			return false;
+		if (this == obj)
+			return true;
 		if (getClass() != obj.getClass())
 			return false;
-		Koordinate other = (Koordinate) obj;
+		final Koordinate other = (Koordinate) obj;
 		return i == other.i && j == other.j;
 	}
 	

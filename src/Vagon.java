@@ -14,12 +14,14 @@ public class Vagon implements Serializable
 	boolean jePosebneNamjene;
 	Koordinate trKoo;
 	Koordinate preKoo;
+	static FileHandler handler;
 	
 	static 
 	{
 		try
 		{
-			Logger.getLogger(Vagon.class.getName()).addHandler(new FileHandler("Error logs/Vagon.log"));
+			handler = new FileHandler("Error logs/Vagon.log");
+			Logger.getLogger(Vagon.class.getName()).addHandler(handler);
 		}
 		catch (Exception e)
 		{
