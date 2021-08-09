@@ -204,6 +204,10 @@ public class Kompozicija extends Thread implements Serializable
 				lokomotive.add(new Lokomotiva("Univerzalna"));
 				break;
 			}
+			case "ml":{
+				lokomotive.add(new Lokomotiva("Manevarska"));
+				break;
+			}
 			}
 		}
 		
