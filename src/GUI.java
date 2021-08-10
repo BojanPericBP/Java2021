@@ -123,7 +123,7 @@ public class GUI extends JFrame
 				kreiranjeKompozicija=new KreiranjeKompozicija();
 				kreiranjeKompozicija.start();
 				timer=new Timer();
-				//timer.schedule(new KreiranjeVozila(), 0, 2000);
+				timer.schedule(new KreiranjeVozila(), 0, 2000);
 			}
 		});
 		leftPanel.add(btnStart);

@@ -48,7 +48,7 @@ public class KreiranjeVozila extends TimerTask
 	{
 		try
 		{
-			Scanner dat = new Scanner(new File("carConfigFile.txt"));
+			Scanner dat = new Scanner(new File("config/cars/carConfigFile.txt"));
 			dat.nextLine();
 			for (int i = 0; i < 3 ; i++)
 			{

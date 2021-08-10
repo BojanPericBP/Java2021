@@ -27,6 +27,10 @@ public class ZeljeznickaStanica extends Thread implements Serializable
 		{
 			e.printStackTrace();
 		}
+	}@Override
+	public String toString() {
+
+		return nazivStanice+"";
 	}
 
 	public ZeljeznickaStanica(char _nazivStanice, ArrayList<Point> _koordinate)

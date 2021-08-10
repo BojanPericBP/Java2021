@@ -37,7 +37,7 @@ public class KreiranjeKompozicija extends Thread
 		try
 		{
 			watcher = FileSystems.getDefault().newWatchService();
-			dir = Paths.get("compositions");
+			dir = Paths.get("config/compositions");
 			dir.register(watcher, ENTRY_MODIFY);
 		}
 		catch (IOException e)
@@ -70,7 +70,6 @@ public class KreiranjeKompozicija extends Thread
 					List<String>content = Files.readAllLines(dir.resolve(fileName));
 					kreiraj(content.get(2));
 				}
-
 				boolean valid = key.reset();
 				if (!valid)
 					break;

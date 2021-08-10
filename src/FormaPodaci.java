@@ -10,7 +10,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.logging.FileHandler;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JScrollPane;
@@ -62,18 +61,17 @@ public class FormaPodaci {
 		
 			for(File f : fajlovi)
 			{
-			
 				ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f.getAbsoluteFile()));
 				Kompozicija k = (Kompozicija)ois.readObject();
 				ois.close();
 				textArea.append("Kompozicija: "+k.idKompozicije+" Vrijeme kretanja: "+k.vrijemeKretanja+"s "+
-						" Usputne stanice: "+k.linija+" Istorija kretanja: ");
+						"Usputne stanice: "+k.linija+" SIstorija kretanja: ");
 				k.istorijaKretanja.forEach( e -> textArea.append("("+e.x+","+e.y+")"));
 				textArea.append("\n");
 			}
 		}
 		catch (Exception e) {
-			Logger.getLogger(FormaPodaci.class.getName()).log(Level.WARNING,e.fillInStackTrace().toString());
+			e.printStackTrace();//Logger.getLogger(FormaPodaci.class.getName()).log(Level.WARNING,e.fillInStackTrace().toString());
 		}
 	}
 }
