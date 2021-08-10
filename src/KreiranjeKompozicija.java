@@ -37,7 +37,7 @@ public class KreiranjeKompozicija extends Thread
 		try
 		{
 			watcher = FileSystems.getDefault().newWatchService();
-			dir = Paths.get("kompozicije");
+			dir = Paths.get("compositions");
 			dir.register(watcher, ENTRY_MODIFY);
 		}
 		catch (IOException e)
@@ -92,7 +92,7 @@ public class KreiranjeKompozicija extends Thread
 	{
 		try
 		{
-			String[] podaci=podaciOKompoziciji.split(" ");
+			String[] podaci = podaciOKompoziciji.split(" ");
 
 			String rasporedL = podaci[0];
 			String rasporedV = podaci[1];
@@ -115,7 +115,7 @@ public class KreiranjeKompozicija extends Thread
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();//Logger.getLogger(KreiranjeKompozicija.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
+			Logger.getLogger(KreiranjeKompozicija.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 		}
 	}
 	

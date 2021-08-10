@@ -1,9 +1,0 @@
-pl - putnicka lokomotiva
-tl - teretna lokomotiva
-ul - univerzalna lokomotiva
-ml - manevarska lokomotiva
-
-vpn - vagon posebne namjene
-pvr - putnicki vagon restoran
-pvs - putnicki vagon spavaci
-tv - teretni vagon 

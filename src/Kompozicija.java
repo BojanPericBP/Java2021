@@ -229,9 +229,7 @@ public class Kompozicija extends Thread implements Serializable
 				if(!lokomotive.get(i).move()) granicaLOK=i+1;
 				synchronized(GUI.frame)
 				{
-					GUI.frame.invalidate();
-					GUI.frame.validate();
-					GUI.frame.repaint();
+					GUI.refreshGui();
 				}
 			}
 			
@@ -240,9 +238,7 @@ public class Kompozicija extends Thread implements Serializable
 				if(!vagoni.get(i).move()) granicaVAG=i+1;
 				synchronized(GUI.frame)
 				{
-					GUI.frame.invalidate();
-					GUI.frame.validate();
-					GUI.frame.repaint();
+					GUI.refreshGui();
 				}
 			}	
 			try { Thread.sleep(brzinaKretanja); } catch (InterruptedException e) { Logger.getLogger(Kompozicija.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString()); }
@@ -286,6 +282,7 @@ public class Kompozicija extends Thread implements Serializable
 		{
 			obojiRampu(flag,6,13,6,14);
 		}
+		
 		flag = true;
 		for (int i = 18; i < 24; i++) {
 			if(GUI.guiMapa[i][26].getComponents().length ==1)
@@ -302,7 +299,6 @@ public class Kompozicija extends Thread implements Serializable
 		{
 			obojiRampu(flag,20,26,21,26);
 		}
-		
 	}
 	
 	synchronized private void obojiRampu(boolean flag,int i1, int j1, int i2,int j2)
@@ -317,8 +313,6 @@ public class Kompozicija extends Thread implements Serializable
 			GUI.guiMapa[i2][j2].setBackground(Color.red);
 		}
 	}
-	
-	
 	
 	synchronized boolean kretanjeKompozicije() // true kad udje u stanicu
 	{
