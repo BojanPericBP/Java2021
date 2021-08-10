@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -16,8 +17,8 @@ import java.util.logging.Logger;
 
 public class KreiranjeKompozicija extends Thread
 {
-	WatchService watcher;
 	Path dir;
+	WatchService watcher;
 	
 	static 
 	{
@@ -63,24 +64,28 @@ public class KreiranjeKompozicija extends Thread
 
 				for (WatchEvent<?> event : key.pollEvents())
 				{
-					@SuppressWarnings("unchecked")//TODO sta je ovo brteyy
 					WatchEvent<Path> ev = (WatchEvent<Path>) event;
 					Path fileName = ev.context();
-					if (fileName.toString().trim().endsWith(".txt"))
-					{
-						List<String>content = Files.readAllLines(dir.resolve(fileName));
-						kreiraj(content.get(2));
-					}
+
+					List<String>content = Files.readAllLines(dir.resolve(fileName));
+					kreiraj(content.get(2));
 				}
 
 				boolean valid = key.reset();
-				if (!valid) { break; }
+				if (!valid)
+					break;
 			}
 		}
 		catch (Exception ex)
 		{
 			Logger.getLogger(KreiranjeKompozicija.class.getName()).log(Level.WARNING, ex.fillInStackTrace().toString());
 		}
+	}
+	
+	@Override
+	public void run()
+	{
+		pokreni();
 	}
 	
 	private void kreiraj(String podaciOKompoziciji)
@@ -92,27 +97,28 @@ public class KreiranjeKompozicija extends Thread
 			String rasporedL = podaci[0];
 			String rasporedV = podaci[1];
 			long brzina = Long.parseLong(podaci[2]);
-			char pocetnaStanica = podaci[3].charAt(0);
-			char krajnjaStanica = podaci[4].charAt(0);
+			String[] linijaString = podaci[3].split("-");
+			ArrayList<ZeljeznickaStanica> _linija = new ArrayList<>();
+			for(String s : linijaString)
+			{
+				for(int i=0; i< GUI.stanice.size();++i)
+				if(GUI.stanice.get(i).nazivStanice == s.charAt(0))
+				{
+					_linija.add(GUI.stanice.get(i));
+					break;
+				}
+			}
+
+			Kompozicija tmp = new Kompozicija(rasporedL, rasporedV, brzina,_linija);
+			GUI.stanice.get(_linija.get(0).nazivStanice-'A').redUStanici.add(tmp);		
 			
-			try {
-				Kompozicija tmp = new Kompozicija(rasporedL, rasporedV, brzina, GUI.stanice.get(pocetnaStanica-'A'), GUI.stanice.get(krajnjaStanica-'A'));
-				GUI.stanice.get(pocetnaStanica-'A').redUStanici.add(tmp);				
-			}
-			catch (Exception e) {
-				Logger.getLogger(KreiranjeKompozicija.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
-			}
 		}
 		catch (Exception e)
 		{
-			Logger.getLogger(KreiranjeKompozicija.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
+			e.printStackTrace();//Logger.getLogger(KreiranjeKompozicija.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 		}
 	}
 	
-	@Override
-	public void run()
-	{
-		pokreni();
-	}
+	
 	
 }

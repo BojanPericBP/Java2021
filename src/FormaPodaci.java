@@ -67,7 +67,7 @@ public class FormaPodaci {
 				Kompozicija k = (Kompozicija)ois.readObject();
 				ois.close();
 				textArea.append("Kompozicija: "+k.idKompozicije+" Vrijeme kretanja: "+k.vrijemeKretanja+"s "+
-						" Usputne stanice: "+k.usputneStanice+" Istorija kretanja: ");
+						" Usputne stanice: "+k.linija+" Istorija kretanja: ");
 				k.istorijaKretanja.forEach( e -> textArea.append("("+e.x+","+e.y+")"));
 				textArea.append("\n");
 			}

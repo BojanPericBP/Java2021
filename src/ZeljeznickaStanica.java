@@ -98,7 +98,7 @@ public class ZeljeznickaStanica extends Thread implements Serializable
 						kompozicija.vagoni.get(i).trKoo = new Point(
 								kompozicija.lokomotive.get(kompozicija.lokomotive.size() - 1).trKoo);
 					}
-					if(kompozicija.polazak.koordinate.contains(kompozicija.lokomotive.get(0).trKoo))
+					if(kompozicija.linija.get(0).koordinate.contains(kompozicija.lokomotive.get(0).trKoo))
 						kompozicija.vrijemeKretanja = System.currentTimeMillis();
 					kompozicija.lokomotive.get(0).trKoo = usmjeriKompoziciju(kompozicija)[1];
 					kompozicija.istorijaKretanja.add(new Point(kompozicija.lokomotive.get(0).trKoo));
@@ -169,22 +169,12 @@ public class ZeljeznickaStanica extends Thread implements Serializable
 	{
 		if (nazivStanice == 'A')
 			return (new Point[]
-			{ new Point(27, 2), new Point(26, 2), new Point(25, 2) });// vraca
-																						// niz
-																						// od
-																						// tri
-																						// koordinate
- // ka A
-		else if (nazivStanice == 'B' && komp.odrediSusjeda().nazivStanice == 'A')
+			{ new Point(27, 2), new Point(26, 2), new Point(25, 2) });// vraca niz od tri koordinate
+
+		else if (nazivStanice == 'B' && komp.odrediSusjeda().nazivStanice == 'A') // ka A
 			return (new Point[]
-			{ new Point(6, 6), new Point(6, 5), new Point(7, 5) }); // prva
-																					// koordinata
-																					// je
-																					// pozicija
-																					// na
-		// koju smjestam kompoziciju, a
-		// druga je za provjeru
-		// razmaka..
+			{ new Point(6, 6), new Point(6, 5), new Point(7, 5) }); // prva koordinata jepozicija na
+		// koju smjestam kompoziciju, adruga je za provjeru razmaka..
 
 		// odredi susjeda.odrediste.koordinate.contains(new Point(27, 2))
 
@@ -210,9 +200,7 @@ public class ZeljeznickaStanica extends Thread implements Serializable
 
 		else if (nazivStanice == 'E')
 			return (new Point[]
-			{ new Point(25, 26), new Point(24, 26), new Point(23, 26) }); // ka
-																							// C
-
+			{ new Point(25, 26), new Point(24, 26), new Point(23, 26) }); // ka C
 		return null;
 	}
 

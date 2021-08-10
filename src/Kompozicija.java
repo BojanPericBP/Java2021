@@ -3,6 +3,7 @@ import java.awt.Point;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,15 +22,12 @@ public class Kompozicija extends Thread implements Serializable
 
 	public long vrijemeKretanja;
 	ArrayList<Point> istorijaKretanja;
-	String usputneStanice;
 	
 	ArrayList<Lokomotiva> lokomotive;
 	ArrayList<Vagon> vagoni;
 	long brzinaKretanja;
 	long tmpBrzina;
-	ZeljeznickaStanica odrediste; // odredisna stanica na koju kompozicija treba da stigne
-	ZeljeznickaStanica polazak;
-	// ide a ne iz koje je krenula npr A-B-C sledecaStanica = B
+	ArrayList<ZeljeznickaStanica> linija;
 	ZeljeznickaStanica prethodnaStanica;
 	
 	static 
@@ -44,21 +42,18 @@ public class Kompozicija extends Thread implements Serializable
 		}
 	}
 
-	public Kompozicija(String _rasporedL, String rasporedV, long _brzina, ZeljeznickaStanica _polazak,
-			ZeljeznickaStanica _odrediste) throws Exception 
+	public Kompozicija(String _rasporedL, String rasporedV, long _brzina, ArrayList<ZeljeznickaStanica> _linija) throws Exception 
 	{
 		idKompozicije = count++;
-
+		linija = _linija;
+		prethodnaStanica = linija.get(0);
 		brzinaKretanja = _brzina <= 500 ? 500: _brzina;
-		polazak = _polazak;
-		odrediste = _odrediste;
+		
 		vagoni = new ArrayList<>();
 		lokomotive = new ArrayList<>();
-		prethodnaStanica = polazak;
 		tmpBrzina = brzinaKretanja;
 		
 		istorijaKretanja = new ArrayList<Point>();
-		usputneStanice = _polazak.nazivStanice+" ";
 		kreirajKompoziciju(_rasporedL,rasporedV);
 	}
 	
@@ -66,62 +61,62 @@ public class Kompozicija extends Thread implements Serializable
 	public void run()
 	{
 
-		while (GUI.simulacijaUToku && !prethodnaStanica.equals(odrediste)) 
+		while (GUI.simulacijaUToku && prethodnaStanica.nazivStanice != linija.get(linija.size()-1).nazivStanice) 
 		{
 			synchronized(this)
 			{
 				radSaRampom();				
 			}
 			
-				ZeljeznickaStanica susjed = odrediSusjeda();
-				if (kretanjeKompozicije()) // kompozicija usla u stanicu
-				{
-					ZeljeznickaStanica.matricaSusjedstva[prethodnaStanica.nazivStanice - 'A'][susjed.nazivStanice- 'A']--;
-					prethodnaStanica = susjed; // npr prethodna je A ovo vrati B
+				//ZeljeznickaStanica susjed = odrediSusjeda();
+			ZeljeznickaStanica susjed = odrediSusjeda();
+			
+			if (kretanjeKompozicije()) // kompozicija usla u stanicu
+			{
+				ZeljeznickaStanica.matricaSusjedstva[prethodnaStanica.nazivStanice - 'A'][susjed.nazivStanice- 'A']--;
+				prethodnaStanica = susjed; // npr prethodna je A ovo vrati B
 
-					susjed = odrediSusjeda(); // prethodna je sada B pa ovo vrati C
-					usputneStanice+=prethodnaStanica.nazivStanice+" ";
-					if (odrediste.koordinate.contains(lokomotive.get(0).trKoo)) // da li je u odredisnoj stanici
-					{
-						vrijemeKretanja = System.currentTimeMillis() - vrijemeKretanja;
-						vrijemeKretanja /=1000;
-						try {
+				susjed = odrediSusjeda(); // prethodna je sada B pa ovo vrati C
+				if (prethodnaStanica.nazivStanice == linija.get(linija.size()-1).nazivStanice) // da li je u odredisnoj stanici
+				{
+					vrijemeKretanja = System.currentTimeMillis() - vrijemeKretanja;
+					vrijemeKretanja /=1000;
+					try {
 							
-						ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("serijalizacija/kompozicija"+idKompozicije+".ser"));
-						oos.writeObject(this);
-						oos.close();
-						}
-						catch (Exception e) {
-							Logger.getLogger(Kompozicija.class.getName()).log(Level.WARNING,e.fillInStackTrace().toString());
-						}
-						
-					} 
-					else // da li je u bilo kojoj stanici koja nije odredisna
+					ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("serijalizacija/kompozicija"+idKompozicije+".ser"));
+					oos.writeObject(this);
+					oos.close();
+					}
+					catch (Exception e) {
+						Logger.getLogger(Kompozicija.class.getName()).log(Level.WARNING,e.fillInStackTrace().toString());
+					}	
+				} 
+				else // da li je u bilo kojoj stanici koja nije odredisna
+				{
+					try 
 					{
-						try 
+						synchronized (this) 
 						{
-							synchronized (this) 
-							{
-								prethodnaStanica.redUStanici.add(this);
-								brzinaKretanja = tmpBrzina;
-								wait();
-							}
-						} 
-						catch (Exception e)
-						{
-							Logger.getLogger(Kompozicija.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
+							prethodnaStanica.redUStanici.add(this);
+							brzinaKretanja = tmpBrzina;
+							wait();
 						}
+					} 
+					catch (Exception e)
+					{
+						Logger.getLogger(Kompozicija.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 					}
 				}
-				synchronized (GUI.guiMapa) 
-				{
-					GUI.refreshGui();
-				}
+			}
+			synchronized (GUI.guiMapa) 
+			{
+				GUI.refreshGui();
+			}
 				
-				synchronized(this)
-				{
-					radSaRampom();				
-				}
+			synchronized(this)
+			{
+				radSaRampom();				
+			}
 			try 
 			{
 				sleep(brzinaKretanja);
@@ -136,25 +131,10 @@ public class Kompozicija extends Thread implements Serializable
 
 	synchronized ZeljeznickaStanica odrediSusjeda() { // vrati referencu susjedne stanice ka kojoj se kompozicija krece
 
-		if (prethodnaStanica.nazivStanice == 'A') {
-			return GUI.stanice.get(1);
-		} else if (prethodnaStanica.nazivStanice == 'B') {
-			if (odrediste == GUI.stanice.get(0))
-				return GUI.stanice.get(0);
-			else
-				return GUI.stanice.get(2);
-		} else if (prethodnaStanica.nazivStanice == 'D' || prethodnaStanica.nazivStanice == 'E') {
-			return GUI.stanice.get(2);
-		} else {
-			if (odrediste == GUI.stanice.get(0) || odrediste == GUI.stanice.get(1))
-				return GUI.stanice.get(1);
-			else if (odrediste == GUI.stanice.get(2))
-				return GUI.stanice.get(2);
-			else if (odrediste == GUI.stanice.get(3))
-				return GUI.stanice.get(3);
-			else
-				return GUI.stanice.get(4);
-		}
+		for(int i = 0; i<linija.size();++i)
+			if(i < linija.size()-1 && linija.get(i).nazivStanice == prethodnaStanica.nazivStanice)
+				return linija.get(i+1);
+		return linija.get(linija.size()-1);
 	}
 
 	private void kreirajKompoziciju(String rasporedLokomotiva, String rasporedVagona) throws Exception
