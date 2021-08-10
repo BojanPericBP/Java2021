@@ -23,9 +23,7 @@ public class FormaPodaci
 		{
 			handlerFajl=new FileHandler("Error logs/FormaPodaci.log");
 			Logger.getLogger(FormaPodaci.class.getName()).addHandler(handlerFajl);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		} catch (Exception e) { e.printStackTrace(); }
 	}
 
 	public FormaPodaci() 
