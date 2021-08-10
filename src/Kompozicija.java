@@ -192,8 +192,6 @@ public class Kompozicija extends Thread implements Serializable
 			throw new Exception("Neispravan format kompozicije");
 		}
 		
-		//TODO univerzalna lokomotiva moze sa vagonom posebne namjene
-		
 		int br = 0;
 		boolean flag=true;
 		for (int i = 0; i < niz.length && flag; i++) 
