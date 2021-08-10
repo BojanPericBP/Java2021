@@ -70,23 +70,25 @@ public class Kompozicija extends Thread implements Serializable
 		while (GUI.simulacijaUToku && !prethodnaStanica.equals(odrediste)) 
 		{
 				ZeljeznickaStanica susjed = odrediSusjeda();
-				if (kretanjeKompozicije()) // kompozicija usla u stanicu
+				if (kretanjeKompozicije()) // kompozicija usla u stanicu kad udje u if
 				{
 
 					ZeljeznickaStanica.matricaSusjedstva[prethodnaStanica.nazivStanice - 'A'][susjed.nazivStanice- 'A']--;
-					prethodnaStanica = susjed; // npr prethodna je A ovo vrati B
+					prethodnaStanica = susjed; 
 
-					susjed = odrediSusjeda(); // prethodna je sada B pa ovo vrati C
+					susjed = odrediSusjeda();
 					usputneStanice+=prethodnaStanica.nazivStanice+" ";
-					if (odrediste.koordinate.contains(lokomotive.get(0).trKoo)) // da li je u odredisnoj stanici
+					
+					if (odrediste.koordinate.contains(lokomotive.get(0).trKoo)) // ako je u odredisnoj stanici
 					{
 						vrijemeKretanja = System.currentTimeMillis() - vrijemeKretanja;
 						vrijemeKretanja /=1000;
-						try {
+						try 
+						{
 							
-						ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("serijalizacija/kompozicija"+idKompozicije+".ser"));
-						oos.writeObject(this);
-						oos.close();
+							ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("serijalizacija/kompozicija"+idKompozicije+".ser"));
+							oos.writeObject(this);
+							oos.close();
 						}
 						catch (Exception e) {
 							Logger.getLogger(Kompozicija.class.getName()).log(Level.WARNING,e.fillInStackTrace().toString());
@@ -122,14 +124,14 @@ public class Kompozicija extends Thread implements Serializable
 				{
 					radSaRampom();				
 				}
-			try 
-			{
-				sleep(brzinaKretanja);
-			} 
-			catch (Exception e) 
-			{
-				Logger.getLogger(Kompozicija.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
-			}
+				try 
+				{
+					sleep(brzinaKretanja);
+				} 
+				catch (Exception e) 
+				{
+					Logger.getLogger(Kompozicija.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
+				}
 		}
 		
 	}
@@ -160,27 +162,37 @@ public class Kompozicija extends Thread implements Serializable
 	private void kreirajKompoziciju(String raspored) throws Exception
 	{
 		String[] niz = raspored.split(";");
-		List<String> kom = Arrays.asList(niz);
+		List<String> kompozicija = Arrays.asList(niz);
 		
-		if(kom.get(0).startsWith("V"))
+		if(kompozicija.get(0).startsWith("V")) //kompozicija ne moze pocinjat vagonom, bez obzira na duzinu
 			throw new Exception("Neispravan format kompozicije");
 		
-		if(kom.size() == 1 && !(kom.get(0).startsWith("L")))
+		if(kompozicija.size() == 1 && !(kompozicija.get(0).startsWith("L"))) //ako kompozicija ima samo 1 element, on mora biti lokomotiva (moze bilo koja)
 		{
 			throw new Exception("Neispravan format kompozicije");
 		}
 		
-		else if(kom.size() > 1 && kom.contains("LM") )
+		else if(kompozicija.size() > 1 && kompozicija.contains("LM") && (kompozicija.contains("LP") || kompozicija.contains("LT") || kompozicija.contains("LU")
+				|| kompozicija.contains("VPS") || kompozicija.contains("VPR") || kompozicija.contains("VT")) )
 		{
+			//manevarska lokomotiva moze samo sa drugim manevarskim lokomotivama i vagonom posebne namjene, ne moze sa ostalim lokomotivama i ostalim vagonima
 			throw new Exception("Neispravan format kompozicije");
 		}
 		
-		else if(kom.contains("LP") && (kom.contains("LT") || kom.contains("VT")))
-		{
+		else if(kompozicija.contains("LP") && (kompozicija.contains("LT") || kompozicija.contains("VT") || kompozicija.contains("VN"))) 
+		{	
+			//putnicka lokomotiva moze sa:    drugim putnickim lokomotivama, univerzalnom lokomotivom, putnickim vagonima
+			//putnicka lokomotiva ne moze sa: manevarskom lokomotivom, teretnom lokomotivom, teretnim vagonima, vagonima posebne namjene 
 			throw new Exception("Neispravan format kompozicije");
 		}
-		else if(kom.contains("LT") && (kom.contains("LP") || kom.contains("VPS") || kom.contains("VPR")))
+		else if(kompozicija.contains("LT") && (kompozicija.contains("LP") || kompozicija.contains("VPS") || kompozicija.contains("VPR") || kompozicija.contains("VN")) )
+		{
+			// teretna lokomotiva moze sa:    drugim teretnim lokomotivama, teretnim vagonima, univerzalnom lokomotivom
+			// teretna lokomotiva ne moze sa: manevarskom lokomotivom, putnickom lokomotivom, putnickim vagonima, vagonima posebne namjene
 			throw new Exception("Neispravan format kompozicije");
+		}
+		
+		//TODO univerzalna lokomotiva moze sa vagonom posebne namjene
 		
 		int br = 0;
 		boolean flag=true;

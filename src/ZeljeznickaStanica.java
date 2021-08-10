@@ -103,8 +103,10 @@ public class ZeljeznickaStanica extends Thread implements Serializable
 						kompozicija.vagoni.get(i).trKoo = new Koordinate(
 								kompozicija.lokomotive.get(kompozicija.lokomotive.size() - 1).trKoo);
 					}
+					
 					if(kompozicija.polazak.koordinate.contains(kompozicija.lokomotive.get(0).trKoo))
 						kompozicija.vrijemeKretanja = System.currentTimeMillis();
+					
 					kompozicija.lokomotive.get(0).trKoo = usmjeriKompoziciju(kompozicija)[1];
 					kompozicija.istorijaKretanja.add(new Koordinate(kompozicija.lokomotive.get(0).trKoo));
 					synchronized (this)
@@ -114,10 +116,8 @@ public class ZeljeznickaStanica extends Thread implements Serializable
 					susjed.dolazneKompozicije.add(kompozicija);
 					synchronized (GUI.frame)
 					{
-						GUI.guiMapa[kompozicija.lokomotive.get(0).trKoo.i][kompozicija.lokomotive.get(0).trKoo.j]
-								.add(new JLabel(new ImageIcon("SLIKE/lokomotiva.png")));
-						((JLabel) GUI.guiMapa[kompozicija.lokomotive.get(0).trKoo.i][kompozicija.lokomotive
-								.get(0).trKoo.j].getComponent(0)).setName(kompozicija.brzinaKretanja + "k");
+						GUI.guiMapa[kompozicija.lokomotive.get(0).trKoo.i][kompozicija.lokomotive.get(0).trKoo.j].add(new JLabel(new ImageIcon("SLIKE/lokomotiva.png")));
+						((JLabel) GUI.guiMapa[kompozicija.lokomotive.get(0).trKoo.i][kompozicija.lokomotive.get(0).trKoo.j].getComponent(0)).setName(kompozicija.brzinaKretanja + "k");
 						SwingUtilities.updateComponentTreeUI(GUI.frame);
 					}
 
