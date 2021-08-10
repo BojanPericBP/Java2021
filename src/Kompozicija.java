@@ -58,9 +58,15 @@ public class Kompozicija extends Thread implements Serializable
 	@Override
 	public void run()
 	{
-
+		
 		while (GUI.simulacijaUToku && prethodnaStanica.nazivStanice != linija.get(linija.size()-1).nazivStanice) 
 		{
+			try {
+				Thread.sleep(brzinaKretanja);
+			} catch (InterruptedException e) {
+				Logger.getLogger(Kompozicija.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
+			}
+			
 			synchronized(this)
 			{
 				radSaRampom();				
@@ -314,6 +320,7 @@ public class Kompozicija extends Thread implements Serializable
 	
 	synchronized boolean kretanjeKompozicije() // true kad udje u stanicu
 	{
+		
 		for (int i = 0; i < lokomotive.size(); i++) 
 		{
 			//Da li (jeUStanici && nijePrethodni na prvom polju pruge)
@@ -396,7 +403,6 @@ public class Kompozicija extends Thread implements Serializable
 				try {
 					Thread.sleep(brzinaKretanja);
 				} catch (InterruptedException e) {
-					
 					Logger.getLogger(Kompozicija.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 				}
 			}
