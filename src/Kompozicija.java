@@ -90,7 +90,7 @@ public class Kompozicija extends Thread implements Serializable
 					if (odrediste.koordinate.contains(lokomotive.get(0).trKoo)) // ako je u odredisnoj stanici
 					{
 						vrijemeKretanja = System.currentTimeMillis() - vrijemeKretanja;
-						vrijemeKretanja /=1000;
+						vrijemeKretanja /= 1000;
 						try 
 						{
 							ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("serijalizacija/kompozicija"+idKompozicije+".ser"));
@@ -121,7 +121,6 @@ public class Kompozicija extends Thread implements Serializable
 				}
 				synchronized (GUI.guiMapa) 
 				{
-					
 					GUI.frame.invalidate();
 					GUI.frame.validate();
 					GUI.frame.repaint();
@@ -200,6 +199,8 @@ public class Kompozicija extends Thread implements Serializable
 			throw new Exception("Neispravan format kompozicije");
 		}
 		
+		//Vagoni posebne namjene samo sa kompozicijama koje imaju samo univerzalne lokomotive
+		
 		int br = 0;
 		boolean flag=true;
 		for (int i = 0; i < niz.length && flag; i++) 
@@ -265,7 +266,6 @@ public class Kompozicija extends Thread implements Serializable
 		int granicaVAG=0;
 		while(granicaLOK!=lokomotive.size() || granicaVAG!=vagoni.size()) 
 		{
-			/////
 			synchronized(this)
 			{
 				radSaRampom();				
@@ -298,68 +298,101 @@ public class Kompozicija extends Thread implements Serializable
 	
 	synchronized void radSaRampom()
 	{
-		boolean flag = true; //treba spustiti rampu
-		for (int i = 18; i < 24; i++) {
-			if(GUI.guiMapa[i][2].getComponents().length ==1)
+		boolean trebaDignuti = true;
+		int pocetakA = 19, krajA = 23;
+		for(int i=0; i<lokomotive.size(); i++) //trazi bar jednu elektricnu
+		{
+			if(lokomotive.get(i).pogon == 'E') 
+			{	
+				pocetakA = 18; krajA = 24;
+				break;
+			}
+		}
+		for (int i = pocetakA; i < krajA; i++) 
+		{
+			if(GUI.guiMapa[i][2].getComponents().length == 1)
 			{
 				if( (GUI.guiMapa[i][2].getComponents()[0]) != null)
 				{
-					String s = ((JLabel)(GUI.guiMapa[i][2].getComponents()[0])).getName(); //Prelaz a
+					String s = ((JLabel)(GUI.guiMapa[i][2].getComponents()[0])).getName(); //Prelaz na putu A
 					if(s != null && s.contains("k"))
-					flag = false;
+						trebaDignuti = false;
 				}
 			}
 		}
 		
 		synchronized(GUI.guiMapa)
 		{
-			obojiRampu(flag,20,2,21,2);
+			obojiRampu(trebaDignuti,20,2,21,2);
 		}
-		flag = true;
-		for (int j = 11; j < 17; j++) {
-			if(GUI.guiMapa[6][j].getComponents().length ==1)
+		
+		//========================================================================================================================0
+		trebaDignuti = true;
+		int pocetakB = 12, krajB = 16;
+		for(int i=0; i<lokomotive.size(); i++) //trazi bar jednu elektricnu
+		{
+			if(lokomotive.get(i).pogon == 'E') 
+			{	
+				pocetakB = 11; krajB = 17;
+				break;
+			}
+		}
+		for (int j = pocetakB; j < krajB; j++) {
+			if(GUI.guiMapa[6][j].getComponents().length == 1)
 			{
 				if( (GUI.guiMapa[6][j].getComponents()[0]) != null)
 				{
-					String s = ((JLabel)(GUI.guiMapa[6][j].getComponents()[0])).getName(); //Prelaz a
+					String s = ((JLabel)(GUI.guiMapa[6][j].getComponents()[0])).getName(); //Prelaz na putu B
 					if(s != null && s.contains("k"))
-					flag = false;
+						trebaDignuti = false;
 				}
 			}
 		}
 		
 		synchronized(GUI.guiMapa)
 		{
-			obojiRampu(flag,6,13,6,14);
+			obojiRampu(trebaDignuti,6,13,6,14);
 			
 		}
-		flag = true;
-		for (int i = 18; i < 24; i++) {
-			if(GUI.guiMapa[i][26].getComponents().length ==1)
+		//========================================================================================================================0
+		trebaDignuti = true;
+		int pocetakC = 19, krajC = 23;
+		for(int i=0; i<lokomotive.size(); i++) //trazi bar jednu elektricnu
+		{
+			if(lokomotive.get(i).pogon == 'E') 
+			{	
+				pocetakC = 18; krajC = 24;
+				break;
+			}
+		}
+		for (int i = pocetakC; i < krajC; i++) 
+		{
+			if(GUI.guiMapa[i][26].getComponents().length == 1)
 			{
 				if( (GUI.guiMapa[i][26].getComponents()[0]) != null)
 				{
-					String s = ((JLabel)(GUI.guiMapa[i][26].getComponents()[0])).getName(); //Prelaz a
+					String s = ((JLabel)(GUI.guiMapa[i][26].getComponents()[0])).getName(); //Prelaz na putu C
 					if(s != null && s.contains("k"))
-					flag = false;
+						trebaDignuti = false;
 				}
 			}
 		}
 		synchronized(GUI.guiMapa)
 		{
-			obojiRampu(flag,20,26,21,26);
+			obojiRampu(trebaDignuti,20,26,21,26);
 		}
 		
 	}
 	
-	synchronized private void obojiRampu(boolean flag,int i1, int j1, int i2,int j2)
+	synchronized private void obojiRampu(boolean trebaPodignuti,int i1, int j1, int i2,int j2)
 	{
-		if(flag)
+		if(trebaPodignuti)
 		{
 			GUI.guiMapa[i1][j1].setBackground(GUI.DIGNUTA_RAMPA);
 			GUI.guiMapa[i2][j2].setBackground(GUI.DIGNUTA_RAMPA);
 		}
-		else {
+		else 
+		{
 			GUI.guiMapa[i1][j1].setBackground(GUI.SPUSTENA_RAMPA);
 			GUI.guiMapa[i2][j2].setBackground(GUI.SPUSTENA_RAMPA);
 		}
@@ -433,7 +466,7 @@ public class Kompozicija extends Thread implements Serializable
 				{
 					synchronized(GUI.frame)
 					{
-						SwingUtilities.updateComponentTreeUI(GUI.frame);					
+						SwingUtilities.updateComponentTreeUI(GUI.frame);				
 					}
 
 					udjiUStanicu();

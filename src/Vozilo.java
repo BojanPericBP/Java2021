@@ -18,6 +18,7 @@ public abstract class Vozilo extends Thread
 	char put;
 	String putanjaSlike;
 	static FileHandler handler;
+	static final int MIN_BRZINA = 1500; //1,5 sekundi najsporije kretanje, a najbrze se cita iz datoteke
 	
 	static 
 	{
@@ -35,9 +36,9 @@ public abstract class Vozilo extends Thread
 	public Vozilo(double maxBrzinaArg, char putArg, String putanjaSlikeArg)
 	{
 		maxBrzina = maxBrzinaArg;
-		trenutnaBrzina = (maxBrzina + Math.random() * (1800-maxBrzina));
-		marka = "marka" + count;
-		model = "model" + count;
+		trenutnaBrzina = maxBrzina + Math.random() * (MIN_BRZINA-maxBrzina);
+		marka = "marka" + new Random().nextInt(100);
+		model = "model" + new Random().nextInt(100);
 		godiste = 1990 + count++;
 		put = putArg;
 		trKoo = new Koordinate(-3, -3);

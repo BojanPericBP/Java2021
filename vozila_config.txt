@@ -1,4 +1,4 @@
-nazivPuta , maxBrzina , maxBrojVozila
+nazivPuta , maxBrzina , maxBrojVozila      (brzina ce se slucajno generisati u rasponu [maxBrzina - MIN_BRZINA])
  A , 10 , 20
  B , 10 , 20
  C , 10 , 20

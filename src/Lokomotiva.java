@@ -6,15 +6,16 @@ import javax.swing.JLabel;
 
 public class Lokomotiva implements Serializable
 {
-	static private int count = 0;
 	private static final long serialVersionUID = 1L;
-	char pogon; //dizel:1, parni:2, elektricni:3
+	static char[] moguciPogoni = {'D', 'P', 'E'}; //D - dizel, P - parni, E - elektricni
+	char pogon; 
 	boolean jeUniverzalna;
 	boolean jePutnicka;
 	boolean jeTeretna;
 	boolean jeManevarska;
 	double snaga;
 	int idLokomotive;
+	static private int brojacLokomotiva = 0;
 	Koordinate trKoo;
 	Koordinate preKoo;
 	static FileHandler handler;
@@ -34,9 +35,9 @@ public class Lokomotiva implements Serializable
 	
 	public Lokomotiva(String tipLokomotive) 
 	{
-		pogon = (char) (new Random().nextInt(2)+49);
+		pogon = moguciPogoni[new Random().nextInt(2)];
 		snaga = Math.random()*10;
-		idLokomotive = count++;
+		idLokomotive = brojacLokomotiva++;
 		
 		trKoo = new Koordinate(-1,-1);
 		preKoo = new Koordinate(-1,-1);

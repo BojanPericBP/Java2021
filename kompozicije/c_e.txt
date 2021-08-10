@@ -1,3 +1,3 @@
  br. lokomotiva,     br. vagona,     raspored, 	         brzina kretanja,      polazak,    odrediste
 ----------------------------------------------------------------------------------------------------
- 3,                  3,             LT;LU;LT;VT;VT;VN,      500,                  C,          E
+ 3,                  3,             LT;LU;LT;VT;VT;VT,      500,                  C,          E

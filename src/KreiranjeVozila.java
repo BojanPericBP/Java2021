@@ -124,6 +124,6 @@ public class KreiranjeVozila extends TimerTask
 	{
 		ucitajIzFajla(); //ucita nove podatke o max broju vozila na putevima i max brzinama
 		kreiraj(); //kreira jedno vozilo
-		postaviNaMapu(); //na svaki put pokusa postaviti po jedno vozilo
+		postaviNaMapu(); //na svaki put pokusa postaviti po jedno vozilo, na jedan smijer
 	}
 }
