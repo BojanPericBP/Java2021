@@ -7,5 +7,5 @@ public class PutnickiVagon extends Vagon
 	{
 		super(false);
 	}
-
+	
 }

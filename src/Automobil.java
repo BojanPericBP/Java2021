@@ -21,9 +21,9 @@ public class Automobil extends Vozilo
 		}
 	}
 	
-	public Automobil(double _maxBrzina,char _put, String _putanjaSlike) 
+	public Automobil(double maxBrzina,char put, String putanjaSlike) 
 	{
-		super(_maxBrzina,_put, _putanjaSlike);
+		super(maxBrzina,put, putanjaSlike);
 		brojVrata = new Random().nextInt(6)+2;
 	}
 

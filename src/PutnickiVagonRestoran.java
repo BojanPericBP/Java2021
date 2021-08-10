@@ -7,7 +7,7 @@ public class PutnickiVagonRestoran extends PutnickiVagon
 	
 	public PutnickiVagonRestoran() 
 	{
-		opis="Ovo je opis vagona "+count++;
+		opis="Opis vagona "+count++;
 	}
 
 }

@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 public class KreiranjeKompozicija extends Thread
 {
 	WatchService watcher;
-	Path dir;
+	Path putanjaFoldera;
 	static FileHandler handler;
 	
 	static 
@@ -37,8 +37,8 @@ public class KreiranjeKompozicija extends Thread
 		try
 		{
 			watcher = FileSystems.getDefault().newWatchService();
-			dir = Paths.get("kompozicije");
-			dir.register(watcher, ENTRY_MODIFY);
+			putanjaFoldera = Paths.get("kompozicije");
+			putanjaFoldera.register(watcher, ENTRY_MODIFY);
 		}
 		catch (IOException e)
 		{
@@ -66,14 +66,13 @@ public class KreiranjeKompozicija extends Thread
 				{
 					@SuppressWarnings("unchecked")
 					WatchEvent<Path> ev = (WatchEvent<Path>) event;
-					Path fileName = ev.context();
-					if (fileName.toString().trim().endsWith(".txt"))
+					Path nazivDatoteke = ev.context();
+					if (nazivDatoteke.toString().trim().endsWith(".txt"))
 					{
-						List<String>content = Files.readAllLines(dir.resolve(fileName));
+						List<String>content = Files.readAllLines(putanjaFoldera.resolve(nazivDatoteke));
 						kreiraj(content.get(2));
 					}
 				}
-
 				boolean valid = key.reset();
 				if (!valid) { break; }
 			}

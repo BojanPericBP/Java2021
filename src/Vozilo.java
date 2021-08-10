@@ -32,18 +32,18 @@ public abstract class Vozilo extends Thread
 		}
 	}
 
-	public Vozilo(double _maxBrzina, char _put, String _putanjaSlike)
+	public Vozilo(double maxBrzinaArg, char putArg, String putanjaSlikeArg)
 	{
-		maxBrzina = _maxBrzina;
+		maxBrzina = maxBrzinaArg;
 		trenutnaBrzina = (maxBrzina + Math.random() * (1800-maxBrzina));
 		marka = "marka" + count;
 		model = "model" + count;
 		godiste = 1990 + count++;
-		put = _put;
+		put = putArg;
 		trKoo = new Koordinate(-3, -3);
 		preKoo = new Koordinate(-3, -3);
 		smjer = (char) ('0' + new Random().nextInt(2));
-		putanjaSlike=_putanjaSlike;
+		putanjaSlike = putanjaSlikeArg;
 	}
 
 	@Override
@@ -97,7 +97,6 @@ public abstract class Vozilo extends Thread
 					preKoo.j = trKoo.j;
 					trKoo = k;
 				}
-
 				SwingUtilities.updateComponentTreeUI(GUI.frame);					
 				
 			}

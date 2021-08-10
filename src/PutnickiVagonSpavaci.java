@@ -3,7 +3,7 @@ import java.util.Random;
 public class PutnickiVagonSpavaci extends Vagon
 {
 	private static final long serialVersionUID = 1L;
-	int brojMjesta;
+	int brojMjesta; 
 	
 	public PutnickiVagonSpavaci() 
 	{

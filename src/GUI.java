@@ -76,7 +76,6 @@ public class GUI extends JFrame
 				ZeljeznickaStanica.handler.close();
 				Vagon.handler.close();
 				Lokomotiva.handler.close();
-				
 				e.getWindow().dispose();
 			}
 		});

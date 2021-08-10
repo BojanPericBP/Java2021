@@ -127,4 +127,3 @@ public class KreiranjeVozila extends TimerTask
 		postaviNaMapu(); //na svaki put pokusa postaviti po jedno vozilo
 	}
 }
-

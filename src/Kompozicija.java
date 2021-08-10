@@ -43,24 +43,24 @@ public class Kompozicija extends Thread implements Serializable
 		}
 	}
 
-	public Kompozicija(int _brLokomotiva, int _brVagona, String _raspored, long _brzina, ZeljeznickaStanica _polazak, ZeljeznickaStanica _odrediste) throws Exception 
+	public Kompozicija(int brLokomotivaArg, int brVagonaArg, String rasporedArg, long brzinaArg, ZeljeznickaStanica polazakArg, ZeljeznickaStanica odredisteArg) throws Exception 
 	{
 		
 		idKompozicije = count++;
-		if (_brLokomotiva > MAX_BROJ_LOKOMOTIVA || _brLokomotiva < 1 || _brVagona > MAX_BR_VAGONA || _brVagona < 0)
+		if (brLokomotivaArg > MAX_BROJ_LOKOMOTIVA || brLokomotivaArg < 1 || brVagonaArg > MAX_BR_VAGONA || brVagonaArg < 0)
 			throw new Exception("Kompozicija nije validna!");
 
-		brzinaKretanja = _brzina <= 500 ? 500: _brzina;
-		polazak = _polazak;
-		odrediste = _odrediste;
-		vagoni = new ArrayList<>(_brVagona);
-		lokomotive = new ArrayList<>(_brLokomotiva);
+		brzinaKretanja = brzinaArg <= 500 ? 500: brzinaArg;
+		polazak = polazakArg;
+		odrediste = odredisteArg;
+		vagoni = new ArrayList<>(brVagonaArg);
+		lokomotive = new ArrayList<>(brLokomotivaArg);
 		prethodnaStanica = polazak;
 		tmpBrzina = brzinaKretanja;
 		
 		istorijaKretanja = new ArrayList<Koordinate>();
-		usputneStanice = _polazak.nazivStanice+" ";
-		kreirajKompoziciju(_raspored);
+		usputneStanice = polazakArg.nazivStanice+" ";
+		kreirajKompoziciju(rasporedArg);
 	}
 	
 	@Override
@@ -85,7 +85,6 @@ public class Kompozicija extends Thread implements Serializable
 						vrijemeKretanja /=1000;
 						try 
 						{
-							
 							ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("serijalizacija/kompozicija"+idKompozicije+".ser"));
 							oos.writeObject(this);
 							oos.close();

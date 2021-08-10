@@ -1,16 +1,17 @@
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Koordinate implements Serializable{
+public class Koordinate implements Serializable
+{
 	
 	private static final long serialVersionUID = 1L;
-	
 	int i;
 	int j;
 	
-	public Koordinate(Koordinate _Koordinate) {
-		i = _Koordinate.i;
-		j = _Koordinate.j;
+	public Koordinate(Koordinate koordinateArg) 
+	{
+		i = koordinateArg.i;
+		j = koordinateArg.j;
 	}
 	
 	public Koordinate(int x, int y)
@@ -18,10 +19,14 @@ public class Koordinate implements Serializable{
 		i = x;
 		j = y;
 	}
-
+	
 	@Override
-	public int hashCode() {
-		return Objects.hash(i, j);
+	public int hashCode() 
+	{
+		int hash = 3;
+		hash = 7 * hash + Integer.valueOf(i).hashCode();
+		hash = 7 * hash + Integer.valueOf(j).hashCode();
+		return hash;
 	}
 
 	@Override

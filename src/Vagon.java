@@ -2,7 +2,6 @@ import java.io.Serializable;
 import java.util.Random;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
-
 import javax.swing.JLabel;
 
 public class Vagon implements Serializable 
@@ -29,15 +28,16 @@ public class Vagon implements Serializable
 		}
 	}
 	
-	public Vagon(boolean _jePosebneNamjene) {
+	public Vagon(boolean jePosebneNamjeneArg) {
 		IDVagona = count++;
 		duzinaVagona = new Random().nextInt(4)+1;
-		jePosebneNamjene = _jePosebneNamjene;
+		jePosebneNamjene = jePosebneNamjeneArg;
 		trKoo = new Koordinate(-1,-1);
 		preKoo = new Koordinate(-1,-1);
 	}
 
-	synchronized public boolean move() {
+	synchronized public boolean move() 
+	{
 		
 		 if((GUI.mapa[trKoo.i-1][trKoo.j] == 'p' || GUI.mapa[trKoo.i-1][trKoo.j] == 'x' || GUI.mapa[trKoo.i-1][trKoo.j] == 's')
 			 && (trKoo.i-1 != preKoo.i))//provjerava gore// == 0

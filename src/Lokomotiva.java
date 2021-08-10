@@ -6,7 +6,6 @@ import javax.swing.JLabel;
 
 public class Lokomotiva implements Serializable
 {
-
 	static private int count = 0;
 	private static final long serialVersionUID = 1L;
 	char pogon; //dizel:1, parni:2, elektricni:3
@@ -54,7 +53,8 @@ public class Lokomotiva implements Serializable
 			System.out.println("Tip lokomotive uz datoteci nije ispravno naveden! ");
 	}
 
-	synchronized public boolean move() {
+	synchronized public boolean move() 
+	{
 		if((GUI.mapa[trKoo.i-1][trKoo.j] == 'p' || GUI.mapa[trKoo.i-1][trKoo.j] == 'x' || GUI.mapa[trKoo.i-1][trKoo.j] == 's')
 				&& (trKoo.i-1 != preKoo.i))//provjerava gore// == 0
 		 {
@@ -64,7 +64,8 @@ public class Lokomotiva implements Serializable
 				 GUI.guiMapa[trKoo.i][trKoo.j].add((JLabel) GUI.guiMapa[preKoo.i][preKoo.j].getComponents()[0]);
 			 
 			 
-			 else if(GUI.mapa[trKoo.i][trKoo.j] == 's') {
+			 else if(GUI.mapa[trKoo.i][trKoo.j] == 's') 
+			 {
 				 GUI.guiMapa[preKoo.i][preKoo.j].remove((JLabel) GUI.guiMapa[preKoo.i][preKoo.j].getComponents()[0]);
 				 return false;
 			}

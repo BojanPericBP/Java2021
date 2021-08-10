@@ -32,7 +32,7 @@ public class ZeljeznickaStanica extends Thread implements Serializable
 		}
 	}
 
-	public ZeljeznickaStanica(char _nazivStanice, ArrayList<Koordinate> _koordinate)
+	public ZeljeznickaStanica(char nazivStaniceArg, ArrayList<Koordinate> koordinateArg)
 	{
 		matricaSusjedstva = new int[5][5];
 		for (int i = 0; i < matricaSusjedstva.length; i++)
@@ -45,17 +45,15 @@ public class ZeljeznickaStanica extends Thread implements Serializable
 		redUStanici = new ArrayList<>();
 		dolazneKompozicije = new ArrayList<>();
 
-		nazivStanice = _nazivStanice;
-		koordinate = _koordinate;
+		nazivStanice = nazivStaniceArg;
+		koordinate = koordinateArg;
 	}
 
 	@Override
 	public void run() // kompozicija je vec na prvom polju izvan pruge tj lokomotiva
 	{
-
 		while (GUI.simulacijaUToku)
 		{
-
 			Iterator<Kompozicija> iteratorKompozicija = redUStanici.iterator();
 
 			while (iteratorKompozicija.hasNext()) // pronalazi kompoziciju za koju je slobodna odredjena pruga i

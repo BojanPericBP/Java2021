@@ -10,18 +10,17 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 
 public class FormaPodaci 
 {
 	static public JTextArea textArea;
 	JFrame frame;
 	static FileHandler handlerFajl;
-	JTable j;
 	
-	static {
-		
-		try {
+	static
+	{
+		try 
+		{
 			handlerFajl=new FileHandler("Error logs/FormaPodaci.log");
 			Logger.getLogger(FormaPodaci.class.getName()).addHandler(handlerFajl);
 		} catch (Exception e) {
@@ -38,6 +37,7 @@ public class FormaPodaci
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(43, 85, 774, 372);
 		frame.getContentPane().add(scrollPane);
+		
 		textArea = new JTextArea();
 		textArea.setFont(new Font("Monospaced", Font.PLAIN, 16));
 		scrollPane.setViewportView(textArea);
