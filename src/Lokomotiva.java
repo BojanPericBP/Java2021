@@ -22,5 +22,4 @@ public class Lokomotiva extends elementKompozicije implements Serializable{
 		
 		typeTrain = tipLokomotive;
 	}
-
 }

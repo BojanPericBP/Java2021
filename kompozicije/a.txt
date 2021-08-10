@@ -1,3 +1,0 @@
-raspored_lokomotiva raspored_vagona brzina polazak odrediste
-
-ml null 300 E D

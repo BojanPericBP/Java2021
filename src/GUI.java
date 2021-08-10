@@ -23,7 +23,6 @@ public class GUI extends JFrame
 	static final int MAT_SIZE = 30;
 	
 	static int[] trenutniBrVozilaNaPutevima = {0, 0, 0};
-	static char[][] mapa;
 	static ArrayList<ZeljeznickaStanica> stanice = new ArrayList<>(5);
 	static boolean btnFlagStart = false;
 	
@@ -62,15 +61,18 @@ public class GUI extends JFrame
 	public static void main(String[] args) throws Exception
 	{
 		new GUI();
-
-		/*Automobil v1 = new Automobil(10,'A',"car.png");
-		guiMapa[21][0].add(new JLabel(new ImageIcon(v1.putanjaSlike)));
-		Automobil v2 = new Automobil(10,'A',"car.png");
-		guiMapa[21][3].add(new JLabel(new ImageIcon(v1.putanjaSlike)));
-		v2.trKoo.x = v2.preKoo.x = 21;
-		v2.trKoo.y = v2.preKoo.y =0;
 		
-		v2.smjer = '1';
+		//guiMapa[0][0].setBackground(new Color(1,150,200));
+		
+		//Automobil v1 = new Automobil(10,'A',"car.png");
+		//guiMapa[21][0].add(new JLabel(new ImageIcon(v1.putanjaSlike)));
+		/*guiMapa[6][13].setBackground(Color.red);
+		Automobil v2 = new Automobil(10,'A',"resource/car.png");
+		guiMapa[4][13].add(new JLabel(new ImageIcon(v2.putanjaSlike)));
+		v2.trKoo.x = 4; v2.preKoo.x = 3;
+		v2.trKoo.y = 13; v2.preKoo.y = 13;
+		
+		v2.smjer = 1;
 		simulacijaUToku = true;
 		v2.run();*/
 		
@@ -85,7 +87,7 @@ public class GUI extends JFrame
 	
 	public GUI() 
 	{
-		frame = new JFrame("NASLOV");
+		frame = new JFrame("Java projekat");
 		frame.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -103,7 +105,6 @@ public class GUI extends JFrame
 		frame.getContentPane().add(contentPanel, BorderLayout.CENTER);
 
 		guiMapa = new JPanel[MAT_SIZE][MAT_SIZE];
-		mapa = new char[MAT_SIZE][MAT_SIZE];
 		
 		JPanel leftPanel = new JPanel();
 		leftPanel.setSize(50,1200);
@@ -134,7 +135,6 @@ public class GUI extends JFrame
 			public void actionPerformed(ActionEvent e) {
 				 FormaPodaci formaPodaci = new FormaPodaci();
 				 formaPodaci.showWindow();
-	
 			}
 		});
 		
@@ -146,7 +146,7 @@ public class GUI extends JFrame
 			for (int j = 0; j < MAT_SIZE; j++) {
 				guiMapa[i][j]= new JPanel(); 
 				guiMapa[i][j].setSize(20,20);
-				guiMapa[i][j].setBackground(Color.LIGHT_GRAY);
+				guiMapa[i][j].setBackground(new Color(222, 225, 227));
 				contentPanel.add(guiMapa[i][j]);
 			}
 		}
@@ -156,99 +156,62 @@ public class GUI extends JFrame
 				
 				//setovanje plavih polja
 				if(j==13)
-				{
-					guiMapa[i][j].setBackground(Color.cyan);
-					mapa[i][j] = '1'; 
-				}
+					guiMapa[i][j].setBackground(new Color(1, 150, 200));
 				
 				else if(j==14)
-				{
-					guiMapa[i][j].setBackground(Color.cyan);
-					mapa[i][j] = '0'; 
-				}
+					guiMapa[i][j].setBackground(new Color(0, 150, 200));
 				
 				
 				else if((i==20) && (j<9 || j > 20))
-				{
-					guiMapa[i][j].setBackground(Color.cyan);
-					mapa[i][j] = '0';
-				}
+					guiMapa[i][j].setBackground(new Color(0, 150, 200));
 				
 				else if(i==21 && (j<9 || j>20))
-				{
-					guiMapa[i][j].setBackground(Color.cyan);
-					mapa[i][j] = '1';
-				}
+					guiMapa[i][j].setBackground(new Color(1, 150, 200));
 				
 				else if(i>21 && (j==8 || j == 21 ))
-				{
-					guiMapa[i][j].setBackground(Color.cyan);
-					mapa[i][j] = '0';					
-				}
+					guiMapa[i][j].setBackground(new Color(0, 150, 200));
 				
 				else if(i>21 && (j==7 || j== 22))
-				{
-					guiMapa[i][j].setBackground(Color.cyan);
-					mapa[i][j] = '1';	
-				}
+					guiMapa[i][j].setBackground(new Color(1, 150, 200));
 				
-				//setovanje sivih polja
 				if((j==2 && i>15) || (i>17 && i< 27 && j==26) || (i==1 && j>22 && j<28))
-				{
-					guiMapa[i][j].setBackground(Color.green);
-					mapa[i][j] = 'p';
-				}
+					guiMapa[i][j].setBackground(Color.LIGHT_GRAY);
 				else if(j==5 && i>5 && i<17)
-				{
-					guiMapa[i][j].setBackground(Color.green);
-					mapa[i][j] = 'p';					
-				}
+					guiMapa[i][j].setBackground(Color.LIGHT_GRAY);
 				
 				else if((i==18 && j>19 && j<27) || (i==6 && j>5 && j<19))
-				{
-					mapa[i][j] = 'p';
-					guiMapa[i][j].setBackground(Color.green);
-				}
+					guiMapa[i][j].setBackground(Color.LIGHT_GRAY);
 				
 				else if((j==20 && i>11 && i<18) || (j==19 && i>5 && i<14))
-				{
-					guiMapa[i][j].setBackground(Color.green);
-					mapa[i][j] = 'p';					
-				}
+					guiMapa[i][j].setBackground(Color.LIGHT_GRAY);
 				
 				else if((i==25 && j>24) || (i==12 && j>20 && j<27) || (j==22 && i>0 && i< 4))
-				{
-					guiMapa[i][j].setBackground(Color.green);
-					mapa[i][j] = 'p';					
-				}
+					guiMapa[i][j].setBackground(Color.LIGHT_GRAY);
 				
 				else if((j == 26 && i>8 && i < 13)|| (j==28 && i > 4 && i < 10) || (i==5 && j>22 && j<29))
-				{
-					guiMapa[i][j].setBackground(Color.green);
-					mapa[i][j] = 'p';					
-				}
+					guiMapa[i][j].setBackground(Color.LIGHT_GRAY);
 			}
 		}
+		guiMapa[21][8].setBackground(new Color(0,150,200));
+		guiMapa[21][21].setBackground(new Color(0,150,200));
 		
-		guiMapa[16][3].setBackground(Color.green);
-		mapa[16][3]='p';
-		guiMapa[16][4].setBackground(Color.green);
-		mapa[16][4]='p';
-		guiMapa[26][25].setBackground(Color.green);
-		guiMapa[9][27].setBackground(Color.green);
-		mapa[9][27]='p';
-		guiMapa[3][23].setBackground(Color.green);
-		mapa[3][23]='p';
-		guiMapa[4][23].setBackground(Color.green);
-		mapa[4][23]='p';
-		guiMapa[2][26].setBackground(Color.green);
-		guiMapa[2][27].setBackground(Color.green);
-		guiMapa[27][1].setBackground(Color.green);
-		guiMapa[28][1].setBackground(Color.green);
-		guiMapa[5][6].setBackground(Color.green);
-		guiMapa[5][7].setBackground(Color.green);
+		guiMapa[16][3].setBackground(Color.LIGHT_GRAY);
+		guiMapa[16][4].setBackground(Color.LIGHT_GRAY);
+		guiMapa[26][25].setBackground(Color.LIGHT_GRAY);
+		guiMapa[9][27].setBackground(Color.LIGHT_GRAY);
+		guiMapa[3][23].setBackground(Color.LIGHT_GRAY);
+		guiMapa[4][23].setBackground(Color.LIGHT_GRAY);
+		guiMapa[2][26].setBackground(Color.LIGHT_GRAY);
+		guiMapa[2][27].setBackground(Color.LIGHT_GRAY);
+		guiMapa[27][1].setBackground(Color.LIGHT_GRAY);
+		guiMapa[28][1].setBackground(Color.LIGHT_GRAY);
+		guiMapa[5][6].setBackground(Color.LIGHT_GRAY);
+		guiMapa[5][7].setBackground(Color.LIGHT_GRAY);
 		
-		mapa[27][2] = 's';
+		guiMapa[27][2].setBackground(Color.yellow);
+		guiMapa[27][1].setBackground(Color.yellow);
+		guiMapa[28][2].setBackground(Color.yellow);
+		guiMapa[28][1].setBackground(Color.yellow);
 		
 		guiMapa[5][7].add(new JLabel(new ImageIcon("resource/station.png")));
 		guiMapa[2][27].add(new JLabel(new ImageIcon("resource/station.png")));
@@ -257,41 +220,50 @@ public class GUI extends JFrame
 		guiMapa[27][1].add(new JLabel(new ImageIcon("resource/a.png")));
 		guiMapa[27][2].add(new JLabel(new ImageIcon("resource/stop.png")));
 		guiMapa[28][1].add(new JLabel(new ImageIcon("resource/station.png")));
-		mapa[27][2] = mapa[28][2] = 's';
+		
+		
 		guiMapa[6][6].add(new JLabel(new ImageIcon("resource/stop.png")));
 		guiMapa[6][7].add(new JLabel(new ImageIcon("resource/stop.png")));
 		guiMapa[5][6].add(new JLabel(new ImageIcon("resource/b.png")));
-		mapa[6][6] = 's'; mapa[6][7] = 's';
+		
+		
+		guiMapa[6][6].setBackground(Color.yellow);
+		guiMapa[6][7].setBackground(Color.yellow);
+		guiMapa[5][6].setBackground(Color.yellow);
+		guiMapa[5][7].setBackground(Color.yellow);
+		
 		guiMapa[12][19].add(new JLabel(new ImageIcon("resource/stop.png")));
 		guiMapa[13][19].add(new JLabel(new ImageIcon("resource/c.png")));
 		guiMapa[12][20].add(new JLabel(new ImageIcon("resource/stop.png")));
 		guiMapa[13][20].add(new JLabel(new ImageIcon("resource/stop.png")));
-		mapa[12][20]='s';
+		guiMapa[12][19].setBackground(Color.yellow);
+		guiMapa[12][20].setBackground(Color.yellow);
+		guiMapa[13][19].setBackground(Color.yellow);
+		guiMapa[13][20].setBackground(Color.yellow);
 		
 		guiMapa[1][26].add(new JLabel(new ImageIcon("resource/stop.png")));
 		guiMapa[2][26].add(new JLabel(new ImageIcon("resource/d.png")));
-		mapa[1][26] = mapa[1][27] = 's';
 		guiMapa[25][25].add(new JLabel(new ImageIcon("resource/e.png")));
 		guiMapa[25][26].add(new JLabel(new ImageIcon("resource/stop.png")));
-		mapa[25][26] = 's';
-		mapa[21][21] = mapa[21][8] = '0';
-		mapa[26][26]= mapa [25][25] = mapa [29][2] = mapa [25][27] = 0;
-		mapa[13][20] = mapa[13][19] = mapa[12][19] = 's';
+		
+
+		guiMapa[25][25].setBackground(Color.yellow);
+		guiMapa[25][26].setBackground(Color.yellow);
+		guiMapa[26][25].setBackground(Color.yellow);
+		guiMapa[26][26].setBackground(Color.yellow);
 		
 		
-		//setovanje pruznih prelaza
+		guiMapa[1][27].setBackground(Color.yellow);
+		guiMapa[1][26].setBackground(Color.yellow);
+		guiMapa[2][27].setBackground(Color.yellow);
+		guiMapa[2][26].setBackground(Color.yellow);
+
 		guiMapa[20][2].setBackground(Color.orange);
-		mapa[20][2]='x';
 		guiMapa[21][2].setBackground(Color.orange);
-		mapa [21][2] ='x';
 		guiMapa[6][13].setBackground(Color.orange);
-		mapa [6][13] ='x';
 		guiMapa[6][14].setBackground(Color.orange);
-		mapa [6][14] ='x';
 		guiMapa[20][26].setBackground(Color.orange);
-		mapa [20][26] = 'x';
 		guiMapa[21][26].setBackground(Color.orange);
-		mapa [21][26] ='x';
 
 		
 		frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE );

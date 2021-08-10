@@ -179,7 +179,7 @@ public class ZeljeznickaStanica extends Thread implements Serializable
 			return (new Point[]
 			{ new Point(6, 6), new Point(6, 5), new Point(7, 5) }); // prva koordinata jepozicija na
 		// koju smjestam kompoziciju, adruga je za provjeru razmaka..
-
+ 
 		// odredi susjeda.odrediste.koordinate.contains(new Point(27, 2))
 
 		else if (nazivStanice == 'B' && komp.odrediSusjeda().nazivStanice == 'C') // ka C

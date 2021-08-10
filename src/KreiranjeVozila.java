@@ -95,7 +95,7 @@ public class KreiranjeVozila extends TimerTask
 		
 		for(int i=0; i<3; ++i) //na svaki put pokusa po jedno vozilo postaviti po jedno vozilo
 		{
-			if(vozilaNaCekanju.get(i).size()>0 && vozilaNaCekanju.get(i).get(0).smjer == '0' && GUI.guiMapa[ kordStart[i][0].x ][ kordStart[i][0].y ].getComponents().length == 0)
+			if(vozilaNaCekanju.get(i).size()>0 && vozilaNaCekanju.get(i).get(0).smjer == 0 && GUI.guiMapa[ kordStart[i][0].x ][ kordStart[i][0].y ].getComponents().length == 0)
 			{
 				Vozilo tmpVozilo = vozilaNaCekanju.get(i).remove(0);
 				tmpVozilo.trKoo.x = kordStart[i][0].x;
@@ -105,7 +105,7 @@ public class KreiranjeVozila extends TimerTask
 				((JLabel)GUI.guiMapa[tmpVozilo.trKoo.x][tmpVozilo.trKoo.y].getComponents()[0]).setName(""+(long)tmpVozilo.trenutnaBrzina);
 				tmpVozilo.start();
 			}
-			else if(vozilaNaCekanju.get(i).size()>0 && vozilaNaCekanju.get(i).get(0).smjer == '1' && GUI.guiMapa[ kordStart[i][1].x ][ kordStart[i][1].y ].getComponents().length == 0) //ako nema niko na pocetku smijera 1
+			else if(vozilaNaCekanju.get(i).size()>0 && vozilaNaCekanju.get(i).get(0).smjer == 1 && GUI.guiMapa[ kordStart[i][1].x ][ kordStart[i][1].y ].getComponents().length == 0) //ako nema niko na pocetku smijera 1
 			{
 				Vozilo tmpVozilo = vozilaNaCekanju.get(i).remove(0);
 				tmpVozilo.trKoo.x = kordStart[i][1].x;

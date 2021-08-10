@@ -61,12 +61,7 @@ public class Kompozicija extends Thread implements Serializable
 		
 		while (GUI.simulacijaUToku && prethodnaStanica.nazivStanice != linija.get(linija.size()-1).nazivStanice) 
 		{
-			try {
-				Thread.sleep(brzinaKretanja);
-			} catch (InterruptedException e) {
-				Logger.getLogger(Kompozicija.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
-			}
-			
+		
 			synchronized(this)
 			{
 				radSaRampom();				

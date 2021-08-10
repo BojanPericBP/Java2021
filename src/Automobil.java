@@ -24,5 +24,4 @@ public class Automobil extends Vozilo
 		super(_maxBrzina,_put, _putanjaSlike);
 		brojVrata = new Random().nextInt(6)+2;
 	}
-
 }
