@@ -18,13 +18,13 @@ public class Kompozicija extends Thread implements Serializable
 	int idKompozicije;
 	private static final long serialVersionUID = 1L;
 
-	public long vrijemeKretanja;
+	volatile long vrijemeKretanja;
 	ArrayList<Point> istorijaKretanja;
 	
 	ArrayList<Lokomotiva> lokomotive;
 	ArrayList<Vagon> vagoni;
-	long brzinaKretanja;
-	long tmpBrzina;
+	volatile long brzinaKretanja;
+	volatile long tmpBrzina;
 	ArrayList<ZeljeznickaStanica> linija;
 	ZeljeznickaStanica prethodnaStanica;
 	

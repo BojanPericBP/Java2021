@@ -13,8 +13,8 @@ public abstract class Vozilo extends Thread
 	String marka;
 	String model;
 	int godiste;
-	double maxBrzina;
-	double trenutnaBrzina;
+	volatile double maxBrzina;
+	volatile double trenutnaBrzina;
 	Point trKoo;
 	Point preKoo;
 	int smjer;
