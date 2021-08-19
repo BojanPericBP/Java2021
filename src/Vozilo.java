@@ -12,8 +12,8 @@ public abstract class Vozilo extends Thread
 	int godiste;
 	double maxBrzina;
 	double trenutnaBrzina;
-	Koordinate trKoo;
-	Koordinate preKoo;
+	Koordinate trenutneKoordinate;
+	Koordinate prethodneKoordinate;
 	char smjer;
 	char put;
 	String putanjaSlike;
@@ -41,8 +41,8 @@ public abstract class Vozilo extends Thread
 		model = "model" + new Random().nextInt(100);
 		godiste = 1990 + count++;
 		put = putArg;
-		trKoo = new Koordinate(-3, -3);
-		preKoo = new Koordinate(-3, -3);
+		trenutneKoordinate = new Koordinate(-3, -3);
+		prethodneKoordinate = new Koordinate(-3, -3);
 		smjer = (char) ('0' + new Random().nextInt(2));
 		putanjaSlike = putanjaSlikeArg;
 	}
@@ -50,7 +50,7 @@ public abstract class Vozilo extends Thread
 	@Override
 	public void run()
 	{
-		while (GUI.simulacijaUToku && (trKoo.i != -1 || trKoo.j != -1))
+		while (GUI.simulacijaUToku && (trenutneKoordinate.i != -1 || trenutneKoordinate.j != -1))
 		{
 			try
 			{
@@ -65,15 +65,15 @@ public abstract class Vozilo extends Thread
 			{
 				Koordinate k = sledeciKorak();
 
-				if (trKoo.equals(k))
+				if (trenutneKoordinate.equals(k))
 				{
 					continue;
 				}
 
 				if (k.i == -1 && k.j == -1)
 				{
-					GUI.guiMapa[trKoo.i][trKoo.j].remove((JLabel) GUI.guiMapa[trKoo.i][trKoo.j].getComponents()[0]);
-					trKoo = k;
+					GUI.guiMapa[trenutneKoordinate.i][trenutneKoordinate.j].remove((JLabel) GUI.guiMapa[trenutneKoordinate.i][trenutneKoordinate.j].getComponents()[0]);
+					trenutneKoordinate = k;
 					GUI.trenutniBrVozilaNaPutevima[put - 'A']--;
 				}
 				else if (k.i == -2)
@@ -81,8 +81,8 @@ public abstract class Vozilo extends Thread
 					Koordinate tmpKoord = prelazakPruznogPrelaza();
 					if (tmpKoord != null)
 					{
-						GUI.guiMapa[tmpKoord.i][tmpKoord.j].add((JLabel) GUI.guiMapa[trKoo.i][trKoo.j].getComponents()[0]);
-						trKoo = tmpKoord;
+						GUI.guiMapa[tmpKoord.i][tmpKoord.j].add((JLabel) GUI.guiMapa[trenutneKoordinate.i][trenutneKoordinate.j].getComponents()[0]);
+						trenutneKoordinate = tmpKoord;
 					}
 					else
 					{
@@ -92,11 +92,11 @@ public abstract class Vozilo extends Thread
 				else
 				{
 					usaglasavanjeBrzine(k);
-					GUI.guiMapa[k.i][k.j].add((JLabel) GUI.guiMapa[trKoo.i][trKoo.j].getComponents()[0]);
+					GUI.guiMapa[k.i][k.j].add((JLabel) GUI.guiMapa[trenutneKoordinate.i][trenutneKoordinate.j].getComponents()[0]);
 
-					preKoo.i = trKoo.i;
-					preKoo.j = trKoo.j;
-					trKoo = k;
+					prethodneKoordinate.i = trenutneKoordinate.i;
+					prethodneKoordinate.j = trenutneKoordinate.j;
+					trenutneKoordinate = k;
 				}
 				SwingUtilities.updateComponentTreeUI(GUI.frame);					
 				
@@ -111,8 +111,8 @@ public abstract class Vozilo extends Thread
 		{
 			if (GUI.guiMapa[20][1].getComponents().length == 0)
 			{
-				preKoo.i = 20;
-				preKoo.j = 2;
+				prethodneKoordinate.i = 20;
+				prethodneKoordinate.j = 2;
 				return new Koordinate(20, 1);
 			}
 		}
@@ -121,8 +121,8 @@ public abstract class Vozilo extends Thread
 		{
 			if (GUI.guiMapa[21][3].getComponents().length == 0)
 			{
-				preKoo.i = 21;
-				preKoo.j = 2;
+				prethodneKoordinate.i = 21;
+				prethodneKoordinate.j = 2;
 				return new Koordinate(21, 3);
 			}
 		}
@@ -131,8 +131,8 @@ public abstract class Vozilo extends Thread
 		{
 			if (GUI.guiMapa[5][14].getComponents().length == 0)
 			{
-				preKoo.i = 6;
-				preKoo.j = 14;
+				prethodneKoordinate.i = 6;
+				prethodneKoordinate.j = 14;
 				return new Koordinate(5, 14);
 			}
 		}
@@ -141,8 +141,8 @@ public abstract class Vozilo extends Thread
 		{
 			if (GUI.guiMapa[7][13].getComponents().length == 0)
 			{
-				preKoo.i = 6;
-				preKoo.j = 13;
+				prethodneKoordinate.i = 6;
+				prethodneKoordinate.j = 13;
 				return new Koordinate(7, 13);
 			}
 		}
@@ -151,8 +151,8 @@ public abstract class Vozilo extends Thread
 		{
 			if (GUI.guiMapa[20][25].getComponents().length == 0)
 			{
-				preKoo.i = 20;
-				preKoo.j = 26;
+				prethodneKoordinate.i = 20;
+				prethodneKoordinate.j = 26;
 				return new Koordinate(20, 25);
 			}
 		}
@@ -161,8 +161,8 @@ public abstract class Vozilo extends Thread
 		{
 			if (GUI.guiMapa[21][27].getComponents().length == 0)
 			{
-				preKoo.i = 21;
-				preKoo.j = 26;
+				prethodneKoordinate.i = 21;
+				prethodneKoordinate.j = 26;
 				return new Koordinate(21, 27);
 			}
 		}
@@ -182,34 +182,34 @@ public abstract class Vozilo extends Thread
 	synchronized Koordinate sledeciKorak()
 	{
 
-		if (trKoo.j < 29 && ((GUI.mapa[trKoo.i][trKoo.j + 1] == smjer || GUI.mapa[trKoo.i][trKoo.j + 1] == 'x') && trKoo.j + 1 != preKoo.j)) // provjera desno
+		if (trenutneKoordinate.j < 29 && ((GUI.planGrada[trenutneKoordinate.i][trenutneKoordinate.j + 1] == smjer || GUI.planGrada[trenutneKoordinate.i][trenutneKoordinate.j + 1] == 'x') && trenutneKoordinate.j + 1 != prethodneKoordinate.j)) // provjera desno
 		{
-			if (GUI.guiMapa[trKoo.i][trKoo.j + 1].getComponents().length == 1)
+			if (GUI.guiMapa[trenutneKoordinate.i][trenutneKoordinate.j + 1].getComponents().length == 1)
 			{
-				return trKoo;
+				return trenutneKoordinate;
 			}
-			return (GUI.mapa[trKoo.i][trKoo.j + 1] == 'x') ? new Koordinate(-2, -2) : new Koordinate(trKoo.i, trKoo.j + 1);
+			return (GUI.planGrada[trenutneKoordinate.i][trenutneKoordinate.j + 1] == 'x') ? new Koordinate(-2, -2) : new Koordinate(trenutneKoordinate.i, trenutneKoordinate.j + 1);
 		}
 
-		else if (trKoo.j > 0 && ((GUI.mapa[trKoo.i][trKoo.j - 1] == smjer || GUI.mapa[trKoo.i][trKoo.j - 1] == 'x') && trKoo.j - 1 != preKoo.j)) // provjera lijevo
+		else if (trenutneKoordinate.j > 0 && ((GUI.planGrada[trenutneKoordinate.i][trenutneKoordinate.j - 1] == smjer || GUI.planGrada[trenutneKoordinate.i][trenutneKoordinate.j - 1] == 'x') && trenutneKoordinate.j - 1 != prethodneKoordinate.j)) // provjera lijevo
 		{
-			if (GUI.guiMapa[trKoo.i][trKoo.j - 1].getComponents().length == 1)
-				return trKoo;
-			return (GUI.mapa[trKoo.i][trKoo.j - 1] == 'x') ? new Koordinate(-2, -2) : new Koordinate(trKoo.i, trKoo.j - 1);
+			if (GUI.guiMapa[trenutneKoordinate.i][trenutneKoordinate.j - 1].getComponents().length == 1)
+				return trenutneKoordinate;
+			return (GUI.planGrada[trenutneKoordinate.i][trenutneKoordinate.j - 1] == 'x') ? new Koordinate(-2, -2) : new Koordinate(trenutneKoordinate.i, trenutneKoordinate.j - 1);
 		}
 
-		else if (trKoo.i > 0 && ((GUI.mapa[trKoo.i - 1][trKoo.j] == smjer || GUI.mapa[trKoo.i - 1][trKoo.j] == 'x') && trKoo.i - 1 != preKoo.i)) // provjera gore
+		else if (trenutneKoordinate.i > 0 && ((GUI.planGrada[trenutneKoordinate.i - 1][trenutneKoordinate.j] == smjer || GUI.planGrada[trenutneKoordinate.i - 1][trenutneKoordinate.j] == 'x') && trenutneKoordinate.i - 1 != prethodneKoordinate.i)) // provjera gore
 		{
-			if (GUI.guiMapa[trKoo.i - 1][trKoo.j].getComponents().length == 1)
-				return trKoo;
-			return (GUI.mapa[trKoo.i - 1][trKoo.j] == 'x') ? new Koordinate(-2, -2) : new Koordinate(trKoo.i - 1, trKoo.j);
+			if (GUI.guiMapa[trenutneKoordinate.i - 1][trenutneKoordinate.j].getComponents().length == 1)
+				return trenutneKoordinate;
+			return (GUI.planGrada[trenutneKoordinate.i - 1][trenutneKoordinate.j] == 'x') ? new Koordinate(-2, -2) : new Koordinate(trenutneKoordinate.i - 1, trenutneKoordinate.j);
 		}
 
-		else if (trKoo.i < 29 && ((GUI.mapa[trKoo.i + 1][trKoo.j] == smjer || GUI.mapa[trKoo.i + 1][trKoo.j] == 'x') && trKoo.i + 1 != preKoo.i)) // provjera dole
+		else if (trenutneKoordinate.i < 29 && ((GUI.planGrada[trenutneKoordinate.i + 1][trenutneKoordinate.j] == smjer || GUI.planGrada[trenutneKoordinate.i + 1][trenutneKoordinate.j] == 'x') && trenutneKoordinate.i + 1 != prethodneKoordinate.i)) // provjera dole
 		{
-			if (GUI.guiMapa[trKoo.i + 1][trKoo.j].getComponents().length == 1)
-				return trKoo;
-			return (GUI.mapa[trKoo.i + 1][trKoo.j] == 'x') ? new Koordinate(-2, -2) : new Koordinate(trKoo.i + 1, trKoo.j);
+			if (GUI.guiMapa[trenutneKoordinate.i + 1][trenutneKoordinate.j].getComponents().length == 1)
+				return trenutneKoordinate;
+			return (GUI.planGrada[trenutneKoordinate.i + 1][trenutneKoordinate.j] == 'x') ? new Koordinate(-2, -2) : new Koordinate(trenutneKoordinate.i + 1, trenutneKoordinate.j);
 		}
 		else
 		{

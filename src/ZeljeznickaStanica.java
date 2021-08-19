@@ -1,12 +1,8 @@
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.SwingUtilities;
+import java.util.logging.*;
+import javax.swing.*;
 
 public class ZeljeznickaStanica extends Thread implements Serializable
 {
@@ -14,7 +10,7 @@ public class ZeljeznickaStanica extends Thread implements Serializable
 	ArrayList<Kompozicija> redUStanici;
 	ArrayList<Kompozicija> dolazneKompozicije;
 	public static final long brzinaRasporedjivanja = 200;
-	static int matricaSusjedstva[][]; //matrica susjedstva[i][j] = 0; putanja od stanice i ka stanici j je slobodna, matrica je konzistentna
+	static int matricaSusjedstva[][]; //putanja OD stanice i KA stanici j
 	char nazivStanice;
 	ArrayList<Koordinate> koordinate;
 	static FileHandler handler;
@@ -56,8 +52,7 @@ public class ZeljeznickaStanica extends Thread implements Serializable
 		{
 			Iterator<Kompozicija> iteratorKompozicija = redUStanici.iterator();
 
-			while (iteratorKompozicija.hasNext()) // pronalazi kompoziciju za koju je slobodna odredjena pruga i
-													// usmejru lokomotivu na odgovarajuce polje
+			while (iteratorKompozicija.hasNext()) // pronalazi kompoziciju, za koju je slobodna odredjena pruga i usmjri lokomotivu na odgovarajuce polje
 			{
 				Kompozicija kompozicija = iteratorKompozicija.next();
 				ZeljeznickaStanica susjed;
@@ -76,7 +71,7 @@ public class ZeljeznickaStanica extends Thread implements Serializable
 					if (matricaSusjedstva[nazivStanice - 'A'][susjed.nazivStanice - 'A'] != 0)
 					{
 						long min = kompozicija.brzinaKretanja;
-						// prodjikroz dolazne dolazneKompozicije susjeda i uzmi
+						// prodjikroz dolazne dolazneKompozicije susjeda i uzmi najmanju
 						for (Kompozicija k : susjed.dolazneKompozicije)
 						{
 							if (k.prethodnaStanica.nazivStanice == nazivStanice && k.brzinaKretanja > min)
@@ -90,23 +85,21 @@ public class ZeljeznickaStanica extends Thread implements Serializable
 
 					for (int i = 0; i < kompozicija.lokomotive.size(); ++i)
 					{
-						kompozicija.lokomotive.get(i).preKoo = usmjeriKompoziciju(kompozicija)[0];
-						kompozicija.lokomotive.get(i).trKoo = new Koordinate(usmjeriKompoziciju(kompozicija)[0]);
+						kompozicija.lokomotive.get(i).trenutneKoordinate = usmjeriKompoziciju(kompozicija)[0];
+						kompozicija.lokomotive.get(i).prethodneKoordinate = new Koordinate(usmjeriKompoziciju(kompozicija)[0]);
 					}
 
 					for (int i = 0; i < kompozicija.vagoni.size(); ++i)
 					{
-						kompozicija.vagoni.get(i).preKoo = new Koordinate(
-								kompozicija.lokomotive.get(kompozicija.lokomotive.size() - 1).preKoo);
-						kompozicija.vagoni.get(i).trKoo = new Koordinate(
-								kompozicija.lokomotive.get(kompozicija.lokomotive.size() - 1).trKoo);
+						kompozicija.vagoni.get(i).prethodneKoordinate = new Koordinate(kompozicija.lokomotive.get(kompozicija.lokomotive.size() - 1).prethodneKoordinate);
+						kompozicija.vagoni.get(i).trenutneKoordinate = new Koordinate(kompozicija.lokomotive.get(kompozicija.lokomotive.size() - 1).trenutneKoordinate);
 					}
 					
-					if(kompozicija.polazak.koordinate.contains(kompozicija.lokomotive.get(0).trKoo))
+					if(kompozicija.polazak.koordinate.contains(kompozicija.lokomotive.get(0).trenutneKoordinate))
 						kompozicija.vrijemeKretanja = System.currentTimeMillis();
 					
-					kompozicija.lokomotive.get(0).trKoo = usmjeriKompoziciju(kompozicija)[1];
-					kompozicija.istorijaKretanja.add(new Koordinate(kompozicija.lokomotive.get(0).trKoo));
+					kompozicija.lokomotive.get(0).trenutneKoordinate = usmjeriKompoziciju(kompozicija)[1];
+					kompozicija.istorijaKretanja.add(new Koordinate(kompozicija.lokomotive.get(0).trenutneKoordinate));
 					synchronized (this)
 					{
 						matricaSusjedstva[nazivStanice - 'A'][susjed.nazivStanice - 'A']++;
@@ -114,8 +107,8 @@ public class ZeljeznickaStanica extends Thread implements Serializable
 					susjed.dolazneKompozicije.add(kompozicija);
 					synchronized (GUI.frame)
 					{
-						GUI.guiMapa[kompozicija.lokomotive.get(0).trKoo.i][kompozicija.lokomotive.get(0).trKoo.j].add(new JLabel(new ImageIcon("SLIKE/lokomotiva.png")));
-						((JLabel) GUI.guiMapa[kompozicija.lokomotive.get(0).trKoo.i][kompozicija.lokomotive.get(0).trKoo.j].getComponent(0)).setName(kompozicija.brzinaKretanja + "k");
+						GUI.guiMapa[kompozicija.lokomotive.get(0).trenutneKoordinate.i][kompozicija.lokomotive.get(0).trenutneKoordinate.j].add(new JLabel(new ImageIcon("SLIKE/lokomotiva.png")));
+						((JLabel) GUI.guiMapa[kompozicija.lokomotive.get(0).trenutneKoordinate.i][kompozicija.lokomotive.get(0).trenutneKoordinate.j].getComponent(0)).setName(kompozicija.brzinaKretanja + "k");
 						SwingUtilities.updateComponentTreeUI(GUI.frame);
 					}
 
@@ -154,8 +147,7 @@ public class ZeljeznickaStanica extends Thread implements Serializable
 	synchronized boolean prugaJeSlobodna(Kompozicija komp) // provjerava da li ima vozova u suprotnom smjeru i ako nema
 															// da li je slobodan pocetak pruge ka odredistu
 	{
-		ZeljeznickaStanica susjed = komp.odrediSusjeda();
-		// susjed i naziv stanice dovoljan za provjeru matrice
+		ZeljeznickaStanica susjed = komp.odrediSusjeda(); // susjed i naziv stanice dovoljan za provjeru matrice
 
 		if (matricaSusjedstva[susjed.nazivStanice - 'A'][(nazivStanice - 'A')] == 0)
 		{

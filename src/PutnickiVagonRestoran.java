@@ -2,12 +2,11 @@
 public class PutnickiVagonRestoran extends PutnickiVagon
 {
 	private static final long serialVersionUID = 1L;
-	static private int count = 0;
 	String opis;
 	
 	public PutnickiVagonRestoran() 
 	{
-		opis="Opis vagona "+count++;
+		opis="Opis vagona "+idVagona;
 	}
 
 }

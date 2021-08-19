@@ -1,18 +1,16 @@
 import java.io.Serializable;
 import java.util.Random;
-import java.util.logging.FileHandler;
-import java.util.logging.Logger;
+import java.util.logging.*;
 import javax.swing.JLabel;
 
 public class Vagon implements Serializable 
 {
 	public Vagon(boolean jePosebneNamjeneArg) 
 	{
-		IDVagona = count++;
-		duzinaVagona = new Random().nextInt(4)+1;
+		idVagona = count++;
 		jePosebneNamjene = jePosebneNamjeneArg;
-		trKoo = new Koordinate(-1,-1);
-		preKoo = new Koordinate(-1,-1);
+		trenutneKoordinate = new Koordinate(-1,-1);
+		prethodneKoordinate = new Koordinate(-1,-1);
 	}
 	
 	static FileHandler handler;
@@ -31,70 +29,70 @@ public class Vagon implements Serializable
 	
 	private static final long serialVersionUID = 1L;
 	static private int count = 0;
-	int duzinaVagona;
-	int IDVagona;
+	int duzinaVagona = new Random().nextInt(8)+1;
+	int idVagona;
 	boolean jePosebneNamjene;
-	Koordinate trKoo;
-	Koordinate preKoo;
+	Koordinate trenutneKoordinate;
+	Koordinate prethodneKoordinate;
 
 	synchronized public boolean move() 
 	{
-		 if((GUI.mapa[trKoo.i-1][trKoo.j] == 'p' || GUI.mapa[trKoo.i-1][trKoo.j] == 'x' || GUI.mapa[trKoo.i-1][trKoo.j] == 's') && (trKoo.i-1 != preKoo.i))//provjerava gore
+		 if((GUI.planGrada[trenutneKoordinate.i-1][trenutneKoordinate.j] == 'p' || GUI.planGrada[trenutneKoordinate.i-1][trenutneKoordinate.j] == 'x' || GUI.planGrada[trenutneKoordinate.i-1][trenutneKoordinate.j] == 's') && (trenutneKoordinate.i-1 != prethodneKoordinate.i))//provjerava gore
 		 {
-			 preKoo = new Koordinate(trKoo);
-			 trKoo.i--;
+			 prethodneKoordinate = new Koordinate(trenutneKoordinate);
+			 trenutneKoordinate.i--;
 			 
-			 if(GUI.mapa[trKoo.i][trKoo.j]!='s') 
-				 GUI.guiMapa[trKoo.i][trKoo.j].add((JLabel) GUI.guiMapa[preKoo.i][preKoo.j].getComponents()[0]);
+			 if(GUI.planGrada[trenutneKoordinate.i][trenutneKoordinate.j]!='s') 
+				 GUI.guiMapa[trenutneKoordinate.i][trenutneKoordinate.j].add((JLabel) GUI.guiMapa[prethodneKoordinate.i][prethodneKoordinate.j].getComponents()[0]);
 			 
-			 else if(GUI.mapa[trKoo.i][trKoo.j] == 's') 
+			 else if(GUI.planGrada[trenutneKoordinate.i][trenutneKoordinate.j] == 's') 
 			 {
-				 GUI.guiMapa[preKoo.i][preKoo.j].remove((JLabel) GUI.guiMapa[preKoo.i][preKoo.j].getComponents()[0]);
+				 GUI.guiMapa[prethodneKoordinate.i][prethodneKoordinate.j].remove((JLabel) GUI.guiMapa[prethodneKoordinate.i][prethodneKoordinate.j].getComponents()[0]);
 				 return false;
 			 }
 			 return true;
 		 }
-		 else if((GUI.mapa[trKoo.i+1][trKoo.j] == 'p' || GUI.mapa[trKoo.i+1][trKoo.j] == 'x' || GUI.mapa[trKoo.i+1][trKoo.j] == 's') && (trKoo.i+1 != preKoo.i))//provjerava dole
+		 else if((GUI.planGrada[trenutneKoordinate.i+1][trenutneKoordinate.j] == 'p' || GUI.planGrada[trenutneKoordinate.i+1][trenutneKoordinate.j] == 'x' || GUI.planGrada[trenutneKoordinate.i+1][trenutneKoordinate.j] == 's') && (trenutneKoordinate.i+1 != prethodneKoordinate.i))//provjerava dole
 		 {
-			 preKoo = new Koordinate(trKoo);
-			 trKoo.i++;
+			 prethodneKoordinate = new Koordinate(trenutneKoordinate);
+			 trenutneKoordinate.i++;
 			 
-			 if(GUI.mapa[trKoo.i][trKoo.j]!='s') 
-				 GUI.guiMapa[trKoo.i][trKoo.j].add((JLabel) GUI.guiMapa[preKoo.i][preKoo.j].getComponents()[0]);
+			 if(GUI.planGrada[trenutneKoordinate.i][trenutneKoordinate.j]!='s') 
+				 GUI.guiMapa[trenutneKoordinate.i][trenutneKoordinate.j].add((JLabel) GUI.guiMapa[prethodneKoordinate.i][prethodneKoordinate.j].getComponents()[0]);
 			 
-			 else if(GUI.mapa[trKoo.i][trKoo.j] == 's') 
+			 else if(GUI.planGrada[trenutneKoordinate.i][trenutneKoordinate.j] == 's') 
 			 {
-				 GUI.guiMapa[preKoo.i][preKoo.j].remove((JLabel) GUI.guiMapa[preKoo.i][preKoo.j].getComponents()[0]);
+				 GUI.guiMapa[prethodneKoordinate.i][prethodneKoordinate.j].remove((JLabel) GUI.guiMapa[prethodneKoordinate.i][prethodneKoordinate.j].getComponents()[0]);
 				 return false;
 			 }
 			 return true;
 		 }
-		 else if((GUI.mapa[trKoo.i][trKoo.j+1] == 'p' || GUI.mapa[trKoo.i][trKoo.j+1] == 'x' || GUI.mapa[trKoo.i][trKoo.j+1] == 's') && (trKoo.j+1 != preKoo.j))//provjerava desno
+		 else if((GUI.planGrada[trenutneKoordinate.i][trenutneKoordinate.j+1] == 'p' || GUI.planGrada[trenutneKoordinate.i][trenutneKoordinate.j+1] == 'x' || GUI.planGrada[trenutneKoordinate.i][trenutneKoordinate.j+1] == 's') && (trenutneKoordinate.j+1 != prethodneKoordinate.j))//provjerava desno
 		 {
-			 preKoo = new Koordinate(trKoo);
-			 trKoo.j++;
+			 prethodneKoordinate = new Koordinate(trenutneKoordinate);
+			 trenutneKoordinate.j++;
 			 
-			 if(GUI.mapa[trKoo.i][trKoo.j]!='s') 
-				 GUI.guiMapa[trKoo.i][trKoo.j].add((JLabel) GUI.guiMapa[preKoo.i][preKoo.j].getComponents()[0]);
+			 if(GUI.planGrada[trenutneKoordinate.i][trenutneKoordinate.j]!='s') 
+				 GUI.guiMapa[trenutneKoordinate.i][trenutneKoordinate.j].add((JLabel) GUI.guiMapa[prethodneKoordinate.i][prethodneKoordinate.j].getComponents()[0]);
 			 
-			 else if(GUI.mapa[trKoo.i][trKoo.j] == 's') 
+			 else if(GUI.planGrada[trenutneKoordinate.i][trenutneKoordinate.j] == 's') 
 			 {
-				 GUI.guiMapa[preKoo.i][preKoo.j].remove((JLabel) GUI.guiMapa[preKoo.i][preKoo.j].getComponents()[0]);
+				 GUI.guiMapa[prethodneKoordinate.i][prethodneKoordinate.j].remove((JLabel) GUI.guiMapa[prethodneKoordinate.i][prethodneKoordinate.j].getComponents()[0]);
 				 return false;
 			 } 
 			 return true;
 		 }
-		 else if((GUI.mapa[trKoo.i][trKoo.j-1] == 'p' || GUI.mapa[trKoo.i][trKoo.j-1] == 'x' || GUI.mapa[trKoo.i][trKoo.j-1] == 's') && (trKoo.j-1 != preKoo.j))//provjerava lijevo// == 0
+		 else if((GUI.planGrada[trenutneKoordinate.i][trenutneKoordinate.j-1] == 'p' || GUI.planGrada[trenutneKoordinate.i][trenutneKoordinate.j-1] == 'x' || GUI.planGrada[trenutneKoordinate.i][trenutneKoordinate.j-1] == 's') && (trenutneKoordinate.j-1 != prethodneKoordinate.j))//provjerava lijevo// == 0
 		 {
-			 preKoo = new Koordinate(trKoo);
-			 trKoo.j--;
+			 prethodneKoordinate = new Koordinate(trenutneKoordinate);
+			 trenutneKoordinate.j--;
 			 
-			 if(GUI.mapa[trKoo.i][trKoo.j]!='s') 
-				 GUI.guiMapa[trKoo.i][trKoo.j].add((JLabel) GUI.guiMapa[preKoo.i][preKoo.j].getComponents()[0]);
+			 if(GUI.planGrada[trenutneKoordinate.i][trenutneKoordinate.j]!='s') 
+				 GUI.guiMapa[trenutneKoordinate.i][trenutneKoordinate.j].add((JLabel) GUI.guiMapa[prethodneKoordinate.i][prethodneKoordinate.j].getComponents()[0]);
 			 
-			 else if(GUI.mapa[trKoo.i][trKoo.j] == 's') 
+			 else if(GUI.planGrada[trenutneKoordinate.i][trenutneKoordinate.j] == 's') 
 			 {
-				 GUI.guiMapa[preKoo.i][preKoo.j].remove((JLabel) GUI.guiMapa[preKoo.i][preKoo.j].getComponents()[0]);
+				 GUI.guiMapa[prethodneKoordinate.i][prethodneKoordinate.j].remove((JLabel) GUI.guiMapa[prethodneKoordinate.i][prethodneKoordinate.j].getComponents()[0]);
 				 return false;
 			 }
 			 return true;

@@ -76,7 +76,7 @@ public class KreiranjeVozila extends TimerTask
 		if(rand.nextBoolean()) //TRUE: kreira se auto, FALSE: kreira se kamion
 		{
 			if((GUI.trenutniBrVozilaNaPutevima[randomPut] + vozilaNaCekanju.get(randomPut).size()) < maxBrVozila[randomPut]) 
-				vozilaNaCekanju.get(randomPut).add(new Automobil(maxBrzine[randomPut], naziviPuteva[randomPut],"SLIKE/auto.png"));
+				vozilaNaCekanju.get(randomPut).add(new Automobil(naziviPuteva[randomPut], maxBrzine[randomPut], "SLIKE/auto.png"));
 		}
 		else
 		{
@@ -99,21 +99,21 @@ public class KreiranjeVozila extends TimerTask
 			if(vozilaNaCekanju.get(i).size()>0 && vozilaNaCekanju.get(i).get(0).smjer == '0' && GUI.guiMapa[ kordStart[i][0].i ][ kordStart[i][0].j ].getComponents().length == 0)
 			{
 				Vozilo tmpVozilo = vozilaNaCekanju.get(i).remove(0);
-				tmpVozilo.trKoo.i = kordStart[i][0].i;
-				tmpVozilo.trKoo.j = kordStart[i][0].j;
+				tmpVozilo.trenutneKoordinate.i = kordStart[i][0].i;
+				tmpVozilo.trenutneKoordinate.j = kordStart[i][0].j;
 				GUI.trenutniBrVozilaNaPutevima[i]++; 
-				GUI.guiMapa[tmpVozilo.trKoo.i][tmpVozilo.trKoo.j].add(new JLabel(new ImageIcon(tmpVozilo.putanjaSlike)));
-				((JLabel)GUI.guiMapa[tmpVozilo.trKoo.i][tmpVozilo.trKoo.j].getComponents()[0]).setName(""+(long)tmpVozilo.trenutnaBrzina);
+				GUI.guiMapa[tmpVozilo.trenutneKoordinate.i][tmpVozilo.trenutneKoordinate.j].add(new JLabel(new ImageIcon(tmpVozilo.putanjaSlike)));
+				((JLabel)GUI.guiMapa[tmpVozilo.trenutneKoordinate.i][tmpVozilo.trenutneKoordinate.j].getComponents()[0]).setName(""+(long)tmpVozilo.trenutnaBrzina);
 				tmpVozilo.start();
 			}
 			else if(vozilaNaCekanju.get(i).size()>0 && vozilaNaCekanju.get(i).get(0).smjer == '1' && GUI.guiMapa[ kordStart[i][1].i ][ kordStart[i][1].j ].getComponents().length == 0) //ako nema niko na pocetku smijera 1
 			{
 				Vozilo tmpVozilo = vozilaNaCekanju.get(i).remove(0);
-				tmpVozilo.trKoo.i = kordStart[i][1].i;
-				tmpVozilo.trKoo.j = kordStart[i][1].j;
+				tmpVozilo.trenutneKoordinate.i = kordStart[i][1].i;
+				tmpVozilo.trenutneKoordinate.j = kordStart[i][1].j;
 				GUI.trenutniBrVozilaNaPutevima[i]++; 
-				GUI.guiMapa[tmpVozilo.trKoo.i][tmpVozilo.trKoo.j].add(new JLabel(new ImageIcon(tmpVozilo.putanjaSlike)));
-				((JLabel)GUI.guiMapa[tmpVozilo.trKoo.i][tmpVozilo.trKoo.j].getComponents()[0]).setName(""+(long)tmpVozilo.trenutnaBrzina);
+				GUI.guiMapa[tmpVozilo.trenutneKoordinate.i][tmpVozilo.trenutneKoordinate.j].add(new JLabel(new ImageIcon(tmpVozilo.putanjaSlike)));
+				((JLabel)GUI.guiMapa[tmpVozilo.trenutneKoordinate.i][tmpVozilo.trenutneKoordinate.j].getComponents()[0]).setName(""+(long)tmpVozilo.trenutnaBrzina);
 				tmpVozilo.start();
 			}
 		}

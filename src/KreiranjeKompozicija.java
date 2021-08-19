@@ -37,8 +37,8 @@ public class KreiranjeKompozicija extends Thread
 			Logger.getLogger(KreiranjeKompozicija.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 		}
 	}
-	
-	public void pokreni()
+	@Override
+	public void run()
 	{
 		try
 		{
@@ -104,12 +104,6 @@ public class KreiranjeKompozicija extends Thread
 			Logger.getLogger(KreiranjeKompozicija.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 		}
 		
-	}
-	
-	@Override
-	public void run()
-	{
-		pokreni();
 	}
 	
 }

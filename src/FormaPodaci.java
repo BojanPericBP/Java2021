@@ -1,6 +1,5 @@
 import java.awt.BorderLayout;
 import javax.swing.JFrame;
-import javax.swing.JTextArea;
 import javax.swing.table.DefaultTableModel;
 import java.io.*;
 import java.util.logging.*;
@@ -9,7 +8,6 @@ import javax.swing.JTable;
 
 public class FormaPodaci 
 {
-	static public JTextArea textArea;
 	JFrame frame;
 	static FileHandler handlerFajl;
 	DefaultTableModel tableModel;
