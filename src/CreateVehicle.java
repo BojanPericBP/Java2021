@@ -14,12 +14,11 @@ import javax.swing.JLabel;
 public class CreateVehicle extends TimerTask{
 	ArrayList<Vehicle> waitingVehicles;
 	HashMap<Integer, Way> ways;
-	
 	static 
 	{
 		try
 		{
-			Logger.getLogger(KreiranjeVozila.class.getName()).addHandler(new FileHandler("Error logs/KreiranjeVozila.log"));
+			Logger.getLogger(CreateVehicle.class.getName()).addHandler(new FileHandler("Error logs/CreateVehicle.log"));
 		}
 		catch (Exception e)
 		{
@@ -55,7 +54,7 @@ public class CreateVehicle extends TimerTask{
 			br.close();
 			
 		} catch (Exception e) {
-			Logger.getLogger(KreiranjeVozila.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
+			Logger.getLogger(CreateVehicle.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 		}
 	}
 	
@@ -64,12 +63,13 @@ public class CreateVehicle extends TimerTask{
 		int wayIndex = new Random().nextInt(3);
 		boolean isCar = new Random().nextBoolean();
 		
-		if(isCar)
-			if(GUI.trenutniBrVozilaNaPutevima[wayIndex] < ways.get(wayIndex).numOfVehicle)
-				waitingVehicles.add(new Automobil(ways.get(wayIndex).maxSpeed, ways.get(wayIndex).name, "resource/car.png"));
-		else 
-			if(GUI.trenutniBrVozilaNaPutevima[wayIndex] < ways.get(wayIndex).numOfVehicle)
-				waitingVehicles.add(new Kamion(ways.get(wayIndex).maxSpeed, ways.get(wayIndex).name, "resource/car.png"));
+		if(GUI.currVheicleCounter[wayIndex] < ways.get(wayIndex).numOfVehicle)
+		{
+			if(isCar)
+				waitingVehicles.add(new Car(ways.get(wayIndex).maxSpeed, ways.get(wayIndex).name, "resource/car.png"));
+			else
+				waitingVehicles.add(new Truck(ways.get(wayIndex).maxSpeed, ways.get(wayIndex).name, "resource/truck.png"));
+		}
 	}
 	
 	public void setOnMap()
@@ -82,9 +82,9 @@ public class CreateVehicle extends TimerTask{
 			{
 				tempVehicle = waitingVehicles.remove(i);
 				tempVehicle.setVehicle();
-				GUI.trenutniBrVozilaNaPutevima[i]++;
-				GUI.guiMapa[tempVehicle.currPoint.x][tempVehicle.currPoint.y].add(new JLabel(new ImageIcon(tempVehicle.imagePath)));
-				((JLabel)GUI.guiMapa[tempVehicle.currPoint.x][tempVehicle.currPoint.y].getComponents()[0]).setName(""+(long)tempVehicle.currSpeed);
+				GUI.currVheicleCounter[tempVehicle.way-'A']++;
+				GUI.trainMap[tempVehicle.currPoint.x][tempVehicle.currPoint.y].add(new JLabel(new ImageIcon(tempVehicle.imagePath)));
+				((JLabel)GUI.trainMap[tempVehicle.currPoint.x][tempVehicle.currPoint.y].getComponents()[0]).setName(""+(long)tempVehicle.currSpeed);
 				tempVehicle.start();
 			}
 			else break;

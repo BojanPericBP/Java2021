@@ -10,19 +10,20 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.logging.FileHandler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.swing.JScrollPane;
 
-public class FormaPodaci {
+public class DataForm {
 	static public JTextArea textArea;
-	public FormaPodaci() {
+	public DataForm() {
 	}
 	
 	static {
 		
 		try {
-			Logger.getLogger(FormaPodaci.class.getName()).addHandler(new FileHandler("Error logs/FormaPodaci.log"));
+			Logger.getLogger(DataForm.class.getName()).addHandler(new FileHandler("Error logs/FormaPodaci.log"));
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -62,16 +63,16 @@ public class FormaPodaci {
 			for(File f : fajlovi)
 			{
 				ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f.getAbsoluteFile()));
-				Kompozicija k = (Kompozicija)ois.readObject();
+				Composition k = (Composition)ois.readObject();
 				ois.close();
-				textArea.append("Kompozicija: "+k.idKompozicije+" Vrijeme kretanja: "+k.vrijemeKretanja+"s "+
-						"Usputne stanice: "+k.linija+" SIstorija kretanja: ");
-				k.istorijaKretanja.forEach( e -> textArea.append("("+e.x+","+e.y+")"));
+				textArea.append("Kompozicija: "+k.idComp+" Vrijeme kretanja: "+k.movingTime+"s "+
+						"Usputne stanice: "+k.trinStationToVisit+" SIstorija kretanja: ");
+				k.movingHistory.forEach( e -> textArea.append("("+e.x+","+e.y+")"));
 				textArea.append("\n");
 			}
 		}
 		catch (Exception e) {
-			e.printStackTrace();//Logger.getLogger(FormaPodaci.class.getName()).log(Level.WARNING,e.fillInStackTrace().toString());
+			Logger.getLogger(DataForm.class.getName()).log(Level.WARNING,e.fillInStackTrace().toString());
 		}
 	}
 }

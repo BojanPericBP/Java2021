@@ -14,6 +14,7 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@SuppressWarnings("unchecked")
 
 public class KreiranjeKompozicija extends Thread
 {
@@ -50,7 +51,7 @@ public class KreiranjeKompozicija extends Thread
 	{
 		try
 		{
-			while (GUI.simulacijaUToku)
+			while (GUI.isAlive)
 			{
 				WatchKey key;
 				try
@@ -97,19 +98,19 @@ public class KreiranjeKompozicija extends Thread
 			String rasporedV = podaci[1];
 			long brzina = Long.parseLong(podaci[2]);
 			String[] linijaString = podaci[3].split("-");
-			ArrayList<ZeljeznickaStanica> _linija = new ArrayList<>();
+			ArrayList<TrainStation> _linija = new ArrayList<>();
 			for(String s : linijaString)
 			{
-				for(int i=0; i< GUI.stanice.size();++i)
-				if(GUI.stanice.get(i).nazivStanice == s.charAt(0))
+				for(int i=0; i< GUI.trainStations.size();++i)
+				if(GUI.trainStations.get(i).nameStation == s.charAt(0))
 				{
-					_linija.add(GUI.stanice.get(i));
+					_linija.add(GUI.trainStations.get(i));
 					break;
 				}
 			}
 
-			Kompozicija tmp = new Kompozicija(rasporedL, rasporedV, brzina,_linija);
-			GUI.stanice.get(_linija.get(0).nazivStanice-'A').redUStanici.add(tmp);		
+			Composition tmp = new Composition(rasporedL, rasporedV, brzina,_linija);
+			GUI.trainStations.get(_linija.get(0).nameStation-'A').outgoingtrains.add(tmp);		
 			
 		}
 		catch (Exception e)

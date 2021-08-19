@@ -5,7 +5,7 @@ import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 
 
-public class Vagon extends elementKompozicije implements Serializable 
+public class Vagon extends ElementOfComposition implements Serializable 
 {
 	private static final long serialVersionUID = 1L;
 	static private int count = 0;
@@ -29,8 +29,8 @@ public class Vagon extends elementKompozicije implements Serializable
 		IDVagona = count++;
 		duzinaVagona = new Random().nextInt(4)+1;
 		jePosebneNamjene = _jePosebneNamjene;
-		trKoo = new Point();
-		preKoo = new Point();
+		currentCoordinates = new Point();
+		previousCoordinates = new Point();
 	}
 
 }

@@ -1,12 +1,12 @@
 import java.util.Random;
 
-public class TeretniVagon extends Vagon {
+public class FreightWagon extends Vagon {
 	private static final long serialVersionUID = 1L;
-	double maxNosivost;
+	double maxCapacity;
 	
-	public TeretniVagon() {
+	public FreightWagon() {
 		super(false);
-		maxNosivost = new Random().nextDouble()*1000+1;
+		maxCapacity = new Random().nextDouble()*1000+1;
 	}
 
 }

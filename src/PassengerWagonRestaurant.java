@@ -1,11 +1,11 @@
 
-public class PutnickiVagonRestoran extends PutnickiVagon{
+public class PassengerWagonRestaurant extends PassengerWagon{
 	private static final long serialVersionUID = 1L;
-	String opis;
+	String description;
 	static private int count = 0;
 	
-	public PutnickiVagonRestoran() {
-		opis="Ovo je opis vagona "+count++;
+	public PassengerWagonRestaurant() {
+		description="Ovo je opis vagona "+count++;
 	}
 
 }

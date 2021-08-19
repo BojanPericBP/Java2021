@@ -53,23 +53,23 @@ public abstract class Vehicle extends Thread
 
 		if(way == 'A')
 		{
-			if(direction == '0')
+			if(direction == 0)
 				currPoint = new Point(29, 8);
-			else if(direction == '1')
-				currPoint = new Point(29, 14);
+			else if(direction == 1)
+				currPoint = new Point(21, 0);
 		}
 		else if(way == 'B')
 		{
-			if(direction == '0')
+			if(direction == 0)
 				currPoint = new Point(29, 14);
-			else if(direction == '1')
+			else if(direction == 1)
 				currPoint = new Point(0, 13);
 		}
 		else if(way == 'C')
 		{
-			if(direction == '0')
+			if(direction == 0)
 				currPoint = new Point(20, 29);
-			else if(direction == '1')
+			else if(direction == 1)
 				currPoint = new Point(29, 22);
 		}
 	}
@@ -78,7 +78,7 @@ public abstract class Vehicle extends Thread
 	@Override
 	public void run()
 	{
-		while (GUI.simulacijaUToku && (currPoint.x != -1 || currPoint.y != -1))
+		while (GUI.isAlive && (currPoint.x != -1 || currPoint.y != -1))
 		{
 			
 			try 
@@ -87,7 +87,7 @@ public abstract class Vehicle extends Thread
 			} 
 			catch (Exception e) 
 			{
-				Logger.getLogger(Kompozicija.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
+				Logger.getLogger(Composition.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 			}
 			
 			GUI.refreshGui();
@@ -98,9 +98,9 @@ public abstract class Vehicle extends Thread
 				{
 					synchronized(GUI.frame)
 					{
-					GUI.guiMapa[currPoint.x][currPoint.y].remove((JLabel) GUI.guiMapa[currPoint.x][currPoint.y].getComponents()[0]);
+					GUI.trainMap[currPoint.x][currPoint.y].remove((JLabel) GUI.trainMap[currPoint.x][currPoint.y].getComponents()[0]);
 					currPoint = k;
-					GUI.trenutniBrVozilaNaPutevima[way - 'A']--;
+					GUI.currVheicleCounter[way - 'A']--;
 					GUI.refreshGui();
 					 }
 					try{Thread.sleep((long) currSpeed);}
@@ -108,11 +108,11 @@ public abstract class Vehicle extends Thread
 					{Logger.getLogger(Vehicle.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());}
 				}
 				
-				else if (currPoint.equals(k) || (GUI.guiMapa[k.x][k.y].getBackground() == Color.red))
+				else if (currPoint.equals(k) || (GUI.trainMap[k.x][k.y].getBackground() == Color.red))
 				{
 					continue;
 				}
-				else if(GUI.guiMapa[k.x][k.y].getBackground() == Color.orange)//prelazak preko pruznog prelaza bez zadrzavanja
+				else if(GUI.trainMap[k.x][k.y].getBackground() == Color.orange)//prelazak preko pruznog prelaza bez zadrzavanja
 				{
 					synchronized(this)
 					{
@@ -121,7 +121,7 @@ public abstract class Vehicle extends Thread
 					Point k2 = sledeciKorak(k, currPoint);
 					if(!k.equals(k2))
 					{
-						GUI.guiMapa[k.x][k.y].add((JLabel) GUI.guiMapa[currPoint.x][currPoint.y].getComponents()[0]);
+						GUI.trainMap[k.x][k.y].add((JLabel) GUI.trainMap[currPoint.x][currPoint.y].getComponents()[0]);
 						GUI.refreshGui();
 						
 						prevPoint.x = currPoint.x;
@@ -130,7 +130,7 @@ public abstract class Vehicle extends Thread
 						
 						try {sleep((long)maxSpeed/2);} catch (InterruptedException e) {e.printStackTrace();}
 						
-						GUI.guiMapa[k2.x][k2.y].add((JLabel) GUI.guiMapa[k.x][k.y].getComponents()[0]);
+						GUI.trainMap[k2.x][k2.y].add((JLabel) GUI.trainMap[k.x][k.y].getComponents()[0]);
 						GUI.refreshGui();
 						try {sleep((long)maxSpeed/2);} catch (InterruptedException e) {e.printStackTrace();}
 						
@@ -145,7 +145,7 @@ public abstract class Vehicle extends Thread
 					synchronized(GUI.frame)
 					{
 					//usaglasavanjeBrzine(k);
-					GUI.guiMapa[k.x][k.y].add((JLabel) GUI.guiMapa[currPoint.x][currPoint.y].getComponents()[0]);
+					GUI.trainMap[k.x][k.y].add((JLabel) GUI.trainMap[currPoint.x][currPoint.y].getComponents()[0]);
 					prevPoint.x = currPoint.x;
 					prevPoint.y = currPoint.y;
 					currPoint = k;
@@ -162,41 +162,41 @@ public abstract class Vehicle extends Thread
 	{
 
 		if (p.y < 29 && 
-				(GUI.guiMapa[p.x][p.y + 1].getBackground().getRed() == direction ||
-				(GUI.guiMapa[p.x][p.y].getBackground().getRed() == direction && (GUI.guiMapa[p.x][p.y + 1].getBackground() == Color.orange || GUI.guiMapa[p.x][p.y + 1].getBackground() == Color.red)) ||
-				(GUI.guiMapa[p.x][p.y].getBackground() == Color.orange && GUI.guiMapa[p.x][p.y + 1].getBackground().getRed() == direction ))
+				(GUI.trainMap[p.x][p.y + 1].getBackground().getRed() == direction ||
+				(GUI.trainMap[p.x][p.y].getBackground().getRed() == direction && (GUI.trainMap[p.x][p.y + 1].getBackground() == Color.orange || GUI.trainMap[p.x][p.y + 1].getBackground() == Color.red)) ||
+				(GUI.trainMap[p.x][p.y].getBackground() == Color.orange && GUI.trainMap[p.x][p.y + 1].getBackground().getRed() == direction ))
 				&& p.y + 1 != q.y) // provjera desno
 		{
-			if (GUI.guiMapa[p.x][p.y + 1].getComponents().length == 1)
+			if (GUI.trainMap[p.x][p.y + 1].getComponents().length == 1)
 				return p;
 			return  new Point(p.x, p.y + 1);
 		}
 
-		else if (p.y > 0 && (GUI.guiMapa[p.x][p.y - 1].getBackground().getRed() == direction || (GUI.guiMapa[p.x][p.y].getBackground().getRed() == direction && GUI.guiMapa[p.x][p.y - 1].getBackground() == Color.orange || GUI.guiMapa[p.x][p.y - 1].getBackground() == Color.red
-				|| GUI.guiMapa[p.x][p.y].getBackground() == Color.orange && GUI.guiMapa[p.x][p.y - 1].getBackground().getRed() == direction))
+		else if (p.y > 0 && (GUI.trainMap[p.x][p.y - 1].getBackground().getRed() == direction || (GUI.trainMap[p.x][p.y].getBackground().getRed() == direction && GUI.trainMap[p.x][p.y - 1].getBackground() == Color.orange || GUI.trainMap[p.x][p.y - 1].getBackground() == Color.red
+				|| GUI.trainMap[p.x][p.y].getBackground() == Color.orange && GUI.trainMap[p.x][p.y - 1].getBackground().getRed() == direction))
 				&& p.y - 1 != q.y) // provjera lijevo
 		{
-			if (GUI.guiMapa[p.x][p.y - 1].getComponents().length == 1)
+			if (GUI.trainMap[p.x][p.y - 1].getComponents().length == 1)
 				return p;
 			return new Point(p.x, p.y - 1);
 		}
 
-		else if (p.x > 0 && (GUI.guiMapa[p.x - 1][p.y].getBackground().getRed() == direction ||
-				(GUI.guiMapa[p.x][p.y].getBackground().getRed() == direction && GUI.guiMapa[p.x - 1][p.y].getBackground() == Color.orange || GUI.guiMapa[p.x - 1][p.y].getBackground() == Color.red)
-				|| (GUI.guiMapa[p.x][p.y].getBackground() == Color.orange && GUI.guiMapa[p.x - 1][p.y].getBackground().getRed() == direction))
+		else if (p.x > 0 && (GUI.trainMap[p.x - 1][p.y].getBackground().getRed() == direction ||
+				(GUI.trainMap[p.x][p.y].getBackground().getRed() == direction && GUI.trainMap[p.x - 1][p.y].getBackground() == Color.orange || GUI.trainMap[p.x - 1][p.y].getBackground() == Color.red)
+				|| (GUI.trainMap[p.x][p.y].getBackground() == Color.orange && GUI.trainMap[p.x - 1][p.y].getBackground().getRed() == direction))
 				&& p.x - 1 != q.x) // provjera gore
 		{
-			if (GUI.guiMapa[p.x - 1][p.y].getComponents().length == 1)
+			if (GUI.trainMap[p.x - 1][p.y].getComponents().length == 1)
 				return p;
 			return new Point(p.x - 1, p.y);
 		}
 
- 		else if (p.x < 29 && (GUI.guiMapa[p.x + 1][p.y].getBackground().getRed() == direction ||
- 				(GUI.guiMapa[p.x][p.y].getBackground() == Color.orange && GUI.guiMapa[p.x + 1][p.y].getBackground().getRed() == direction
-				|| GUI.guiMapa[p.x][p.y].getBackground().getRed() == direction && GUI.guiMapa[p.x + 1][p.y].getBackground() == Color.orange || GUI.guiMapa[p.x + 1][p.y].getBackground() == Color.red))
+ 		else if (p.x < 29 && (GUI.trainMap[p.x + 1][p.y].getBackground().getRed() == direction ||
+ 				(GUI.trainMap[p.x][p.y].getBackground() == Color.orange && GUI.trainMap[p.x + 1][p.y].getBackground().getRed() == direction
+				|| GUI.trainMap[p.x][p.y].getBackground().getRed() == direction && GUI.trainMap[p.x + 1][p.y].getBackground() == Color.orange || GUI.trainMap[p.x + 1][p.y].getBackground() == Color.red))
 				&& p.x + 1 != q.x) // provjera dole
 		{
-			if (GUI.guiMapa[p.x + 1][p.y].getComponents().length == 1)
+			if (GUI.trainMap[p.x + 1][p.y].getComponents().length == 1)
 				return p;
 			return  new Point(p.x + 1, p.y);
 		}

@@ -3,23 +3,24 @@ import java.io.Serializable;
 import java.util.Random;
 
 
-public class Lokomotiva extends elementKompozicije implements Serializable{
+public class Locomotive extends ElementOfComposition implements Serializable{
 
-	static private int count = 0;
 	private static final long serialVersionUID = 1L;
-	char pogon; //dizel-1, parni-2, elektricni-3
-	String typeTrain;
-	double snaga;
-	int idLokomotive;
+	static private int count = 0;
 	
-	public Lokomotiva(String tipLokomotive) {
-		pogon = (char) (new Random().nextInt(2)+49);
-		snaga = Math.random()*10;
-		idLokomotive = count++;
+	char drive; //dizel-1, parni-2, elektricni-3
+	String typeLocomotive;
+	double power;
+	int idLocomotive;
+	
+	public Locomotive(String _typeLocomotive) {
+		drive = (char) (new Random().nextInt(2)+49);
+		power = Math.random()*10;
+		idLocomotive = count++;
 		
-		trKoo = new Point(-1,-1);
-		preKoo = new Point(-1,-1);
+		currentCoordinates = new Point(-1,-1);
+		previousCoordinates = new Point(-1,-1);
 		
-		typeTrain = tipLokomotive;
+		typeLocomotive = _typeLocomotive;
 	}
 }
