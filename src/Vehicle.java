@@ -48,6 +48,33 @@ public abstract class Vehicle extends Thread
 		imagePath=_imagePath;
 	}
 
+	public void setVehicle()
+	{
+
+		if(way == 'A')
+		{
+			if(direction == '0')
+				currPoint = new Point(29, 8);
+			else if(direction == '1')
+				currPoint = new Point(29, 14);
+		}
+		else if(way == 'B')
+		{
+			if(direction == '0')
+				currPoint = new Point(29, 14);
+			else if(direction == '1')
+				currPoint = new Point(0, 13);
+		}
+		else if(way == 'C')
+		{
+			if(direction == '0')
+				currPoint = new Point(20, 29);
+			else if(direction == '1')
+				currPoint = new Point(29, 22);
+		}
+	}
+	
+	
 	@Override
 	public void run()
 	{

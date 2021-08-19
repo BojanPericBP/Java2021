@@ -22,7 +22,7 @@ public class Kamion extends Vehicle
 	public Kamion(double _maxBrizna,char _put, String _putanjaSlike) 
 	{
 		super(_maxBrizna, _put, _putanjaSlike);
-		nosivost = new Random().nextInt(200) + 40;
+		nosivost = new Random().nextInt(7000) + 2000;
 	}
 
 }
