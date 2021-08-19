@@ -44,12 +44,12 @@ public class Kompozicija extends Thread implements Serializable
 			throw new Exception("Kompozicija nije validna!");
 
 		brzinaKretanja = brzinaArg <= 500 ? 500: brzinaArg;
-		polazak = polazakArg;
-		odrediste = odredisteArg;
-		vagoni = new ArrayList<>(brVagonaArg);
-		lokomotive = new ArrayList<>(brLokomotivaArg);
-		prethodnaStanica = polazak;
 		uskladjenaBrzina = brzinaKretanja;
+		polazak = polazakArg;
+		prethodnaStanica = polazak;
+		vagoni = new ArrayList<>(brVagonaArg);
+		odrediste = odredisteArg;
+		lokomotive = new ArrayList<>(brLokomotivaArg);
 		
 		istorijaKretanja = new ArrayList<Koordinate>();
 		usputneStanice = polazakArg.nazivStanice+" ";
