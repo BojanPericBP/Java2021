@@ -7,7 +7,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import javax.swing.SwingUtilities;
 
 public class TrainStation extends Thread implements Serializable
 {
@@ -66,29 +65,39 @@ public class TrainStation extends Thread implements Serializable
 													// usmejru lokomotivu na odgovarajuce polje
 			{
 				Composition kompozicija = iteratorKompozicija.next();
+				boolean jeSlobodna = false;
 				TrainStation susjed;
-				boolean jeSlobodna;
-
+				
 				synchronized (schedulerMatrix)
 				{
-					jeSlobodna = prugaJeSlobodna(kompozicija);
-				}
+					//jeSlobodna = prugaJeSlobodna(kompozicija);
+					
+					susjed = kompozicija.findNextStation();
+					// susjed i naziv stanice dovoljan za provjeru matrice
 
+					if (schedulerMatrix[susjed.nameStation - 'A'][(nameStation - 'A')] == 0)
+					{
+						Point kord0 = usmjeriKompoziciju(kompozicija)[1];
+						Point kord1 = usmjeriKompoziciju(kompozicija)[2];
+
+						if (GUI.trainMap[kord0.x][kord0.y].getComponents().length == 0
+								&& GUI.trainMap[kord1.x][kord1.y].getComponents().length == 0)
+							jeSlobodna = true;
+					}
+				}
+			
 				if (jeSlobodna)
 				{
-					susjed = kompozicija.findNextStation();
-
 					if (schedulerMatrix[nameStation - 'A'][susjed.nameStation - 'A'] != 0)
 					{
 						long min = kompozicija.speed;
-						// prodjikroz dolazne dolazneKompozicije susjeda i uzmi
+						// prodjikroz dolazne dolazneKompozicije susjeda i uzmi min brzinu
 						for (Composition k : susjed.incomingTrains)
 						{
 							if (k.prevTrainStation.nameStation == nameStation && k.speed > min)
-							{
 								min = k.speed;
-							}
 						}
+						
 						kompozicija.reducedSpeed = kompozicija.speed;
 						kompozicija.speed = min;
 					}
@@ -101,19 +110,21 @@ public class TrainStation extends Thread implements Serializable
 
 					for (int i = 0; i < kompozicija.wagon.size(); ++i)
 					{
-						kompozicija.wagon.get(i).previousCoordinates = new Point(
-								kompozicija.locomotive.get(kompozicija.locomotive.size() - 1).previousCoordinates);
-						kompozicija.wagon.get(i).currentCoordinates = new Point(
-								kompozicija.locomotive.get(kompozicija.locomotive.size() - 1).currentCoordinates);
+						kompozicija.wagon.get(i).previousCoordinates = new Point(kompozicija.locomotive.get(kompozicija.locomotive.size() - 1).previousCoordinates);
+						kompozicija.wagon.get(i).currentCoordinates = new Point(kompozicija.locomotive.get(kompozicija.locomotive.size() - 1).currentCoordinates);
 					}
+					
 					if(kompozicija.trinStationToVisit.get(0).coordinates.contains(kompozicija.locomotive.get(0).currentCoordinates))
 						kompozicija.movingTime = System.currentTimeMillis();
+					
 					kompozicija.locomotive.get(0).currentCoordinates = usmjeriKompoziciju(kompozicija)[1];
 					kompozicija.movingHistory.add(new Point(kompozicija.locomotive.get(0).currentCoordinates));
+					
 					synchronized (this)
 					{
 						schedulerMatrix[nameStation - 'A'][susjed.nameStation - 'A']++;
 					}
+					
 					susjed.incomingTrains.add(kompozicija);
 					synchronized (GUI.frame)
 					{
@@ -121,7 +132,7 @@ public class TrainStation extends Thread implements Serializable
 								.add(new JLabel(new ImageIcon("resource/train.png")));
 						((JLabel) GUI.trainMap[kompozicija.locomotive.get(0).currentCoordinates.x][kompozicija.locomotive
 								.get(0).currentCoordinates.y].getComponent(0)).setName(kompozicija.speed + "k");
-						SwingUtilities.updateComponentTreeUI(GUI.frame);
+						GUI.refreshGui();
 					}
 
 					synchronized(this)
@@ -155,60 +166,40 @@ public class TrainStation extends Thread implements Serializable
 
 	}
 
-	synchronized boolean prugaJeSlobodna(Composition komp) // provjerava da li ima vozova u suprotnom smjeru i ako nema
-															// da li je slobodan pocetak pruge ka odredistu
-	{
-		TrainStation susjed = komp.findNextStation();
-		// susjed i naziv stanice dovoljan za provjeru matrice
-
-		if (schedulerMatrix[susjed.nameStation - 'A'][(nameStation - 'A')] == 0)
-		{
-			Point kord0 = usmjeriKompoziciju(komp)[1];
-			Point kord1 = usmjeriKompoziciju(komp)[2];
-
-			if (GUI.trainMap[kord0.x][kord0.y].getComponents().length == 0
-					&& GUI.trainMap[kord1.x][kord1.y].getComponents().length == 0)
-				return true;
-		}
-		return false;
-	}
-
 	synchronized Point[] usmjeriKompoziciju(Composition komp)
 	{
 		if (nameStation == 'A')
 			return (new Point[]
 			{ new Point(27, 2), new Point(26, 2), new Point(25, 2) });// vraca niz od tri koordinate
 
-		else if (nameStation == 'B' && komp.findNextStation().nameStation == 'A') // ka A
+		else if (nameStation == 'B' && komp.findNextStation().nameStation == 'A')
 			return (new Point[]
-			{ new Point(6, 6), new Point(6, 5), new Point(7, 5) }); // prva koordinata jepozicija na
-		// koju smjestam kompoziciju, adruga je za provjeru razmaka..
- 
-		// odredi susjeda.odrediste.koordinate.contains(new Point(27, 2))
+			{ new Point(6, 6), new Point(6, 5), new Point(7, 5) }); //nulte koordinate su koordinate stanice prva koordinata je pozicija na koju smjestam kompoziciju, adruga je za provjeru razmaka..
 
-		else if (nameStation == 'B' && komp.findNextStation().nameStation == 'C') // ka C
+
+		else if (nameStation == 'B' && komp.findNextStation().nameStation == 'C')
 			return (new Point[]
 			{ new Point(6, 7), new Point(6, 8), new Point(6, 9) });
 
-		else if (nameStation == 'C' && (komp.findNextStation().nameStation == 'B')) // ka B
+		else if (nameStation == 'C' && (komp.findNextStation().nameStation == 'B'))
 			return (new Point[]
-			{ new Point(12, 19), new Point(11, 19), new Point(10, 19) });
+			{ new Point(13, 19), new Point(11, 19), new Point(10, 19) });
 
-		else if (nameStation == 'C' && komp.findNextStation().nameStation == 'D') // ka D
+		else if (nameStation == 'C' && komp.findNextStation().nameStation == 'D') 
 			return (new Point[]
-			{ new Point(12, 20), new Point(12, 21), new Point(12, 22) });
+			{ new Point(13, 20), new Point(12, 21), new Point(12, 22) });
 
-		else if (nameStation == 'C' && komp.findNextStation().nameStation == 'E') // ka E
+		else if (nameStation == 'C' && komp.findNextStation().nameStation == 'E') 
 			return (new Point[]
-			{ new Point(13, 20), new Point(14, 20), new Point(15, 20) });
+			{ new Point(13, 19), new Point(14, 20), new Point(15, 20) });
 
 		else if (nameStation == 'D')
 			return (new Point[]
-			{ new Point(1, 26), new Point(1, 25), new Point(1, 24) }); // ka C
+			{ new Point(1, 26), new Point(1, 25), new Point(1, 24) });
 
 		else if (nameStation == 'E')
 			return (new Point[]
-			{ new Point(25, 26), new Point(24, 26), new Point(23, 26) }); // ka C
+			{ new Point(25, 26), new Point(24, 26), new Point(23, 26) });
 		return null;
 	}
 
