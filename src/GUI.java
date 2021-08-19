@@ -101,7 +101,7 @@ public class GUI extends JFrame
 				kreiranjeKompozicija=new KreiranjeKompozicija();
 				kreiranjeKompozicija.start();
 				timer=new Timer();
-				timer.schedule(new CreateVehicle(), 0, 500);
+				//timer.schedule(new CreateVehicle(), 0, 500);
 				
 				btnStart.setEnabled(false);
 			}

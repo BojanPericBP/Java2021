@@ -11,7 +11,7 @@ public abstract class ElementOfComposition {
 
 	synchronized public boolean move() {
 		if((GUI.trainMap[currentCoordinates.x-1][currentCoordinates.y].getBackground() == Color.LIGHT_GRAY || GUI.trainMap[currentCoordinates.x-1][currentCoordinates.y].getBackground() == Color.red || GUI.trainMap[currentCoordinates.x-1][currentCoordinates.y].getBackground() == Color.yellow)
-				&& (currentCoordinates.x-1 != previousCoordinates.x))//provjerava gore
+				&& ( currentCoordinates.x-1 != previousCoordinates.x))//provjerava gore
 		 {
 			 previousCoordinates = new Point(currentCoordinates);
 			 currentCoordinates.x--;

@@ -52,7 +52,7 @@ public class TrainStation extends Thread implements Serializable
 		nameStation = _nameStation;
 		coordinates = _coordinates;
 	}
-
+	
 	@Override
 	public void run() // kompozicija je vec na prvom polju izvan pruge tj lokomotiva
 	{
@@ -67,7 +67,8 @@ public class TrainStation extends Thread implements Serializable
 				Composition kompozicija = iteratorKompozicija.next();
 				boolean jeSlobodna = false;
 				TrainStation susjed;
-				
+				Point kord0=null;
+				Point kord1=null;
 				synchronized (schedulerMatrix)
 				{
 					//jeSlobodna = prugaJeSlobodna(kompozicija);
@@ -77,8 +78,8 @@ public class TrainStation extends Thread implements Serializable
 
 					if (schedulerMatrix[susjed.nameStation - 'A'][(nameStation - 'A')] == 0)
 					{
-						Point kord0 = usmjeriKompoziciju(kompozicija)[1];
-						Point kord1 = usmjeriKompoziciju(kompozicija)[2];
+						kord0 = usmjeriKompoziciju(kompozicija)[1];
+						kord1 = usmjeriKompoziciju(kompozicija)[2];
 
 						if (GUI.trainMap[kord0.x][kord0.y].getComponents().length == 0
 								&& GUI.trainMap[kord1.x][kord1.y].getComponents().length == 0)
@@ -104,6 +105,7 @@ public class TrainStation extends Thread implements Serializable
 
 					for (int i = 0; i < kompozicija.locomotive.size(); ++i)
 					{
+						//kompozicija.locomotive.get(i).previousCoordinates = usmjeriKompoziciju(kompozicija)[0];
 						kompozicija.locomotive.get(i).previousCoordinates = usmjeriKompoziciju(kompozicija)[0];
 						kompozicija.locomotive.get(i).currentCoordinates = new Point(usmjeriKompoziciju(kompozicija)[0]);
 					}
@@ -117,7 +119,7 @@ public class TrainStation extends Thread implements Serializable
 					if(kompozicija.trinStationToVisit.get(0).coordinates.contains(kompozicija.locomotive.get(0).currentCoordinates))
 						kompozicija.movingTime = System.currentTimeMillis();
 					
-					kompozicija.locomotive.get(0).currentCoordinates = usmjeriKompoziciju(kompozicija)[1];
+					kompozicija.locomotive.get(0).currentCoordinates = new Point(kord0);
 					kompozicija.movingHistory.add(new Point(kompozicija.locomotive.get(0).currentCoordinates));
 					
 					synchronized (this)
