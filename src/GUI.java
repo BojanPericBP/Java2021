@@ -39,9 +39,11 @@ public class GUI extends JFrame
 	public GUI() 
 	{
 		frame = new JFrame(" PJ2 PROJEKAT");
-		frame.addWindowListener(new WindowAdapter() {
+		frame.addWindowListener(new WindowAdapter() 
+		{
 			@Override
-			public void windowClosing(WindowEvent e) {
+			public void windowClosing(WindowEvent e) 
+			{
 				if(timer!=null) timer.cancel();
 				simulacijaUToku=false;
 				Kompozicija.handler.close();
@@ -279,7 +281,6 @@ public class GUI extends JFrame
 		frame.setMinimumSize(new Dimension(1000, 850));
 		
 		initialize();
-		
 	}
 	
 	private void initialize()

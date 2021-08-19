@@ -1,16 +1,8 @@
-import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.WatchEvent;
-import java.nio.file.WatchKey;
-import java.nio.file.WatchService;
+import java.nio.file.*;
 import java.util.List;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.logging.*;
+import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 
 
 public class KreiranjeKompozicija extends Thread
@@ -98,7 +90,7 @@ public class KreiranjeKompozicija extends Thread
 			
 			try 
 			{
-				Kompozicija tmp = new Kompozicija(brLokomotiva,  brVagona,  raspored,  brzina,  GUI.stanice.get(pocetnaStanica-'A'),  GUI.stanice.get(krajnjaStanica-'A'));
+				Kompozicija tmp = new Kompozicija(brzina, raspored, brLokomotiva, brVagona, GUI.stanice.get(pocetnaStanica-'A'),  GUI.stanice.get(krajnjaStanica-'A'));
 				GUI.stanice.get(pocetnaStanica-'A').redUStanici.add(tmp);				
 			}
 			catch (Exception ex) 

@@ -1,21 +1,15 @@
-import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.SwingUtilities;
+import java.util.logging.*;
+import javax.swing.*;
 
 public class Kompozicija extends Thread implements Serializable  
 {
 	final static int MAX_BROJ_LOKOMOTIVA = 5;
 	final static int MAX_BR_VAGONA = 5;
-	static int count=0;
+	static int brojacKompozicija=0;
 	int idKompozicije;
 	private static final long serialVersionUID = 1L;
 	public long vrijemeKretanja;
@@ -24,8 +18,8 @@ public class Kompozicija extends Thread implements Serializable
 	ArrayList<Lokomotiva> lokomotive;
 	ArrayList<Vagon> vagoni;
 	long brzinaKretanja;
-	long tmpBrzina;
-	ZeljeznickaStanica odrediste; // odredisna stanica na koju kompozicija treba da stigne
+	long uskladjenaBrzina;
+	ZeljeznickaStanica odrediste;
 	ZeljeznickaStanica polazak;
 	ZeljeznickaStanica prethodnaStanica;
 	static FileHandler handler;
@@ -43,10 +37,9 @@ public class Kompozicija extends Thread implements Serializable
 		}
 	}
 
-	public Kompozicija(int brLokomotivaArg, int brVagonaArg, String rasporedArg, long brzinaArg, ZeljeznickaStanica polazakArg, ZeljeznickaStanica odredisteArg) throws Exception 
+	public Kompozicija( long brzinaArg, String rasporedArg, int brLokomotivaArg, int brVagonaArg, ZeljeznickaStanica polazakArg, ZeljeznickaStanica odredisteArg) throws Exception 
 	{
-		
-		idKompozicije = count++;
+		idKompozicije = brojacKompozicija++;
 		if (brLokomotivaArg > MAX_BROJ_LOKOMOTIVA || brLokomotivaArg < 1 || brVagonaArg > MAX_BR_VAGONA || brVagonaArg < 0)
 			throw new Exception("Kompozicija nije validna!");
 
@@ -56,7 +49,7 @@ public class Kompozicija extends Thread implements Serializable
 		vagoni = new ArrayList<>(brVagonaArg);
 		lokomotive = new ArrayList<>(brLokomotivaArg);
 		prethodnaStanica = polazak;
-		tmpBrzina = brzinaKretanja;
+		uskladjenaBrzina = brzinaKretanja;
 		
 		istorijaKretanja = new ArrayList<Koordinate>();
 		usputneStanice = polazakArg.nazivStanice+" ";
@@ -66,7 +59,6 @@ public class Kompozicija extends Thread implements Serializable
 	@Override
 	public void run()
 	{
-
 		while (GUI.simulacijaUToku && !prethodnaStanica.equals(odrediste)) 
 		{
 				ZeljeznickaStanica susjed = odrediSusjeda();
@@ -78,6 +70,7 @@ public class Kompozicija extends Thread implements Serializable
 				{
 					Logger.getLogger(Kompozicija.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 				}
+				
 				if (kretanjeKompozicije()) // kompozicija usla u stanicu kad udje u if
 				{
 
@@ -87,7 +80,7 @@ public class Kompozicija extends Thread implements Serializable
 					susjed = odrediSusjeda();
 					usputneStanice+=prethodnaStanica.nazivStanice+" ";
 					
-					if (odrediste.koordinate.contains(lokomotive.get(0).trKoo)) // ako je u odredisnoj stanici
+					if (odrediste.koordinate.contains(lokomotive.get(0).trKoo)) // u odredisnoj stanici
 					{
 						vrijemeKretanja = System.currentTimeMillis() - vrijemeKretanja;
 						vrijemeKretanja /= 1000;
@@ -102,14 +95,14 @@ public class Kompozicija extends Thread implements Serializable
 						}
 						
 					} 
-					else // da li je u bilo kojoj stanici koja nije odredisna
+					else // u bilo kojoj stanici (koja nije odredisna)
 					{
 						try 
 						{
 							synchronized (this) 
 							{
 								prethodnaStanica.redUStanici.add(this);
-								brzinaKretanja = tmpBrzina;
+								brzinaKretanja = uskladjenaBrzina;
 								wait();
 							}
 						} 
@@ -143,18 +136,25 @@ public class Kompozicija extends Thread implements Serializable
 		
 	}
 
-	synchronized ZeljeznickaStanica odrediSusjeda() { // vrati referencu susjedne stanice ka kojoj se kompozicija krece
-
-		if (prethodnaStanica.nazivStanice == 'A') {
+	synchronized ZeljeznickaStanica odrediSusjeda() // vrati referencu susjedne stanice ka kojoj se kompozicija krece
+	{ 
+		if (prethodnaStanica.nazivStanice == 'A') 
+		{
 			return GUI.stanice.get(1);
-		} else if (prethodnaStanica.nazivStanice == 'B') {
+		} 
+		else if (prethodnaStanica.nazivStanice == 'B') 
+		{
 			if (odrediste == GUI.stanice.get(0))
 				return GUI.stanice.get(0);
 			else
 				return GUI.stanice.get(2);
-		} else if (prethodnaStanica.nazivStanice == 'D' || prethodnaStanica.nazivStanice == 'E') {
+		} 
+		else if (prethodnaStanica.nazivStanice == 'D' || prethodnaStanica.nazivStanice == 'E') 
+		{
 			return GUI.stanice.get(2);
-		} else {
+		} 
+		else 
+		{
 			if (odrediste == GUI.stanice.get(0) || odrediste == GUI.stanice.get(1))
 				return GUI.stanice.get(1);
 			else if (odrediste == GUI.stanice.get(2))

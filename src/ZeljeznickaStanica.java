@@ -84,7 +84,7 @@ public class ZeljeznickaStanica extends Thread implements Serializable
 								min = k.brzinaKretanja;
 							}
 						}
-						kompozicija.tmpBrzina = kompozicija.brzinaKretanja;
+						kompozicija.uskladjenaBrzina = kompozicija.brzinaKretanja;
 						kompozicija.brzinaKretanja = min;
 					}
 

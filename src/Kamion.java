@@ -21,7 +21,7 @@ public class Kamion extends Vozilo
 		}
 	}
 	
-	public Kamion(double maxBriznaArg,char putArg, String putanjaSlikeArg) 
+	public Kamion(double maxBriznaArg, char putArg, String putanjaSlikeArg) 
 	{
 		super(maxBriznaArg, putArg, putanjaSlikeArg);
 		nosivost = new Random().nextInt(200) + 40;

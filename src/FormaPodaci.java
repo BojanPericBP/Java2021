@@ -1,16 +1,9 @@
 import java.awt.BorderLayout;
-import java.awt.Color;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
 import javax.swing.table.DefaultTableModel;
-
-import java.awt.Font;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.ObjectInputStream;
-import java.util.logging.FileHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.*;
+import java.util.logging.*;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
@@ -76,7 +69,6 @@ public class FormaPodaci
 				k.istorijaKretanja.forEach( e -> istorija.append(e.toString()) );
 
 				tableModel.insertRow(tableModel.getRowCount(), new Object[] { "Kompozicija"+k.idKompozicije, k.lokomotive.size(), k.vagoni.size(), k.vrijemeKretanja+"s", k.usputneStanice, istorija.toString() });
-				
 			}
 		}
 		catch (Exception e) 
