@@ -3,7 +3,7 @@ import java.util.Random;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 
-public class Kamion extends Vozilo
+public class Kamion extends Vehicle
 {
 	double nosivost;
 	

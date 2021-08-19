@@ -66,9 +66,19 @@ public class Kompozicija extends Thread implements Serializable
 			{
 				radSaRampom();				
 			}
+
 			
 				//ZeljeznickaStanica susjed = odrediSusjeda();
 			ZeljeznickaStanica susjed = odrediSusjeda();
+			
+			try 
+			{
+				sleep(brzinaKretanja);
+			} 
+			catch (Exception e) 
+			{
+				Logger.getLogger(Kompozicija.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
+			}
 			
 			if (kretanjeKompozicije()) // kompozicija usla u stanicu
 			{
@@ -116,14 +126,14 @@ public class Kompozicija extends Thread implements Serializable
 			{
 				radSaRampom();				
 			}
-			try 
+			/*try 
 			{
 				sleep(brzinaKretanja);
 			} 
 			catch (Exception e) 
 			{
 				Logger.getLogger(Kompozicija.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
-			}
+			}*/
 		}
 		
 	}

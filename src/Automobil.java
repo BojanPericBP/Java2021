@@ -3,7 +3,7 @@ import java.util.Random;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 
-public class Automobil extends Vozilo
+public class Automobil extends Vehicle
 {
 	int brojVrata;
 	
@@ -19,7 +19,7 @@ public class Automobil extends Vozilo
 		}
 	}
 	
-	public Automobil(double _maxBrzina,char _put, String _putanjaSlike) 
+	public Automobil(double _maxBrzina, char _put, String _putanjaSlike) 
 	{
 		super(_maxBrzina,_put, _putanjaSlike);
 		brojVrata = new Random().nextInt(6)+2;
