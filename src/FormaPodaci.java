@@ -2,6 +2,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
+import javax.swing.table.DefaultTableModel;
+
 import java.awt.Font;
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,12 +12,14 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 public class FormaPodaci 
 {
 	static public JTextArea textArea;
 	JFrame frame;
 	static FileHandler handlerFajl;
+	DefaultTableModel tableModel;
 	
 	static
 	{
@@ -29,40 +33,50 @@ public class FormaPodaci
 	public FormaPodaci() 
 	{
 		frame = new JFrame("PODACI O KRETANJIMA SVIH KOMPOZICIJA");
-		frame.setBounds(100,100,892,584);
+		frame.setBounds(100,100,1500,600);
 		frame.getContentPane().setLayout(new BorderLayout());
 		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(43, 85, 774, 372);
-		frame.getContentPane().add(scrollPane);
-		
-		textArea = new JTextArea();
-		textArea.setFont(new Font("Monospaced", Font.PLAIN, 16));
-		scrollPane.setViewportView(textArea);
-		textArea.setEditable(false);
-		textArea.setBackground(new Color(255,255,255));
-		frame.setVisible(false);
+		tableModel = new DefaultTableModel();
+	    JTable table = new JTable(tableModel);
+	    tableModel.addColumn("Kompozicija");
+	    tableModel.addColumn("Br lokomotiva");
+	    tableModel.addColumn("Br vagona");
+	    tableModel.addColumn("vrijeme kretanja");
+	    tableModel.addColumn("Usputne stanice");
+	    tableModel.addColumn("Istorija kretanja");
+	    table.getColumnModel().getColumn(0).setMaxWidth(90);
+	    table.getColumnModel().getColumn(0).setMinWidth(90);
+	    table.getColumnModel().getColumn(1).setMinWidth(80);
+	    table.getColumnModel().getColumn(1).setMaxWidth(80);
+	    table.getColumnModel().getColumn(2).setMinWidth(60);
+	    table.getColumnModel().getColumn(2).setMaxWidth(60);
+	    table.getColumnModel().getColumn(3).setMinWidth(90);
+	    table.getColumnModel().getColumn(3).setMaxWidth(90);
+	    table.getColumnModel().getColumn(4).setMinWidth(95);
+	    table.getColumnModel().getColumn(4).setMaxWidth(95);
+	    frame.add(new JScrollPane(table));
+	    frame.setVisible(false);
 	}
 	
 	
 	public void prikaziPodatke() 
 	{
+		tableModel.setRowCount(0);
 		try 
 		{
-			textArea.setText("");
 			File folder = new File("serijalizacija");
 			File[] fajlovi = folder.listFiles();
 			for(File f : fajlovi)
 			{
-				StringBuffer crta = new StringBuffer("");
-				crta.append("===================");
 				ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f.getAbsoluteFile()));
 				Kompozicija k = (Kompozicija)ois.readObject();
 				ois.close();
-				textArea.append(" Kompozicija"+k.idKompozicije+"\n"+" Broj lokomotiva: "+k.lokomotive.size()+"\n Broj vagona: "+k.vagoni.size()+"\n Ukupno vrijeme kretanja: "+k.vrijemeKretanja+"s\n"
-				+" Usputne stanice: "+k.usputneStanice+"\n Istorija kretanja: ");
-				k.istorijaKretanja.forEach( e -> {String tmp=e.toString(); textArea.append(tmp+" "); for(int i=0;i<tmp.length()+1;i++)crta.append("=");});
-				textArea.append("\n"+crta.toString()+"\n");
+				
+				StringBuffer istorija = new StringBuffer("");
+				k.istorijaKretanja.forEach( e -> istorija.append(e.toString()) );
+
+				tableModel.insertRow(tableModel.getRowCount(), new Object[] { "Kompozicija"+k.idKompozicije, k.lokomotive.size(), k.vagoni.size(), k.vrijemeKretanja+"s", k.usputneStanice, istorija.toString() });
+				
 			}
 		}
 		catch (Exception e) 

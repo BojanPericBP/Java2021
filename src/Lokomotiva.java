@@ -35,7 +35,7 @@ public class Lokomotiva implements Serializable
 	
 	public Lokomotiva(String tipLokomotive) 
 	{
-		pogon = moguciPogoni[new Random().nextInt(2)];
+		pogon = moguciPogoni[new Random().nextInt(3)];
 		snaga = Math.random()*10;
 		idLokomotive = brojacLokomotiva++;
 		
