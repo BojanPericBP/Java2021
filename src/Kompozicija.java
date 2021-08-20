@@ -314,7 +314,7 @@ public class Kompozicija extends Thread implements Serializable
 				pocetakA = 18; krajA = 24;
 				break;
 			}
-		}
+		}	
 		for (int i = pocetakA; i < krajA; i++) 
 		{
 			if(GUI.guiMapa[i][2].getComponents().length == 1)
@@ -456,7 +456,9 @@ public class Kompozicija extends Thread implements Serializable
 				((JLabel)GUI.guiMapa[vagoni.get(i).trenutneKoordinate.i][vagoni.get(i).trenutneKoordinate.j].getComponent(0)).setName(brzinaKretanja+"k");
 				synchronized(GUI.frame)
 				{
-					SwingUtilities.updateComponentTreeUI(GUI.frame);					
+					GUI.frame.invalidate();
+					GUI.frame.validate();
+					GUI.frame.repaint();					
 				}
 				try {
 					Thread.sleep(brzinaKretanja);
@@ -473,7 +475,9 @@ public class Kompozicija extends Thread implements Serializable
 				{
 					synchronized(GUI.frame)
 					{
-						SwingUtilities.updateComponentTreeUI(GUI.frame);				
+						GUI.frame.invalidate();
+						GUI.frame.validate();
+						GUI.frame.repaint();				
 					}
 
 					udjiUStanicu();
@@ -489,7 +493,9 @@ public class Kompozicija extends Thread implements Serializable
 				((JLabel)GUI.guiMapa[vagoni.get(i).trenutneKoordinate.i][vagoni.get(i).trenutneKoordinate.j].getComponent(0)).setName(brzinaKretanja+"k");
 				synchronized(GUI.frame)
 				{
-					SwingUtilities.updateComponentTreeUI(GUI.frame);					
+					GUI.frame.invalidate();
+					GUI.frame.validate();
+					GUI.frame.repaint();					
 				}
 				try {
 					Thread.sleep(brzinaKretanja);
@@ -503,7 +509,9 @@ public class Kompozicija extends Thread implements Serializable
 			{
 				synchronized(GUI.frame)
 				{
-					SwingUtilities.updateComponentTreeUI(GUI.frame);					
+					GUI.frame.invalidate();
+					GUI.frame.validate();
+					GUI.frame.repaint();					
 				}
 
 				udjiUStanicu();

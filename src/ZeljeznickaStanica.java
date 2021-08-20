@@ -10,9 +10,9 @@ public class ZeljeznickaStanica extends Thread implements Serializable
 	ArrayList<Kompozicija> redUStanici;
 	ArrayList<Kompozicija> dolazneKompozicije;
 	public static final long brzinaRasporedjivanja = 200;
-	static int matricaSusjedstva[][]; //putanja OD stanice i KA stanici j
+	static int matricaSusjedstva[][]; //putanja OD stanice i, PREMA stanici j
 	char nazivStanice;
-	ArrayList<Koordinate> koordinate; 
+	ArrayList<Koordinate> koordinate;
 	static FileHandler handler;
 	
 	static 
@@ -48,13 +48,13 @@ public class ZeljeznickaStanica extends Thread implements Serializable
 	}
 
 	@Override
-	public void run() // kompozicija je vec na prvom polju izvan pruge tj lokomotiva
+	public void run()
 	{
 		while (GUI.simulacijaUToku)
 		{
 			Iterator<Kompozicija> iteratorKompozicija = redUStanici.iterator();
 
-			while (iteratorKompozicija.hasNext()) // pronalazi kompoziciju, za koju je slobodna odredjena pruga i usmjri lokomotivu na odgovarajuce polje
+			while (iteratorKompozicija.hasNext()) // rasporedjuje kompozicije iz reda u stanici
 			{
 				Kompozicija kompozicija = iteratorKompozicija.next();
 				ZeljeznickaStanica susjed;
@@ -111,7 +111,9 @@ public class ZeljeznickaStanica extends Thread implements Serializable
 					{
 						GUI.guiMapa[kompozicija.lokomotive.get(0).trenutneKoordinate.i][kompozicija.lokomotive.get(0).trenutneKoordinate.j].add(new JLabel(new ImageIcon("SLIKE/lokomotiva.png")));
 						((JLabel) GUI.guiMapa[kompozicija.lokomotive.get(0).trenutneKoordinate.i][kompozicija.lokomotive.get(0).trenutneKoordinate.j].getComponent(0)).setName(kompozicija.brzinaKretanja + "k");
-						SwingUtilities.updateComponentTreeUI(GUI.frame);
+						GUI.frame.invalidate();
+						GUI.frame.validate();
+						GUI.frame.repaint();
 					}
 
 					synchronized(this)
@@ -134,30 +136,21 @@ public class ZeljeznickaStanica extends Thread implements Serializable
 				}
 			}
 
-			try
-			{
-				Thread.sleep(brzinaRasporedjivanja);
-			}
-			catch (Exception e)
-			{
-				Logger.getLogger(ZeljeznickaStanica.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
-			}
+			try{ Thread.sleep(brzinaRasporedjivanja); } catch (Exception e){ Logger.getLogger(ZeljeznickaStanica.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());}
 		}
 
 	}
 
-	synchronized boolean prugaJeSlobodna(Kompozicija komp) // provjerava da li ima vozova u suprotnom smjeru i ako nema
-															// da li je slobodan pocetak pruge ka odredistu
+	synchronized boolean prugaJeSlobodna(Kompozicija komp) // provjerava da li ima vozova u suprotnom smjeru i da li je slobodan pocetak pruge ka odredistu
 	{
-		ZeljeznickaStanica susjed = komp.odrediSusjeda(); // susjed i naziv stanice dovoljan za provjeru matrice
+		ZeljeznickaStanica susjed = komp.odrediSusjeda();
 
 		if (matricaSusjedstva[susjed.nazivStanice - 'A'][(nazivStanice - 'A')] == 0)
 		{
 			Koordinate kord0 = usmjeriKompoziciju(komp)[1];
 			Koordinate kord1 = usmjeriKompoziciju(komp)[2];
 
-			if (GUI.guiMapa[kord0.i][kord0.j].getComponents().length == 0
-					&& GUI.guiMapa[kord1.i][kord1.j].getComponents().length == 0)
+			if (GUI.guiMapa[kord0.i][kord0.j].getComponents().length == 0 && GUI.guiMapa[kord1.i][kord1.j].getComponents().length == 0)
 				return true;
 		}
 		return false;

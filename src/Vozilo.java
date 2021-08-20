@@ -2,7 +2,6 @@ import java.awt.Component;
 import java.util.Random;
 import java.util.logging.*;
 import javax.swing.JLabel;
-import javax.swing.SwingUtilities;
 
 public abstract class Vozilo extends Thread
 {
@@ -98,7 +97,10 @@ public abstract class Vozilo extends Thread
 					prethodneKoordinate.j = trenutneKoordinate.j;
 					trenutneKoordinate = k;
 				}
-				SwingUtilities.updateComponentTreeUI(GUI.frame);					
+				
+				GUI.frame.invalidate();
+				GUI.frame.validate();
+				GUI.frame.repaint();
 				
 			}
 		}

@@ -32,7 +32,7 @@ public class FormaPodaci
 	    tableModel.addColumn("Kompozicija");
 	    tableModel.addColumn("Br lokomotiva");
 	    tableModel.addColumn("Br vagona");
-	    tableModel.addColumn("vrijeme kretanja");
+	    tableModel.addColumn("Vrijeme kretanja");
 	    tableModel.addColumn("Usputne stanice");
 	    tableModel.addColumn("Istorija kretanja");
 	    table.getColumnModel().getColumn(0).setMaxWidth(90);
@@ -41,8 +41,8 @@ public class FormaPodaci
 	    table.getColumnModel().getColumn(1).setMaxWidth(80);
 	    table.getColumnModel().getColumn(2).setMinWidth(60);
 	    table.getColumnModel().getColumn(2).setMaxWidth(60);
-	    table.getColumnModel().getColumn(3).setMinWidth(90);
-	    table.getColumnModel().getColumn(3).setMaxWidth(90);
+	    table.getColumnModel().getColumn(3).setMinWidth(95);
+	    table.getColumnModel().getColumn(3).setMaxWidth(95);
 	    table.getColumnModel().getColumn(4).setMinWidth(95);
 	    table.getColumnModel().getColumn(4).setMaxWidth(95);
 	    frame.add(new JScrollPane(table));
@@ -66,7 +66,7 @@ public class FormaPodaci
 				StringBuffer istorija = new StringBuffer("");
 				k.istorijaKretanja.forEach( e -> istorija.append(e.toString()) );
 
-				tableModel.insertRow(tableModel.getRowCount(), new Object[] { "Kompozicija"+k.idKompozicije, k.lokomotive.size(), k.vagoni.size(), k.vrijemeKretanja+"s", k.usputneStanice, istorija.toString() });
+				tableModel.insertRow(tableModel.getRowCount(), new Object[] { "Kompozicija"+k.idKompozicije, " "+k.lokomotive.size(), " "+k.vagoni.size(), " "+k.vrijemeKretanja+"s", k.usputneStanice, istorija.toString() });
 			}
 		}
 		catch (Exception e) 
