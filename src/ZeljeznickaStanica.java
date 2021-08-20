@@ -70,7 +70,7 @@ public class ZeljeznickaStanica extends Thread implements Serializable
 				{
 					susjed = kompozicija.odrediSusjeda();
 
-					if (matricaSusjedstva[nazivStanice - 'A'][susjed.nazivStanice - 'A'] != 0)
+					if (matricaSusjedstva[nazivStanice - 'A'][susjed.nazivStanice - 'A'] != 0) //TODO uskladjivanje brzine kompozicije (ako je razlicito on nule treba uskladiti brzinu)
 					{
 						long min = kompozicija.brzinaKretanja;
 						

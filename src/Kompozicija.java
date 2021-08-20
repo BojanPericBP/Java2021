@@ -53,124 +53,8 @@ public class Kompozicija extends Thread implements Serializable
 		
 		istorijaKretanja = new ArrayList<Koordinate>();
 		usputneStanice = polazakArg.nazivStanice+" ";
-		kreirajKompoziciju(rasporedArg);
-	}
-	
-	@Override
-	public void run()
-	{
-		while (GUI.simulacijaUToku && !prethodnaStanica.equals(odrediste)) 
-		{
-	
-	
-				ZeljeznickaStanica susjed = odrediSusjeda();
-				try 
-				{
-					sleep(brzinaKretanja);
-				} 
-				catch (Exception e) 
-				{
-					Logger.getLogger(Kompozicija.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
-				}
-				
-				if (kretanjeKompozicije()) // kompozicija usla u stanicu kad udje u if
-				{
-
-					ZeljeznickaStanica.matricaSusjedstva[prethodnaStanica.nazivStanice - 'A'][susjed.nazivStanice- 'A']--;
-					prethodnaStanica = susjed; 
-
-					susjed = odrediSusjeda();
-					usputneStanice+=prethodnaStanica.nazivStanice+" ";
-					
-					if (odrediste.koordinate.contains(lokomotive.get(0).trenutneKoordinate)) // u odredisnoj stanici
-					{
-						vrijemeKretanja = System.currentTimeMillis() - vrijemeKretanja;
-						vrijemeKretanja /= 1000;
-						try 
-						{
-							ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("serijalizacija/kompozicija"+idKompozicije+".ser"));
-							oos.writeObject(this);
-							oos.close();
-						}
-						catch (Exception e) {
-							Logger.getLogger(Kompozicija.class.getName()).log(Level.WARNING,e.fillInStackTrace().toString());
-						}
-						
-					} 
-					else // u bilo kojoj stanici (koja nije odredisna)
-					{
-						try 
-						{
-							synchronized (this) 
-							{
-								prethodnaStanica.redUStanici.add(this);
-								brzinaKretanja = uskladjenaBrzina;
-								wait();
-							}
-						} 
-						catch (Exception e)
-						{
-							Logger.getLogger(Kompozicija.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
-						}
-					}
-				}
-				synchronized (GUI.guiMapa) 
-				{
-					GUI.frame.invalidate();
-					GUI.frame.validate();
-					GUI.frame.repaint();
-				}
-				
-				synchronized(this)
-				{
-					radSaRampom();				
-				}
-				/*
-				try 
-				{
-					sleep(brzinaKretanja);
-				} 
-				catch (Exception e) 
-				{
-					Logger.getLogger(Kompozicija.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
-				}*/
-		}
 		
-	}
-
-	synchronized ZeljeznickaStanica odrediSusjeda() // vrati referencu susjedne stanice ka kojoj se kompozicija krece
-	{ 
-		if (prethodnaStanica.nazivStanice == 'A') 
-		{
-			return GUI.stanice.get(1);
-		} 
-		else if (prethodnaStanica.nazivStanice == 'B') 
-		{
-			if (odrediste == GUI.stanice.get(0))
-				return GUI.stanice.get(0);
-			else
-				return GUI.stanice.get(2);
-		} 
-		else if (prethodnaStanica.nazivStanice == 'D' || prethodnaStanica.nazivStanice == 'E') 
-		{
-			return GUI.stanice.get(2);
-		} 
-		else 
-		{
-			if (odrediste == GUI.stanice.get(0) || odrediste == GUI.stanice.get(1))
-				return GUI.stanice.get(1);
-			else if (odrediste == GUI.stanice.get(2))
-				return GUI.stanice.get(2);
-			else if (odrediste == GUI.stanice.get(3))
-				return GUI.stanice.get(3);
-			else
-				return GUI.stanice.get(4);
-		}
-	}
-
-	private void kreirajKompoziciju(String raspored) throws Exception
-	{
-		String[] niz = raspored.split(";");
+		String[] niz = rasporedArg.split(";");
 		List<String> kompozicija = Arrays.asList(niz);
 		
 		if(kompozicija.get(0).startsWith("V")) //kompozicija ne moze pocinjat vagonom, bez obzira na duzinu
@@ -259,13 +143,135 @@ public class Kompozicija extends Thread implements Serializable
 				{
 					lokomotive.add(new Lokomotiva("univerzalna"));
 				}
+				/*
 				else if (string.equals("LM"))// manevarska lokomotiva
+				{
+					lokomotive.add(new Lokomotiva("manevarska"));
+				}
+				*/
+				else if ('M' == string.charAt(1)) // manevarska
 				{
 					lokomotive.add(new Lokomotiva("manevarska"));
 				}
 				else throw new Exception();
 			}
 			else throw new Exception();
+		}
+	}
+	
+	@Override
+	public void run()
+	{
+		while (GUI.simulacijaUToku && !prethodnaStanica.equals(odrediste)) 
+		{
+			/*synchronized(GUI.guiMapa)
+			{
+				radSaRampom();				
+			}*/
+			
+				ZeljeznickaStanica susjed = odrediSusjeda();
+				try 
+				{
+					sleep(brzinaKretanja);
+				} 
+				catch (Exception e) 
+				{
+					Logger.getLogger(Kompozicija.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
+				}
+				
+				if (kretanjeKompozicije()) // kompozicija usla u stanicu kad udje u if
+				{
+
+					ZeljeznickaStanica.matricaSusjedstva[prethodnaStanica.nazivStanice - 'A'][susjed.nazivStanice- 'A']--;
+					prethodnaStanica = susjed; 
+
+					susjed = odrediSusjeda();
+					usputneStanice+=prethodnaStanica.nazivStanice+" ";
+					
+					if (odrediste.koordinate.contains(lokomotive.get(0).trenutneKoordinate)) // u odredisnoj stanici
+					{
+						vrijemeKretanja = System.currentTimeMillis() - vrijemeKretanja;
+						vrijemeKretanja /= 1000;
+						try 
+						{
+							ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("serijalizacija/kompozicija"+idKompozicije+".ser"));
+							oos.writeObject(this);
+							oos.close();
+						}
+						catch (Exception e) {
+							Logger.getLogger(Kompozicija.class.getName()).log(Level.WARNING,e.fillInStackTrace().toString());
+						}
+						
+					} 
+					else // u bilo kojoj stanici (koja nije odredisna)
+					{
+						try 
+						{
+							synchronized (this) 
+							{
+								prethodnaStanica.redUStanici.add(this);
+								brzinaKretanja = uskladjenaBrzina;
+								wait();
+							}
+						} 
+						catch (Exception e)
+						{
+							Logger.getLogger(Kompozicija.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
+						}
+					}
+				}
+				synchronized(GUI.guiMapa)
+				{
+					radSaRampom();				
+				}
+				synchronized (GUI.guiMapa) 
+				{
+					GUI.frame.invalidate();
+					GUI.frame.validate();
+					GUI.frame.repaint();
+				}
+				
+				
+				/*
+				try 
+				{
+					sleep(brzinaKretanja);
+				} 
+				catch (Exception e) 
+				{
+					Logger.getLogger(Kompozicija.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
+				}*/
+		}
+		
+	}
+
+	synchronized ZeljeznickaStanica odrediSusjeda() // vrati referencu susjedne stanice ka kojoj se kompozicija krece
+	{ 
+		if (prethodnaStanica.nazivStanice == 'A') 
+		{
+			return GUI.stanice.get(1);
+		} 
+		else if (prethodnaStanica.nazivStanice == 'B') 
+		{
+			if (odrediste == GUI.stanice.get(0))
+				return GUI.stanice.get(0);
+			else
+				return GUI.stanice.get(2);
+		} 
+		else if (prethodnaStanica.nazivStanice == 'D' || prethodnaStanica.nazivStanice == 'E') 
+		{
+			return GUI.stanice.get(2);
+		} 
+		else 
+		{
+			if (odrediste == GUI.stanice.get(0) || odrediste == GUI.stanice.get(1))
+				return GUI.stanice.get(1);
+			else if (odrediste == GUI.stanice.get(2))
+				return GUI.stanice.get(2);
+			else if (odrediste == GUI.stanice.get(3))
+				return GUI.stanice.get(3);
+			else
+				return GUI.stanice.get(4);
 		}
 	}
 
@@ -275,13 +281,14 @@ public class Kompozicija extends Thread implements Serializable
 		int granicaVAG=0;
 		while(granicaLOK!=lokomotive.size() || granicaVAG!=vagoni.size()) 
 		{
-			synchronized(this)
-			{
-				radSaRampom();				
-			}
+			
 			for (int i = granicaLOK; i < lokomotive.size(); i++)
 			{
 				if(!lokomotive.get(i).move()) granicaLOK=i+1;
+				synchronized(GUI.guiMapa)
+				{
+					radSaRampom();				
+				}
 				synchronized(GUI.frame)
 				{
 					GUI.frame.invalidate();
@@ -293,17 +300,18 @@ public class Kompozicija extends Thread implements Serializable
 			for (int i = granicaVAG; i < vagoni.size(); i++)
 			{
 				if(!vagoni.get(i).move()) granicaVAG=i+1;
+				synchronized(GUI.guiMapa)
+				{
+					radSaRampom();				
+				}
 				synchronized(GUI.frame)
 				{
 					GUI.frame.invalidate();
 					GUI.frame.validate();
 					GUI.frame.repaint();
 				}
-				synchronized(this)
-				{
-					radSaRampom();				
-				}
-			}	
+			}
+			
 			try { Thread.sleep(brzinaKretanja); } catch (InterruptedException e) { Logger.getLogger(Kompozicija.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString()); }
 		}
 	}
@@ -311,6 +319,9 @@ public class Kompozicija extends Thread implements Serializable
 	
 	synchronized void radSaRampom()
 	{
+		//synchronized(GUI.guiMapa)
+		//{
+		
 		boolean trebaDignuti = true;
 		int pocetakA = 19, krajA = 23;
 		for(int i=0; i<lokomotive.size(); i++) //trazi bar jednu elektricnu
@@ -394,7 +405,7 @@ public class Kompozicija extends Thread implements Serializable
 		{
 			obojiRampu(trebaDignuti,20,26,21,26);
 		}
-		
+		//}
 	}
 	
 	synchronized private void obojiRampu(boolean trebaPodignuti,int i1, int j1, int i2,int j2)
@@ -421,7 +432,7 @@ public class Kompozicija extends Thread implements Serializable
 			if (prethodnaStanica.koordinate.contains(lokomotive.get(i).trenutneKoordinate) && !prethodnaStanica.koordinate.contains(lokomotive.get(i-1).prethodneKoordinate))  // U prvom koraku se nece ispitivati drgui uslov
 			{
 				lokomotive.get(i).trenutneKoordinate = new Koordinate(lokomotive.get(i-1).prethodneKoordinate);
-				GUI.guiMapa[lokomotive.get(i).trenutneKoordinate.i][lokomotive.get(i).trenutneKoordinate.j].add(new JLabel(new ImageIcon("SLIKE/lokomotiva.png")));
+				GUI.guiMapa[lokomotive.get(i).trenutneKoordinate.i][lokomotive.get(i).trenutneKoordinate.j].add(new JLabel(new ImageIcon(lokomotive.get(i).slika)));
 				((JLabel)GUI.guiMapa[lokomotive.get(i).trenutneKoordinate.i][lokomotive.get(i).trenutneKoordinate.j].getComponent(0)).setName(brzinaKretanja+"k");
 				
 			}

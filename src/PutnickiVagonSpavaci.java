@@ -8,7 +8,7 @@ public class PutnickiVagonSpavaci extends Vagon
 	public PutnickiVagonSpavaci() 
 	{
 		super(false);
-		brojMjesta = new Random().nextInt(31)+6;
+		brojMjesta = new Random().nextInt(5)+4; //od 4 do 8 mjesta
 	}
 
 }
