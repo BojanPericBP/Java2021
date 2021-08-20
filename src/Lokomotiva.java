@@ -19,6 +19,7 @@ public class Lokomotiva implements Serializable
 	Koordinate trenutneKoordinate;
 	Koordinate prethodneKoordinate;
 	static FileHandler handler;
+	String slika;
 	
 	static 
 	{
@@ -37,6 +38,8 @@ public class Lokomotiva implements Serializable
 	{
 		idLokomotive = brojacLokomotiva++;
 		pogon = moguciPogoni[new Random().nextInt(3)];
+		if(pogon=='E') slika="SLIKE/Elokomotiva.png";
+		else slika="SLIKE/lokomotiva.png";
 		snaga = Math.random()*10;
 		
 		trenutneKoordinate = new Koordinate(-1,-1);

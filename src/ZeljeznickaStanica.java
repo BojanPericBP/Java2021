@@ -109,7 +109,7 @@ public class ZeljeznickaStanica extends Thread implements Serializable
 					susjed.dolazneKompozicije.add(kompozicija);
 					synchronized (GUI.frame)
 					{
-						GUI.guiMapa[kompozicija.lokomotive.get(0).trenutneKoordinate.i][kompozicija.lokomotive.get(0).trenutneKoordinate.j].add(new JLabel(new ImageIcon("SLIKE/lokomotiva.png")));
+						GUI.guiMapa[kompozicija.lokomotive.get(0).trenutneKoordinate.i][kompozicija.lokomotive.get(0).trenutneKoordinate.j].add(new JLabel(new ImageIcon(kompozicija.lokomotive.get(0).slika)));
 						((JLabel) GUI.guiMapa[kompozicija.lokomotive.get(0).trenutneKoordinate.i][kompozicija.lokomotive.get(0).trenutneKoordinate.j].getComponent(0)).setName(kompozicija.brzinaKretanja + "k");
 						GUI.frame.invalidate();
 						GUI.frame.validate();

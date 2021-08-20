@@ -61,6 +61,8 @@ public class Kompozicija extends Thread implements Serializable
 	{
 		while (GUI.simulacijaUToku && !prethodnaStanica.equals(odrediste)) 
 		{
+	
+	
 				ZeljeznickaStanica susjed = odrediSusjeda();
 				try 
 				{
@@ -296,6 +298,10 @@ public class Kompozicija extends Thread implements Serializable
 					GUI.frame.invalidate();
 					GUI.frame.validate();
 					GUI.frame.repaint();
+				}
+				synchronized(this)
+				{
+					radSaRampom();				
 				}
 			}	
 			try { Thread.sleep(brzinaKretanja); } catch (InterruptedException e) { Logger.getLogger(Kompozicija.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString()); }

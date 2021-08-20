@@ -18,7 +18,7 @@ public class KreiranjeKompozicija extends Thread
 			handler = new FileHandler("Error logs/KreiranjeKompozicija.log");
 			Logger.getLogger(KreiranjeKompozicija.class.getName()).addHandler(handler);
 		}
-		catch (SecurityException | IOException e)
+		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
