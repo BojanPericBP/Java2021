@@ -57,14 +57,15 @@ public class DataForm {
 	private void prikaziPodatke() {
 		try 
 		{
-			File folder = new File("serijalizacija");
-			File[] fajlovi = folder.listFiles();
+			File dir = new File("serijalizacija");
+			File[] fajles = dir.listFiles();
 		
-			for(File f : fajlovi)
+			for(File f : fajles)
 			{
 				ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f.getAbsoluteFile()));
 				Train k = (Train)ois.readObject();
 				ois.close();
+				
 				textArea.append("Kompozicija: "+k.idComp+" Vrijeme kretanja: "+k.movingTime+"s "+
 						"Usputne stanice: "+k.trinStationToVisit+" SIstorija kretanja: ");
 				k.movingHistory.forEach( e -> textArea.append("("+e.x+","+e.y+")"));
@@ -72,8 +73,7 @@ public class DataForm {
 			}
 		}
 		catch (Exception e) {
-			e.printStackTrace();
-			//Logger.getLogger(DataForm.class.getName()).log(Level.WARNING,e.fillInStackTrace().toString());
+			Logger.getLogger(DataForm.class.getName()).log(Level.WARNING,e.fillInStackTrace().toString());
 		}
 	}
 }

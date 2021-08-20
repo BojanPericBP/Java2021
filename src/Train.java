@@ -39,7 +39,7 @@ public class Train extends Thread implements Serializable
 		}
 	}
 
-	public Train(String _rasporedL, String rasporedV, long _brzina, ArrayList<TrainStation> _linija) throws Exception 
+	public Train(String _rasporedL, String rasporedV, long _brzina, ArrayList<TrainStation> _linija) throws Exception
 	{
 		idComp = count++;
 		trinStationToVisit = _linija;
@@ -51,13 +51,14 @@ public class Train extends Thread implements Serializable
 		
 		movingHistory = new ArrayList<Point>();
 		makeComp(_rasporedL,rasporedV);
+
 	}
 	
 	@Override
 	public void run()
 	{
 		
-		while (GUI.isAlive && prevTrainStation.nameStation != trinStationToVisit.get(trinStationToVisit.size()-1).nameStation) 
+		while (Main.isAlive && prevTrainStation.nameStation != trinStationToVisit.get(trinStationToVisit.size()-1).nameStation) 
 		{
 		
 			synchronized(this)
@@ -65,7 +66,7 @@ public class Train extends Thread implements Serializable
 				rampUpDown();				
 			}
 
-			TrainStation susjed = findNextStation();
+			TrainStation nextStation = findNextStation();
 			
 			try 
 			{
@@ -78,19 +79,19 @@ public class Train extends Thread implements Serializable
 			
 			if (move()) // kompozicija usla u stanicu
 			{
-				TrainStation.schedulerMatrix[prevTrainStation.nameStation - 'A'][susjed.nameStation- 'A']--;
-				prevTrainStation = susjed; // npr prethodna je A ovo vrati B
+				TrainStation.schedulerMatrix[prevTrainStation.nameStation - 'A'][nextStation.nameStation- 'A']--;
+				prevTrainStation = nextStation; // npr prethodna je A ovo vrati B
 
-				susjed = findNextStation(); // prethodna je sada B pa ovo vrati C
+				nextStation = findNextStation(); // prethodna je sada B pa ovo vrati C
 				if (prevTrainStation.nameStation == trinStationToVisit.get(trinStationToVisit.size()-1).nameStation) // da li je u odredisnoj stanici
 				{
 					movingTime = System.currentTimeMillis() - movingTime;
 					movingTime /=1000;
+					
 					try {
-							
-					ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("serijalizacija/kompozicija"+idComp+".ser"));
-					oos.writeObject(this);
-					oos.close();
+						ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("serijalizacija/kompozicija"+idComp+".ser"));
+						oos.writeObject(this);
+						oos.close();
 					}
 					catch (Exception e) {
 						e.printStackTrace();
@@ -114,17 +115,15 @@ public class Train extends Thread implements Serializable
 					}
 				}
 			}
-			synchronized (GUI.trainMap) 
+			synchronized (Main.trainMap) 
 			{
-				GUI.refreshGui();
+				Main.refreshGui();
 			}
-				
 			synchronized(this)
 			{
 				rampUpDown();				
 			}
 		}
-		
 	}
 
 	synchronized TrainStation findNextStation() { // vrati referencu susjedne stanice ka kojoj se kompozicija krece
@@ -141,18 +140,19 @@ public class Train extends Thread implements Serializable
 		Exception e = new Exception("Wrong train format");
 		List<String> locomotives = new ArrayList<>();
 		List<String> wagons = new ArrayList<>();
+	
 		
 		if(rasporedLokomotiva.equals("null"))
 			throw e;
 		
 		if(!rasporedVagona.equals("null"))
-		{
 			wagons = Arrays.asList(rasporedVagona.split(","));
-		}
 		
 		locomotives = Arrays.asList(rasporedLokomotiva.split(","));
 		
-
+		if(rasporedLokomotiva.split(",").length + rasporedVagona.split(",").length> 10)
+			throw e;
+		
 		if(locomotives.size() > 1 && locomotives.contains("ml") && (locomotives.contains("tl") || locomotives.contains("pl")))
 				throw e;
 		else if(locomotives.contains("ml") && (wagons.contains("tv") || wagons.contains("pvs") || wagons.contains("pvr")))
@@ -204,7 +204,7 @@ public class Train extends Thread implements Serializable
 				break;
 			}
 			case "vpn":{
-				train.add(new Vagon(false));
+				train.add(new SpecialWagon());
 				break;
 			}
 			case "tv":{
@@ -230,8 +230,8 @@ public class Train extends Thread implements Serializable
 					if(!train.get(i).move())
 						j++;
 					
-					synchronized(GUI.frame)
-					{ GUI.refreshGui(); }
+					synchronized(Main.frame)
+					{ Main.refreshGui(); }
 				}
 				try { Thread.sleep(speed); } catch (InterruptedException e) { Logger.getLogger(Train.class.getName()).log(Level.WARNING, 							e.fillInStackTrace().toString()); 
 				}
@@ -243,65 +243,78 @@ public class Train extends Thread implements Serializable
 	{
 		boolean flag = true; //treba spustiti rampu
 		for (int i = 18; i < 23; i++) {
-			if(GUI.trainMap[i][2].getComponents().length ==1)
+			if(Main.trainMap[i][2].getComponents().length ==1)
 			{
-				if( (GUI.trainMap[i][2].getComponents()[0]) != null)
+				if( (Main.trainMap[i][2].getComponents()[0]) != null)
 				{
-					String s = ((JLabel)(GUI.trainMap[i][2].getComponents()[0])).getName(); //Prelaz a
-					if(s != null && s.contains("k"))
+					if(((JLabel)(Main.trainMap[i][2].getComponents()[0])).getName() != null && ((JLabel)(Main.trainMap[i][2].getComponents()[0])).getName().contains("k"))
 					flag = false;
 				}
 			}
 		}
 		
-		synchronized(GUI.trainMap)
+		synchronized(Main.trainMap)
 		{
-			tmpRamp(flag,20,2,21,2);
+			if(flag)
+			{
+				Main.trainMap[20][2].setBackground(Color.orange);
+				Main.trainMap[21][2].setBackground(Color.orange);
+			}
+			else {
+				Main.trainMap[20][2].setBackground(Color.red);
+				Main.trainMap[21][2].setBackground(Color.red);
+			}
 		}
+		
 		flag = true;
 		for (int j = 11; j < 16; j++) {
-			if(GUI.trainMap[6][j].getComponents().length ==1)
+			if(Main.trainMap[6][j].getComponents().length ==1)
 			{
-				if( (GUI.trainMap[6][j].getComponents()[0]) != null)
+				if( (Main.trainMap[6][j].getComponents()[0]) != null)
 				{
-					String s = ((JLabel)(GUI.trainMap[6][j].getComponents()[0])).getName(); //Prelaz a
-					if(s != null && s.contains("k"))
+
+					if(((JLabel)(Main.trainMap[6][j].getComponents()[0])).getName() != null && ((JLabel)(Main.trainMap[6][j].getComponents()[0])).getName().contains("k"))
 						flag = false;
 				}
 			}
 		}
 		
-		synchronized(GUI.trainMap)
-		{ tmpRamp(flag,6,13,6,14); }
+		synchronized(Main.trainMap)
+		{
+			if(flag)
+			{
+				Main.trainMap[6][13].setBackground(Color.orange);
+				Main.trainMap[6][14].setBackground(Color.orange);
+			}
+			else {
+				Main.trainMap[6][13].setBackground(Color.red);
+				Main.trainMap[6][14].setBackground(Color.red);
+			}
+		}
 		
 		flag = true;
 		for (int i = 18; i < 23; i++) {
-			if(GUI.trainMap[i][26].getComponents().length ==1)
+			if(Main.trainMap[i][26].getComponents().length ==1)
 			{
-				if( (GUI.trainMap[i][26].getComponents()[0]) != null)
+				if( (Main.trainMap[i][26].getComponents()[0]) != null)
 				{
-					String s = ((JLabel)(GUI.trainMap[i][26].getComponents()[0])).getName(); //Prelaz a
+					String s = ((JLabel)(Main.trainMap[i][26].getComponents()[0])).getName(); //Prelaz a
 					if(s != null && s.contains("k"))
 					flag = false;
 				}
 			}
 		}
-		synchronized(GUI.trainMap)
-		{
-			tmpRamp(flag,20,26,21,26);
-		}
-	}
-	
-	synchronized private void tmpRamp(boolean flag,int i1, int j1, int i2,int j2)
-	{
-		if(flag)
-		{
-			GUI.trainMap[i1][j1].setBackground(Color.orange);
-			GUI.trainMap[i2][j2].setBackground(Color.orange);
-		}
-		else {
-			GUI.trainMap[i1][j1].setBackground(Color.red);
-			GUI.trainMap[i2][j2].setBackground(Color.red);
+		synchronized(Main.trainMap)
+		{	
+			if(flag)
+			{
+				Main.trainMap[20][26].setBackground(Color.orange);
+				Main.trainMap[21][26].setBackground(Color.orange);
+			}
+			else {
+				Main.trainMap[20][26].setBackground(Color.red);
+				Main.trainMap[21][26].setBackground(Color.red);
+			}
 		}
 	}
 	
@@ -314,11 +327,11 @@ public class Train extends Thread implements Serializable
 			if (prevTrainStation.coordinates.contains(train.get(i).currentCoordinates) && !prevTrainStation.coordinates.contains(train.get(i-1).previousCoordinates))  
 			{
 				train.get(i).currentCoordinates = new Point(train.get(i-1).previousCoordinates);
-				GUI.trainMap[train.get(i).currentCoordinates.x][train.get(i).currentCoordinates.y].add(new JLabel(new ImageIcon(train.get(i).imgPath)));//TODO img path dodati kao atribut elementa kompozicije
-				((JLabel)GUI.trainMap[train.get(i).currentCoordinates.x][train.get(i).currentCoordinates.y].getComponent(0)).setName(speed+"k");
+				Main.trainMap[train.get(i).currentCoordinates.x][train.get(i).currentCoordinates.y].add(new JLabel(new ImageIcon(train.get(i).imgPath)));//TODO img path dodati kao atribut elementa kompozicije
+				((JLabel)Main.trainMap[train.get(i).currentCoordinates.x][train.get(i).currentCoordinates.y].getComponent(0)).setName(speed+"k");
 			}
 			
-			else if(i!=0 && GUI.trainMap[train.get(i - 1).previousCoordinates.x][train.get(i - 1).previousCoordinates.y].getComponents().length != 0) 
+			else if(i!=0 && Main.trainMap[train.get(i - 1).previousCoordinates.x][train.get(i - 1).previousCoordinates.y].getComponents().length != 0) 
 				continue;
 			else 
 			{	
@@ -326,9 +339,9 @@ public class Train extends Thread implements Serializable
 					if(i == 0)
 						movingHistory.add(new Point(train.get(0).currentCoordinates));
 				 
-					synchronized(GUI.frame)
+					synchronized(Main.frame)
 					{				
-						GUI.refreshGui();
+						Main.refreshGui();
 					}
 					
 					if(!flag)

@@ -1,12 +1,12 @@
 import java.util.Random;
 
-public class PassengerWagonSleep extends Vagon{
+public class PassengerWagonSleep extends Wagon{
 	private static final long serialVersionUID = 1L;
-	int brojMjesta;
+	int seats;
 	
 	public PassengerWagonSleep() {
-		super(false);
-		brojMjesta = new Random().nextInt(31)+6;
+		super();
+		seats = new Random().nextInt(53)+12;
 	}
 
 }

@@ -5,19 +5,18 @@ import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 
 
-public class Vagon extends ElementOfComposition implements Serializable 
+public class Wagon extends ElementOfComposition implements Serializable 
 {
 	private static final long serialVersionUID = 1L;
 	static private int count = 0;
-	int duzinaVagona;
-	int IDVagona;
-	boolean jePosebneNamjene;
+	int wagonLength;
+	int IdWagon;
 	
 	static 
 	{
 		try
 		{
-			Logger.getLogger(Vagon.class.getName()).addHandler(new FileHandler("Error logs/Vagon.log"));
+			Logger.getLogger(Wagon.class.getName()).addHandler(new FileHandler("Error logs/Vagon.log"));
 		}
 		catch (Exception e)
 		{
@@ -25,11 +24,10 @@ public class Vagon extends ElementOfComposition implements Serializable
 		}
 	}
 	
-	public Vagon(boolean _jePosebneNamjene) {
+	public Wagon() {
 		super("resource/traincar.png");
-		IDVagona = count++;
-		duzinaVagona = new Random().nextInt(4)+1;
-		jePosebneNamjene = _jePosebneNamjene;
+		IdWagon = count++;
+		wagonLength = new Random().nextInt(4)+1;
 		currentCoordinates = new Point();
 		previousCoordinates = new Point();
 	}

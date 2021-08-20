@@ -57,78 +57,75 @@ public class TrainStation extends Thread implements Serializable
 	public void run() // kompozicija je vec na prvom polju izvan pruge tj lokomotiva
 	{
 
-		while (GUI.isAlive)
+		while (Main.isAlive)
 		{
 			Iterator<Train> iteratorKompozicija = outgoingtrains.iterator();
 
 			while (iteratorKompozicija.hasNext()) // pronalazi kompoziciju za koju je slobodna odredjena pruga i
 													// usmejru lokomotivu na odgovarajuce polje
 			{
-				Train kompozicija = iteratorKompozicija.next();
-				boolean jeSlobodna = false;
-				TrainStation susjed;
-				Point kord0=null;
-				Point kord1=null;
+				Train tmpTrain = iteratorKompozicija.next();
+				boolean isFree = false;
+				TrainStation nextStation;
+				Point point1 = null;
+				Point point2 = null;
 				synchronized (schedulerMatrix)
 				{
-					//jeSlobodna = prugaJeSlobodna(kompozicija);
 					
-					susjed = kompozicija.findNextStation();
-					// susjed i naziv stanice dovoljan za provjeru matrice
+					nextStation = tmpTrain.findNextStation();
 
-					if (schedulerMatrix[susjed.nameStation - 'A'][(nameStation - 'A')] == 0)
+					if (schedulerMatrix[nextStation.nameStation - 'A'][(nameStation - 'A')] == 0)
 					{
-						kord0 = usmjeriKompoziciju(kompozicija)[1];
-						kord1 = usmjeriKompoziciju(kompozicija)[2];
+						point1 = redirectTrain(tmpTrain)[1];
+						point2 = redirectTrain(tmpTrain)[2];
 
-						if (GUI.trainMap[kord0.x][kord0.y].getComponents().length == 0
-								&& GUI.trainMap[kord1.x][kord1.y].getComponents().length == 0)
-							jeSlobodna = true;
+						if (Main.trainMap[point1.x][point1.y].getComponents().length == 0
+								&& Main.trainMap[point2.x][point2.y].getComponents().length == 0)
+							isFree = true;
 					}
 				}
 			
-				if (jeSlobodna)
+				if (isFree)
 				{
-					if (schedulerMatrix[nameStation - 'A'][susjed.nameStation - 'A'] != 0)
+					if (schedulerMatrix[nameStation - 'A'][nextStation.nameStation - 'A'] != 0)
 					{
-						long min = kompozicija.speed;
+						long min = tmpTrain.speed;
 						// prodjikroz dolazne dolazneKompozicije susjeda i uzmi min brzinu
-						for (Train k : susjed.incomingTrains)
+						for (Train k : nextStation.incomingTrains)
 						{
 							if (k.prevTrainStation.nameStation == nameStation && k.speed > min)
 								min = k.speed;
 						}
 						
-						kompozicija.reducedSpeed = kompozicija.speed;
-						kompozicija.speed = min;
+						tmpTrain.reducedSpeed = tmpTrain.speed;
+						tmpTrain.speed = min;
 					}
 
-					for (int i = 0; i < kompozicija.train.size(); ++i)
+					for (int i = 0; i < tmpTrain.train.size(); ++i)
 					{
-						//kompozicija.locomotive.get(i).previousCoordinates = usmjeriKompoziciju(kompozicija)[0];
-						kompozicija.train.get(i).previousCoordinates = usmjeriKompoziciju(kompozicija)[0];
-						kompozicija.train.get(i).currentCoordinates = new Point(usmjeriKompoziciju(kompozicija)[0]);
+						tmpTrain.train.get(i).previousCoordinates = redirectTrain(tmpTrain)[0];
+						tmpTrain.train.get(i).currentCoordinates = new Point(redirectTrain(tmpTrain)[0]);
 					}
 					
-					if(kompozicija.trinStationToVisit.get(0).coordinates.contains(kompozicija.train.get(0).currentCoordinates))
-						kompozicija.movingTime = System.currentTimeMillis();
+					if(tmpTrain.trinStationToVisit.get(0).coordinates.contains(tmpTrain.train.get(0).currentCoordinates))
+						tmpTrain.movingTime = System.currentTimeMillis();
 					
-					kompozicija.train.get(0).currentCoordinates = new Point(kord0);
-					kompozicija.movingHistory.add(new Point(kompozicija.train.get(0).currentCoordinates));
+					tmpTrain.train.get(0).currentCoordinates = new Point(point1);
+					tmpTrain.movingHistory.add(new Point(tmpTrain.train.get(0).currentCoordinates));
 					
 					synchronized (this)
 					{
-						schedulerMatrix[nameStation - 'A'][susjed.nameStation - 'A']++;
+						schedulerMatrix[nameStation - 'A'][nextStation.nameStation - 'A']++;
 					}
 					
-					susjed.incomingTrains.add(kompozicija);
-					synchronized (GUI.frame)
+					nextStation.incomingTrains.add(tmpTrain);
+					synchronized (Main.frame)
 					{
-						GUI.trainMap[kompozicija.train.get(0).currentCoordinates.x][kompozicija.train.get(0).currentCoordinates.y]
+						Main.trainMap[tmpTrain.train.get(0).currentCoordinates.x][tmpTrain.train.get(0).currentCoordinates.y]
 								.add(new JLabel(new ImageIcon("resource/train.png")));
-						((JLabel) GUI.trainMap[kompozicija.train.get(0).currentCoordinates.x][kompozicija.train
-								.get(0).currentCoordinates.y].getComponent(0)).setName(kompozicija.speed + "k");
-						GUI.refreshGui();
+						((JLabel) Main.trainMap[tmpTrain.train.get(0).currentCoordinates.x][tmpTrain.train
+								.get(0).currentCoordinates.y].getComponent(0)).setName(tmpTrain.speed + "k");
+						Main.refreshGui();
 					}
 
 					synchronized(this)
@@ -136,16 +133,16 @@ public class TrainStation extends Thread implements Serializable
 						iteratorKompozicija.remove();
 					}
 					
-					if (kompozicija.isAlive())
+					if (tmpTrain.isAlive())
 					{
-						synchronized (kompozicija)
+						synchronized (tmpTrain)
 						{
-							kompozicija.notify();
+							tmpTrain.notify();
 						}
 					}
 					else
 					{
-						kompozicija.start();
+						tmpTrain.start();
 					}
 				}
 			}
@@ -161,39 +158,33 @@ public class TrainStation extends Thread implements Serializable
 
 	}
 
-	synchronized Point[] usmjeriKompoziciju(Train komp)
+	synchronized Point[] redirectTrain(Train _train)
 	{
+		//nulte koordinate su koordinate stanice prva koordinata je pozicija na koju smjestam kompoziciju, adruga je za provjeru razmaka..
+		if (nameStation == 'C' && (_train.findNextStation().nameStation == 'B'))
+			return (new Point[] { new Point(13, 19), new Point(11, 19), new Point(10, 19) });
+		
+		else if (nameStation == 'C' && _train.findNextStation().nameStation == 'D') 
+			return (new Point[] { new Point(13, 20), new Point(12, 21), new Point(12, 22) });
+		
+		else if (nameStation == 'C' && _train.findNextStation().nameStation == 'E') 
+			return (new Point[] { new Point(13, 19), new Point(14, 20), new Point(15, 20) });
+		
+		else if (nameStation == 'B' && _train.findNextStation().nameStation == 'A')
+			return (new Point[]{ new Point(6, 6), new Point(6, 5), new Point(7, 5) }); 
+		
+		else if (nameStation == 'B' && _train.findNextStation().nameStation == 'C')
+			return (new Point[] { new Point(6, 7), new Point(6, 8), new Point(6, 9) });
+		
 		if (nameStation == 'A')
-			return (new Point[]
-			{ new Point(27, 2), new Point(26, 2), new Point(25, 2) });// vraca niz od tri koordinate
-
-		else if (nameStation == 'B' && komp.findNextStation().nameStation == 'A')
-			return (new Point[]
-			{ new Point(6, 6), new Point(6, 5), new Point(7, 5) }); //nulte koordinate su koordinate stanice prva koordinata je pozicija na koju smjestam kompoziciju, adruga je za provjeru razmaka..
-
-		else if (nameStation == 'B' && komp.findNextStation().nameStation == 'C')
-			return (new Point[]
-			{ new Point(6, 7), new Point(6, 8), new Point(6, 9) });
-
-		else if (nameStation == 'C' && (komp.findNextStation().nameStation == 'B'))
-			return (new Point[]
-			{ new Point(13, 19), new Point(11, 19), new Point(10, 19) });
-
-		else if (nameStation == 'C' && komp.findNextStation().nameStation == 'D') 
-			return (new Point[]
-			{ new Point(13, 20), new Point(12, 21), new Point(12, 22) });
-
-		else if (nameStation == 'C' && komp.findNextStation().nameStation == 'E') 
-			return (new Point[]
-			{ new Point(13, 19), new Point(14, 20), new Point(15, 20) });
+			return (new Point[]{ new Point(27, 2), new Point(26, 2), new Point(25, 2) });
 
 		else if (nameStation == 'D')
-			return (new Point[]
-			{ new Point(1, 26), new Point(1, 25), new Point(1, 24) });
+			return (new Point[] { new Point(1, 26), new Point(1, 25), new Point(1, 24) });
 
 		else if (nameStation == 'E')
-			return (new Point[]
-			{ new Point(25, 26), new Point(24, 26), new Point(23, 26) });
+			return (new Point[] { new Point(25, 26), new Point(24, 26), new Point(23, 26) });
+		
 		return null;
 	}
 

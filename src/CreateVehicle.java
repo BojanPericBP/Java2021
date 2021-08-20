@@ -31,7 +31,6 @@ public class CreateVehicle extends TimerTask{
 		ways = new HashMap<>();
 	}
 	
-	
 	@Override
 	public void run() {
 		
@@ -63,7 +62,7 @@ public class CreateVehicle extends TimerTask{
 		int wayIndex = new Random().nextInt(3);
 		boolean isCar = new Random().nextBoolean();
 		
-		if(GUI.currVheicleCounter[wayIndex] < ways.get(wayIndex).numOfVehicle)
+		if(Main.currVheicleCounter[wayIndex] < ways.get(wayIndex).numOfVehicle)
 		{
 			if(isCar)
 				waitingVehicles.add(new Car(ways.get(wayIndex).maxSpeed, ways.get(wayIndex).name, "resource/car.png"));
@@ -82,9 +81,9 @@ public class CreateVehicle extends TimerTask{
 			{
 				tempVehicle = waitingVehicles.remove(i);
 				tempVehicle.setVehicle();
-				GUI.currVheicleCounter[tempVehicle.way-'A']++;
-				GUI.trainMap[tempVehicle.currPoint.x][tempVehicle.currPoint.y].add(new JLabel(new ImageIcon(tempVehicle.imagePath)));
-				((JLabel)GUI.trainMap[tempVehicle.currPoint.x][tempVehicle.currPoint.y].getComponents()[0]).setName(""+(long)tempVehicle.currSpeed);
+				Main.currVheicleCounter[tempVehicle.way-'A']++;
+				Main.trainMap[tempVehicle.currPoint.x][tempVehicle.currPoint.y].add(new JLabel(new ImageIcon(tempVehicle.imagePath)));
+				((JLabel)Main.trainMap[tempVehicle.currPoint.x][tempVehicle.currPoint.y].getComponents()[0]).setName(""+(long)tempVehicle.currSpeed);
 				tempVehicle.start();
 			}
 			else break;

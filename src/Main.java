@@ -17,14 +17,14 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 
-public class GUI extends JFrame 
+public class Main extends JFrame 
 {
 	private static final long serialVersionUID = 1L;
 	static final int MAT_SIZE = 30;
 	
 	static int[] currVheicleCounter = {0, 0, 0};
 	static ArrayList<TrainStation> trainStations = new ArrayList<>(5);
-	KreiranjeKompozicija kreiranjeKompozicija;
+	CreateTrains kreiranjeKompozicija;
 	Timer timer;
 	
 	static private GridLayout gridLayout;
@@ -59,10 +59,10 @@ public class GUI extends JFrame
 	
 	public static void main(String[] args) throws Exception
 	{
-		new GUI();
+		new Main();
 	}
 	
-	public GUI() 
+	public Main() 
 	{
 		frame = new JFrame("Iz kuce je izleteo na ulicu Iva");
 		
@@ -92,14 +92,16 @@ public class GUI extends JFrame
 		btnStart.addActionListener(new ActionListener() {
 			
 			public void actionPerformed(ActionEvent e) {
+				
 				isAlive=true;
 				trainStations.get(0).start();
 				trainStations.get(1).start();
 				trainStations.get(2).start();
 				trainStations.get(3).start();
 				trainStations.get(4).start();
-				kreiranjeKompozicija=new KreiranjeKompozicija();
+				kreiranjeKompozicija=new CreateTrains();
 				kreiranjeKompozicija.start();
+				
 				timer=new Timer();
 				timer.schedule(new CreateVehicle(), 0, 2000);
 				
@@ -112,8 +114,8 @@ public class GUI extends JFrame
 		btnData = new JButton("Podaci");
 		btnData.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				 DataForm formaPodaci = new DataForm();
-				 formaPodaci.showWindow();
+				 DataForm dataForm = new DataForm();
+				 dataForm.showWindow();
 			}
 		});
 		
@@ -132,7 +134,6 @@ public class GUI extends JFrame
 		for (int i = 0; i < MAT_SIZE; i++) {
 			for (int j = 0; j < MAT_SIZE; j++) {
 				
-				//setovanje plavih polja
 				if(j==13)
 					trainMap[i][j].setBackground(new Color(1, 150, 200));
 				
@@ -213,6 +214,7 @@ public class GUI extends JFrame
 		trainMap[13][19].add(new JLabel(new ImageIcon("resource/c.png")));
 		trainMap[12][20].add(new JLabel(new ImageIcon("resource/stop.png")));
 		trainMap[13][20].add(new JLabel(new ImageIcon("resource/stop.png")));
+		
 		trainMap[12][19].setBackground(Color.yellow);
 		trainMap[12][20].setBackground(Color.yellow);
 		trainMap[13][19].setBackground(Color.yellow);
@@ -256,9 +258,9 @@ public class GUI extends JFrame
 	
 	public static void refreshGui()
 	{
-		GUI.frame.invalidate();
-		GUI.frame.validate();
-		GUI.frame.repaint();
+		Main.frame.invalidate();
+		Main.frame.validate();
+		Main.frame.repaint();
 	}
 	
 }

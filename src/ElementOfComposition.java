@@ -20,62 +20,62 @@ public abstract class ElementOfComposition implements Serializable {
 
 
 	synchronized public boolean move() {
-		if((GUI.trainMap[currentCoordinates.x-1][currentCoordinates.y].getBackground() == Color.LIGHT_GRAY || GUI.trainMap[currentCoordinates.x-1][currentCoordinates.y].getBackground() == Color.red || GUI.trainMap[currentCoordinates.x-1][currentCoordinates.y].getBackground() == Color.yellow)
+		if((Main.trainMap[currentCoordinates.x-1][currentCoordinates.y].getBackground() == Color.LIGHT_GRAY || Main.trainMap[currentCoordinates.x-1][currentCoordinates.y].getBackground() == Color.red || Main.trainMap[currentCoordinates.x-1][currentCoordinates.y].getBackground() == Color.yellow)
 				&& ( currentCoordinates.x-1 != previousCoordinates.x))//provjerava gore
 		 {
 			 previousCoordinates = new Point(currentCoordinates);
 			 currentCoordinates.x--;
-			 if(GUI.trainMap[currentCoordinates.x][currentCoordinates.y].getBackground() != Color.yellow) 
-				 GUI.trainMap[currentCoordinates.x][currentCoordinates.y].add((JLabel) GUI.trainMap[previousCoordinates.x][previousCoordinates.y].getComponents()[0]);
+			 if(Main.trainMap[currentCoordinates.x][currentCoordinates.y].getBackground() != Color.yellow) 
+				 Main.trainMap[currentCoordinates.x][currentCoordinates.y].add((JLabel) Main.trainMap[previousCoordinates.x][previousCoordinates.y].getComponents()[0]);
 			 
 			 
-			 else if(GUI.trainMap[currentCoordinates.x][currentCoordinates.y].getBackground()  == Color.yellow) {
-				 GUI.trainMap[previousCoordinates.x][previousCoordinates.y].remove((JLabel) GUI.trainMap[previousCoordinates.x][previousCoordinates.y].getComponents()[0]);
+			 else if(Main.trainMap[currentCoordinates.x][currentCoordinates.y].getBackground()  == Color.yellow) {
+				 Main.trainMap[previousCoordinates.x][previousCoordinates.y].remove((JLabel) Main.trainMap[previousCoordinates.x][previousCoordinates.y].getComponents()[0]);
 				 return false;
 			}
 
 			 return true;
 		 }
-		 else if((GUI.trainMap[currentCoordinates.x+1][currentCoordinates.y].getBackground() == Color.LIGHT_GRAY || GUI.trainMap[currentCoordinates.x+1][currentCoordinates.y].getBackground() == Color.red || GUI.trainMap[currentCoordinates.x+1][currentCoordinates.y].getBackground() == Color.yellow)
+		 else if((Main.trainMap[currentCoordinates.x+1][currentCoordinates.y].getBackground() == Color.LIGHT_GRAY || Main.trainMap[currentCoordinates.x+1][currentCoordinates.y].getBackground() == Color.red || Main.trainMap[currentCoordinates.x+1][currentCoordinates.y].getBackground() == Color.yellow)
 				 && (currentCoordinates.x+1 != previousCoordinates.x))//provjerava dole
 		 {
 			 previousCoordinates = new Point(currentCoordinates);
 			 currentCoordinates.x++;
-			 if(GUI.trainMap[currentCoordinates.x][currentCoordinates.y].getBackground() != Color.yellow) 
-				 GUI.trainMap[currentCoordinates.x][currentCoordinates.y].add((JLabel) GUI.trainMap[previousCoordinates.x][previousCoordinates.y].getComponents()[0]);
+			 if(Main.trainMap[currentCoordinates.x][currentCoordinates.y].getBackground() != Color.yellow) 
+				 Main.trainMap[currentCoordinates.x][currentCoordinates.y].add((JLabel) Main.trainMap[previousCoordinates.x][previousCoordinates.y].getComponents()[0]);
 			 
-			 else if(GUI.trainMap[currentCoordinates.x][currentCoordinates.y].getBackground() == Color.yellow) {		//ovo srediti
-				 GUI.trainMap[previousCoordinates.x][previousCoordinates.y].remove((JLabel) GUI.trainMap[previousCoordinates.x][previousCoordinates.y].getComponents()[0]); //ovo srediti
+			 else if(Main.trainMap[currentCoordinates.x][currentCoordinates.y].getBackground() == Color.yellow) {		//ovo srediti
+				 Main.trainMap[previousCoordinates.x][previousCoordinates.y].remove((JLabel) Main.trainMap[previousCoordinates.x][previousCoordinates.y].getComponents()[0]); //ovo srediti
 				 return false; // ovo srediti
 			}
 			 
 			 return true;
 		 }
-		 else if((GUI.trainMap[currentCoordinates.x][currentCoordinates.y+1].getBackground() == Color.LIGHT_GRAY || GUI.trainMap[currentCoordinates.x][currentCoordinates.y+1].getBackground() == Color.red || GUI.trainMap[currentCoordinates.x][currentCoordinates.y+1].getBackground() == Color.yellow)
+		 else if((Main.trainMap[currentCoordinates.x][currentCoordinates.y+1].getBackground() == Color.LIGHT_GRAY || Main.trainMap[currentCoordinates.x][currentCoordinates.y+1].getBackground() == Color.red || Main.trainMap[currentCoordinates.x][currentCoordinates.y+1].getBackground() == Color.yellow)
 				 && (currentCoordinates.y+1 != previousCoordinates.y))//provjerava desno
 		 {
 			 previousCoordinates = new Point(currentCoordinates);
 			 currentCoordinates.y++;
-			 if(GUI.trainMap[currentCoordinates.x][currentCoordinates.y].getBackground() != Color.yellow) 
-				 GUI.trainMap[currentCoordinates.x][currentCoordinates.y].add((JLabel) GUI.trainMap[previousCoordinates.x][previousCoordinates.y].getComponents()[0]);
+			 if(Main.trainMap[currentCoordinates.x][currentCoordinates.y].getBackground() != Color.yellow) 
+				 Main.trainMap[currentCoordinates.x][currentCoordinates.y].add((JLabel) Main.trainMap[previousCoordinates.x][previousCoordinates.y].getComponents()[0]);
 			 
 			 
-			 else if(GUI.trainMap[currentCoordinates.x][currentCoordinates.y].getBackground() == Color.yellow) {
-				 GUI.trainMap[previousCoordinates.x][previousCoordinates.y].remove((JLabel) GUI.trainMap[previousCoordinates.x][previousCoordinates.y].getComponents()[0]);
+			 else if(Main.trainMap[currentCoordinates.x][currentCoordinates.y].getBackground() == Color.yellow) {
+				 Main.trainMap[previousCoordinates.x][previousCoordinates.y].remove((JLabel) Main.trainMap[previousCoordinates.x][previousCoordinates.y].getComponents()[0]);
 				 return false;
 			}
 			 return true;
 		 }
-		 else if((GUI.trainMap[currentCoordinates.x][currentCoordinates.y-1].getBackground() == Color.LIGHT_GRAY || GUI.trainMap[currentCoordinates.x][currentCoordinates.y-1].getBackground() == Color.red || GUI.trainMap[currentCoordinates.x][currentCoordinates.y-1].getBackground() == Color.yellow)
+		 else if((Main.trainMap[currentCoordinates.x][currentCoordinates.y-1].getBackground() == Color.LIGHT_GRAY || Main.trainMap[currentCoordinates.x][currentCoordinates.y-1].getBackground() == Color.red || Main.trainMap[currentCoordinates.x][currentCoordinates.y-1].getBackground() == Color.yellow)
 				 && (currentCoordinates.y-1 != previousCoordinates.y))//provjerava lijevo
 		 {
 			 previousCoordinates = new Point(currentCoordinates);
 			 currentCoordinates.y--;
-			 if(GUI.trainMap[currentCoordinates.x][currentCoordinates.y].getBackground() != Color.yellow) 
-				 GUI.trainMap[currentCoordinates.x][currentCoordinates.y].add((JLabel) GUI.trainMap[previousCoordinates.x][previousCoordinates.y].getComponents()[0]);
+			 if(Main.trainMap[currentCoordinates.x][currentCoordinates.y].getBackground() != Color.yellow) 
+				 Main.trainMap[currentCoordinates.x][currentCoordinates.y].add((JLabel) Main.trainMap[previousCoordinates.x][previousCoordinates.y].getComponents()[0]);
 			 
-			 else if(GUI.trainMap[currentCoordinates.x][currentCoordinates.y].getBackground() == Color.yellow) {
-				 GUI.trainMap[previousCoordinates.x][previousCoordinates.y].remove((JLabel) GUI.trainMap[previousCoordinates.x][previousCoordinates.y].getComponents()[0]);
+			 else if(Main.trainMap[currentCoordinates.x][currentCoordinates.y].getBackground() == Color.yellow) {
+				 Main.trainMap[previousCoordinates.x][previousCoordinates.y].remove((JLabel) Main.trainMap[previousCoordinates.x][previousCoordinates.y].getComponents()[0]);
 				 return false;
 			}
 			 
