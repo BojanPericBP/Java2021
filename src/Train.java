@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
-public class Composition extends Thread implements Serializable  
+public class Train extends Thread implements Serializable  
 {
 	private static final long serialVersionUID = 1L;
 	static int count=0;
@@ -32,7 +32,7 @@ public class Composition extends Thread implements Serializable
 	{
 		try
 		{
-			Logger.getLogger(Composition.class.getName()).addHandler(new FileHandler("Error logs/Kompozicija.log"));
+			Logger.getLogger(Train.class.getName()).addHandler(new FileHandler("Error logs/Kompozicija.log"));
 		}
 		catch (Exception e)
 		{
@@ -40,7 +40,7 @@ public class Composition extends Thread implements Serializable
 		}
 	}
 
-	public Composition(String _rasporedL, String rasporedV, long _brzina, ArrayList<TrainStation> _linija) throws Exception 
+	public Train(String _rasporedL, String rasporedV, long _brzina, ArrayList<TrainStation> _linija) throws Exception 
 	{
 		idComp = count++;
 		trinStationToVisit = _linija;
@@ -77,7 +77,7 @@ public class Composition extends Thread implements Serializable
 			} 
 			catch (Exception e) 
 			{
-				Logger.getLogger(Composition.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
+				Logger.getLogger(Train.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 			}
 			
 			if (move()) // kompozicija usla u stanicu
@@ -97,7 +97,7 @@ public class Composition extends Thread implements Serializable
 					oos.close();
 					}
 					catch (Exception e) {
-						Logger.getLogger(Composition.class.getName()).log(Level.WARNING,e.fillInStackTrace().toString());
+						Logger.getLogger(Train.class.getName()).log(Level.WARNING,e.fillInStackTrace().toString());
 					}	
 				} 
 				else // da li je u bilo kojoj stanici koja nije odredisna
@@ -113,7 +113,7 @@ public class Composition extends Thread implements Serializable
 					} 
 					catch (Exception e)
 					{
-						Logger.getLogger(Composition.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
+						Logger.getLogger(Train.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 					}
 				}
 			}
@@ -248,7 +248,7 @@ public class Composition extends Thread implements Serializable
 					GUI.refreshGui();
 				}
 			}	
-			try { Thread.sleep(speed); } catch (InterruptedException e) { Logger.getLogger(Composition.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString()); }
+			try { Thread.sleep(speed); } catch (InterruptedException e) { Logger.getLogger(Train.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString()); }
 		}
 	}
 
@@ -373,7 +373,7 @@ public class Composition extends Thread implements Serializable
 					Thread.sleep(speed);
 				} catch (InterruptedException e) {
 					
-					Logger.getLogger(Composition.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
+					Logger.getLogger(Train.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 				}
 			}
 			
@@ -405,7 +405,7 @@ public class Composition extends Thread implements Serializable
 				try {
 					Thread.sleep(speed);
 				} catch (InterruptedException e) {
-					Logger.getLogger(Composition.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
+					Logger.getLogger(Train.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 				}
 			}
 			

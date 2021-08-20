@@ -11,8 +11,8 @@ import javax.swing.JLabel;
 public class TrainStation extends Thread implements Serializable
 {
 	private static final long serialVersionUID = 1L;
-	ArrayList<Composition> outgoingtrains;
-	ArrayList<Composition> incomingTrains;
+	ArrayList<Train> outgoingtrains;
+	ArrayList<Train> incomingTrains;
 	static int schedulerMatrix[][]; //matrica susjedstva[i][j] = 0; putanja od stanice i ka stanici j je slobodna, matrica je konzistentna
 	char nameStation;
 	ArrayList<Point> coordinates;
@@ -59,12 +59,12 @@ public class TrainStation extends Thread implements Serializable
 
 		while (GUI.isAlive)
 		{
-			Iterator<Composition> iteratorKompozicija = outgoingtrains.iterator();
+			Iterator<Train> iteratorKompozicija = outgoingtrains.iterator();
 
 			while (iteratorKompozicija.hasNext()) // pronalazi kompoziciju za koju je slobodna odredjena pruga i
 													// usmejru lokomotivu na odgovarajuce polje
 			{
-				Composition kompozicija = iteratorKompozicija.next();
+				Train kompozicija = iteratorKompozicija.next();
 				boolean jeSlobodna = false;
 				TrainStation susjed;
 				Point kord0=null;
@@ -93,7 +93,7 @@ public class TrainStation extends Thread implements Serializable
 					{
 						long min = kompozicija.speed;
 						// prodjikroz dolazne dolazneKompozicije susjeda i uzmi min brzinu
-						for (Composition k : susjed.incomingTrains)
+						for (Train k : susjed.incomingTrains)
 						{
 							if (k.prevTrainStation.nameStation == nameStation && k.speed > min)
 								min = k.speed;
@@ -168,7 +168,7 @@ public class TrainStation extends Thread implements Serializable
 
 	}
 
-	synchronized Point[] usmjeriKompoziciju(Composition komp)
+	synchronized Point[] usmjeriKompoziciju(Train komp)
 	{
 		if (nameStation == 'A')
 			return (new Point[]
@@ -177,7 +177,6 @@ public class TrainStation extends Thread implements Serializable
 		else if (nameStation == 'B' && komp.findNextStation().nameStation == 'A')
 			return (new Point[]
 			{ new Point(6, 6), new Point(6, 5), new Point(7, 5) }); //nulte koordinate su koordinate stanice prva koordinata je pozicija na koju smjestam kompoziciju, adruga je za provjeru razmaka..
-
 
 		else if (nameStation == 'B' && komp.findNextStation().nameStation == 'C')
 			return (new Point[]

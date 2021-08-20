@@ -87,7 +87,7 @@ public abstract class Vehicle extends Thread
 			} 
 			catch (Exception e) 
 			{
-				Logger.getLogger(Composition.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
+				Logger.getLogger(Train.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 			}
 			
 			GUI.refreshGui();

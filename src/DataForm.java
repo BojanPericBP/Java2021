@@ -63,7 +63,7 @@ public class DataForm {
 			for(File f : fajlovi)
 			{
 				ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f.getAbsoluteFile()));
-				Composition k = (Composition)ois.readObject();
+				Train k = (Train)ois.readObject();
 				ois.close();
 				textArea.append("Kompozicija: "+k.idComp+" Vrijeme kretanja: "+k.movingTime+"s "+
 						"Usputne stanice: "+k.trinStationToVisit+" SIstorija kretanja: ");

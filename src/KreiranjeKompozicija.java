@@ -109,7 +109,7 @@ public class KreiranjeKompozicija extends Thread
 				}
 			}
 
-			Composition tmp = new Composition(rasporedL, rasporedV, brzina,_linija);
+			Train tmp = new Train(rasporedL, rasporedV, brzina,_linija);
 			GUI.trainStations.get(_linija.get(0).nameStation-'A').outgoingtrains.add(tmp);		
 			
 		}
