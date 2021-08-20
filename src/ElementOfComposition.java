@@ -1,12 +1,22 @@
 import java.awt.Color;
 import java.awt.Point;
+import java.io.Serializable;
 
 import javax.swing.JLabel;
 
-public abstract class ElementOfComposition {
+public abstract class ElementOfComposition implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	Point currentCoordinates;
 	Point previousCoordinates;
+	String imgPath;
+	
+	public ElementOfComposition(String _imgPath) {
+		currentCoordinates = new Point(-1,-1);
+		previousCoordinates = new Point(-1,-1);
+		imgPath = _imgPath;
+	}
 
 
 	synchronized public boolean move() {
@@ -23,7 +33,7 @@ public abstract class ElementOfComposition {
 				 GUI.trainMap[previousCoordinates.x][previousCoordinates.y].remove((JLabel) GUI.trainMap[previousCoordinates.x][previousCoordinates.y].getComponents()[0]);
 				 return false;
 			}
-			 
+
 			 return true;
 		 }
 		 else if((GUI.trainMap[currentCoordinates.x+1][currentCoordinates.y].getBackground() == Color.LIGHT_GRAY || GUI.trainMap[currentCoordinates.x+1][currentCoordinates.y].getBackground() == Color.red || GUI.trainMap[currentCoordinates.x+1][currentCoordinates.y].getBackground() == Color.yellow)

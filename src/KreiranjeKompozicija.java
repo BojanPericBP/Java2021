@@ -81,7 +81,6 @@ public class KreiranjeKompozicija extends Thread
 			Logger.getLogger(KreiranjeKompozicija.class.getName()).log(Level.WARNING, ex.fillInStackTrace().toString());
 		}
 	}
-	
 	@Override
 	public void run()
 	{

@@ -103,24 +103,18 @@ public class TrainStation extends Thread implements Serializable
 						kompozicija.speed = min;
 					}
 
-					for (int i = 0; i < kompozicija.locomotive.size(); ++i)
+					for (int i = 0; i < kompozicija.train.size(); ++i)
 					{
 						//kompozicija.locomotive.get(i).previousCoordinates = usmjeriKompoziciju(kompozicija)[0];
-						kompozicija.locomotive.get(i).previousCoordinates = usmjeriKompoziciju(kompozicija)[0];
-						kompozicija.locomotive.get(i).currentCoordinates = new Point(usmjeriKompoziciju(kompozicija)[0]);
-					}
-
-					for (int i = 0; i < kompozicija.wagon.size(); ++i)
-					{
-						kompozicija.wagon.get(i).previousCoordinates = new Point(kompozicija.locomotive.get(kompozicija.locomotive.size() - 1).previousCoordinates);
-						kompozicija.wagon.get(i).currentCoordinates = new Point(kompozicija.locomotive.get(kompozicija.locomotive.size() - 1).currentCoordinates);
+						kompozicija.train.get(i).previousCoordinates = usmjeriKompoziciju(kompozicija)[0];
+						kompozicija.train.get(i).currentCoordinates = new Point(usmjeriKompoziciju(kompozicija)[0]);
 					}
 					
-					if(kompozicija.trinStationToVisit.get(0).coordinates.contains(kompozicija.locomotive.get(0).currentCoordinates))
+					if(kompozicija.trinStationToVisit.get(0).coordinates.contains(kompozicija.train.get(0).currentCoordinates))
 						kompozicija.movingTime = System.currentTimeMillis();
 					
-					kompozicija.locomotive.get(0).currentCoordinates = new Point(kord0);
-					kompozicija.movingHistory.add(new Point(kompozicija.locomotive.get(0).currentCoordinates));
+					kompozicija.train.get(0).currentCoordinates = new Point(kord0);
+					kompozicija.movingHistory.add(new Point(kompozicija.train.get(0).currentCoordinates));
 					
 					synchronized (this)
 					{
@@ -130,9 +124,9 @@ public class TrainStation extends Thread implements Serializable
 					susjed.incomingTrains.add(kompozicija);
 					synchronized (GUI.frame)
 					{
-						GUI.trainMap[kompozicija.locomotive.get(0).currentCoordinates.x][kompozicija.locomotive.get(0).currentCoordinates.y]
+						GUI.trainMap[kompozicija.train.get(0).currentCoordinates.x][kompozicija.train.get(0).currentCoordinates.y]
 								.add(new JLabel(new ImageIcon("resource/train.png")));
-						((JLabel) GUI.trainMap[kompozicija.locomotive.get(0).currentCoordinates.x][kompozicija.locomotive
+						((JLabel) GUI.trainMap[kompozicija.train.get(0).currentCoordinates.x][kompozicija.train
 								.get(0).currentCoordinates.y].getComponent(0)).setName(kompozicija.speed + "k");
 						GUI.refreshGui();
 					}
@@ -155,7 +149,6 @@ public class TrainStation extends Thread implements Serializable
 					}
 				}
 			}
-
 			try
 			{
 				Thread.sleep(300);

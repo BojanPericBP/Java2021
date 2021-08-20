@@ -14,6 +14,7 @@ public class Locomotive extends ElementOfComposition implements Serializable{
 	int idLocomotive;
 	
 	public Locomotive(String _typeLocomotive) {
+		super("resource/train.png");
 		drive = (char) (new Random().nextInt(2)+49);
 		power = Math.random()*10;
 		idLocomotive = count++;

@@ -20,9 +20,8 @@ public class Train extends Thread implements Serializable
 	int idComp;
 	volatile long movingTime;
 	ArrayList<Point> movingHistory;
-	
-	ArrayList<Locomotive> locomotive;
-	ArrayList<Vagon> wagon;
+
+	ArrayList<ElementOfComposition> train;
 	volatile long speed;
 	volatile long reducedSpeed;
 	ArrayList<TrainStation> trinStationToVisit;
@@ -47,8 +46,7 @@ public class Train extends Thread implements Serializable
 		prevTrainStation = trinStationToVisit.get(0);
 		speed = _brzina <= 500 ? 500: _brzina;
 		
-		wagon = new ArrayList<>();
-		locomotive = new ArrayList<>();
+		train = new ArrayList<>();
 		reducedSpeed = speed;
 		
 		movingHistory = new ArrayList<Point>();
@@ -67,8 +65,6 @@ public class Train extends Thread implements Serializable
 				rampUpDown();				
 			}
 
-			
-				//ZeljeznickaStanica susjed = odrediSusjeda();
 			TrainStation susjed = findNextStation();
 			
 			try 
@@ -97,6 +93,7 @@ public class Train extends Thread implements Serializable
 					oos.close();
 					}
 					catch (Exception e) {
+						e.printStackTrace();
 						Logger.getLogger(Train.class.getName()).log(Level.WARNING,e.fillInStackTrace().toString());
 					}	
 				} 
@@ -142,121 +139,110 @@ public class Train extends Thread implements Serializable
 	{
 		//lokomotive vagoni //null vagoni // lokomotive null
 		Exception e = new Exception("Wrong train format");
-		List<String> trains = new ArrayList<>();
-		List<String> trainCar = new ArrayList<>();
+		List<String> locomotives = new ArrayList<>();
+		List<String> wagons = new ArrayList<>();
 		
 		if(rasporedLokomotiva.equals("null"))
 			throw e;
 		
 		if(!rasporedVagona.equals("null"))
 		{
-			trainCar = Arrays.asList(rasporedVagona.split(","));
+			wagons = Arrays.asList(rasporedVagona.split(","));
 		}
 		
-		trains = Arrays.asList(rasporedLokomotiva.split(","));
+		locomotives = Arrays.asList(rasporedLokomotiva.split(","));
 		
 
-		if(trains.size() > 1 && trains.contains("ml") && (trains.contains("tl") || trains.contains("pl")))
+		if(locomotives.size() > 1 && locomotives.contains("ml") && (locomotives.contains("tl") || locomotives.contains("pl")))
 				throw e;
-		else if(trains.contains("ml") && (trainCar.contains("tv") || trainCar.contains("pvs") || trainCar.contains("pvr")))
+		else if(locomotives.contains("ml") && (wagons.contains("tv") || wagons.contains("pvs") || wagons.contains("pvr")))
 			throw e;
 		
-		else if(trains.contains("ml") && trainCar.contains(""))
+		else if(locomotives.contains("ml") && wagons.contains(""))
 			throw e;
 		
-		else if(trains.contains("pl") && (trains.contains("tl") || trainCar.contains("tv") || trainCar.contains("vpn")))
+		else if(locomotives.contains("pl") && (locomotives.contains("tl") || wagons.contains("tv") || wagons.contains("vpn")))
 			throw e;
 		
-		else if(trains.contains("tl") && (trains.contains("pl") || trainCar.contains("pvs") || trainCar.contains("pvr") || trainCar.contains("vpn")))
+		else if(locomotives.contains("tl") && (locomotives.contains("pl") || wagons.contains("pvs") || wagons.contains("pvr") || wagons.contains("vpn")))
 			throw e;
 		
-		else if(trainCar.contains("tv") && (trainCar.contains("pvr") || trainCar.contains("pvs")) && !trains.contains("ul"))
+		else if(wagons.contains("tv") && (wagons.contains("pvr") || wagons.contains("pvs")) && !locomotives.contains("ul"))
 			throw e;
 		
-		for(String s : trains)
+		for(String s : locomotives)
 		{
 			switch (s) {
 			case "tl": {
-				locomotive.add(new Locomotive("Teretna"));
+				train.add(new Locomotive("Teretna"));
 				break;
 			}
 			case "pl":{
-				locomotive.add(new Locomotive("Putnicka"));
+				train.add(new Locomotive("Putnicka"));
 				break;
 			}
 			case "ul":{
-				locomotive.add(new Locomotive("Univerzalna"));
+				train.add(new Locomotive("Univerzalna"));
 				break;
 			}
 			case "ml":{
-				locomotive.add(new Locomotive("Manevarska"));
+				train.add(new Locomotive("Manevarska"));
 				break;
 			}
 			}
 		}
 		
-		for(String s : trainCar)
+		for(String s : wagons)
 		{
 			switch (s) {
 			case "pvr": {
-				wagon.add(new PassengerWagonRestaurant());
+				train.add(new PassengerWagonRestaurant());
 				break;
 			}
 			case "pvs":{
-				wagon.add(new PassengerWagonSleep());
+				train.add(new PassengerWagonSleep());
 				break;
 			}
 			case "vpn":{
-				wagon.add(new Vagon(false));
+				train.add(new Vagon(false));
 				break;
 			}
 			case "tv":{
-				wagon.add(new FreightWagon());
+				train.add(new FreightWagon());
 				break;
 			}
 			default:
 				throw e;
 			}
 		}
-		
 	}
 	
 	synchronized void arriveToStation() 
 	{
-		int granicaLOK=1;
-		int granicaVAG=0;
-		while(granicaLOK!=locomotive.size() || granicaVAG!=wagon.size()) 
-		{
-			synchronized(this)
+		int j = 1;
+			while(j < train.size())
 			{
-				rampUpDown();				
-			}
-			for (int i = granicaLOK; i < locomotive.size(); i++)
-			{
-				if(!locomotive.get(i).move()) granicaLOK=i+1;
-				synchronized(GUI.frame)
+				for (int i = j; i < train.size(); i++) 
 				{
-					GUI.refreshGui();
+					synchronized(this)
+					{ rampUpDown();	 }
+
+					if(!train.get(i).move())
+						j++;
+					
+					synchronized(GUI.frame)
+					{ GUI.refreshGui(); }
+				}
+				try { Thread.sleep(speed); } catch (InterruptedException e) { Logger.getLogger(Train.class.getName()).log(Level.WARNING, 							e.fillInStackTrace().toString()); 
 				}
 			}
-			
-			for (int i = granicaVAG; i < wagon.size(); i++)
-			{
-				if(!wagon.get(i).move()) granicaVAG=i+1;
-				synchronized(GUI.frame)
-				{
-					GUI.refreshGui();
-				}
-			}	
-			try { Thread.sleep(speed); } catch (InterruptedException e) { Logger.getLogger(Train.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString()); }
-		}
 	}
 
 	
 	synchronized void rampUpDown()
 	{
 		boolean flag = true; //treba spustiti rampu
-		for (int i = 18; i < 24; i++) {
+		for (int i = 18; i < 23; i++) {
 			if(GUI.trainMap[i][2].getComponents().length ==1)
 			{
 				if( (GUI.trainMap[i][2].getComponents()[0]) != null)
@@ -273,25 +259,23 @@ public class Train extends Thread implements Serializable
 			tmpRamp(flag,20,2,21,2);
 		}
 		flag = true;
-		for (int j = 11; j < 17; j++) {
+		for (int j = 11; j < 16; j++) {
 			if(GUI.trainMap[6][j].getComponents().length ==1)
 			{
 				if( (GUI.trainMap[6][j].getComponents()[0]) != null)
 				{
 					String s = ((JLabel)(GUI.trainMap[6][j].getComponents()[0])).getName(); //Prelaz a
 					if(s != null && s.contains("k"))
-					flag = false;
+						flag = false;
 				}
 			}
 		}
 		
 		synchronized(GUI.trainMap)
-		{
-			tmpRamp(flag,6,13,6,14);
-		}
+		{ tmpRamp(flag,6,13,6,14); }
 		
 		flag = true;
-		for (int i = 18; i < 24; i++) {
+		for (int i = 18; i < 23; i++) {
 			if(GUI.trainMap[i][26].getComponents().length ==1)
 			{
 				if( (GUI.trainMap[i][26].getComponents()[0]) != null)
@@ -323,25 +307,24 @@ public class Train extends Thread implements Serializable
 	
 	synchronized boolean move() // true kad udje u stanicu
 	{
-		for (int i = 0; i < locomotive.size(); i++) 
+		for (int i = 0; i < train.size(); i++) 
 		{
 			//Da li (jeUStanici && nijePrethodni na prvom polju pruge)
-			if (prevTrainStation.coordinates.contains(locomotive.get(i).currentCoordinates) && !prevTrainStation.coordinates.contains(locomotive.get(i-1).previousCoordinates))  // U prvom koraku se nece ispitivati drgui uslov
+			// U prvom koraku se nece ispitivati drgui uslov
+			if (prevTrainStation.coordinates.contains(train.get(i).currentCoordinates) && !prevTrainStation.coordinates.contains(train.get(i-1).previousCoordinates))  
 			{
-				locomotive.get(i).currentCoordinates = new Point(locomotive.get(i-1).previousCoordinates);
-				GUI.trainMap[locomotive.get(i).currentCoordinates.x][locomotive.get(i).currentCoordinates.y].add(new JLabel(new ImageIcon("resource/train.png")));
-				((JLabel)GUI.trainMap[locomotive.get(i).currentCoordinates.x][locomotive.get(i).currentCoordinates.y].getComponent(0)).setName(speed+"k");
+				train.get(i).currentCoordinates = new Point(train.get(i-1).previousCoordinates);
+				GUI.trainMap[train.get(i).currentCoordinates.x][train.get(i).currentCoordinates.y].add(new JLabel(new ImageIcon(train.get(i).imgPath)));//TODO img path dodati kao atribut elementa kompozicije
+				((JLabel)GUI.trainMap[train.get(i).currentCoordinates.x][train.get(i).currentCoordinates.y].getComponent(0)).setName(speed+"k");
 			}
 			
-			else if(i!=0 && GUI.trainMap[locomotive.get(i - 1).previousCoordinates.x][locomotive.get(i - 1).previousCoordinates.y].getComponents().length != 0) 
+			else if(i!=0 && GUI.trainMap[train.get(i - 1).previousCoordinates.x][train.get(i - 1).previousCoordinates.y].getComponents().length != 0) 
 				continue;
 			else 
 			{	
-					boolean flag = locomotive.get(i).move();
+					boolean flag = train.get(i).move();
 					if(i == 0)
-					{
-						movingHistory.add(new Point(locomotive.get(0).currentCoordinates));
-					}
+						movingHistory.add(new Point(train.get(0).currentCoordinates));
 				 
 					synchronized(GUI.frame)
 					{				
@@ -355,75 +338,7 @@ public class Train extends Thread implements Serializable
 					}
 			}
 		}
-		
-		for (int i = 0; i < wagon.size(); i++) 
-		{
-			
-			//prvi vagon, u stanici je  i nije zadnja lokomotiva zauzela mjesto gdje on treba ici
-			if(i==0 && prevTrainStation.coordinates.contains(wagon.get(i).currentCoordinates) && !prevTrainStation.coordinates.contains(locomotive.get(locomotive.size()-1).previousCoordinates))
-			{
-				wagon.get(i).currentCoordinates = new Point(locomotive.get(locomotive.size()-1).previousCoordinates);
-				GUI.trainMap[wagon.get(i).currentCoordinates.x][wagon.get(i).currentCoordinates.y].add(new JLabel(new ImageIcon("resource/traincar.png")));
-				((JLabel)GUI.trainMap[wagon.get(i).currentCoordinates.x][wagon.get(i).currentCoordinates.y].getComponent(0)).setName(speed+"k");
-				synchronized(GUI.frame)
-				{
-					GUI.refreshGui();				
-				}
-				try {
-					Thread.sleep(speed);
-				} catch (InterruptedException e) {
-					
-					Logger.getLogger(Train.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
-				}
-			}
-			
-			//prvi vagon, nije u stanici i nije zadnja lokomotiva zauzela mjesto gdje on treba ici
-			else if(i==0 && !prevTrainStation.coordinates.contains(wagon.get(i).currentCoordinates) && !prevTrainStation.coordinates.contains(locomotive.get(locomotive.size()-1).previousCoordinates))
-			{
-				if(!wagon.get(i).move()) 
-				{
-					synchronized(GUI.frame)
-					{
-						GUI.refreshGui();					
-					}
-
-					arriveToStation();
-					return true; // vagon uso u stanicu
-				}
-			}
-			
-			//Da li (jeUStanici && nijePrethodni na prvom polju pruge)
-			else if (i>0 && prevTrainStation.coordinates.contains(wagon.get(i).currentCoordinates) && !prevTrainStation.coordinates.contains(wagon.get(i-1).previousCoordinates))
-			{
-				wagon.get(i).currentCoordinates = new Point(wagon.get(i-1).previousCoordinates);
-				GUI.trainMap[wagon.get(i).currentCoordinates.x][wagon.get(i).currentCoordinates.y].add(new JLabel(new ImageIcon("resource/traincar.png")));
-				((JLabel)GUI.trainMap[wagon.get(i).currentCoordinates.x][wagon.get(i).currentCoordinates.y].getComponent(0)).setName(speed+"k");
-				synchronized(GUI.frame)
-				{
-					GUI.refreshGui();					
-				}
-				try {
-					Thread.sleep(speed);
-				} catch (InterruptedException e) {
-					Logger.getLogger(Train.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
-				}
-			}
-			
-			else if (i > 0 && GUI.trainMap[wagon.get(i - 1).previousCoordinates.x][wagon.get(i - 1).previousCoordinates.y].getComponents().length == 0  && !wagon.get(i).move())
-			{
-				synchronized(GUI.frame)
-				{
-					GUI.refreshGui();						
-				}
-
-				arriveToStation();
-				return true; // vagon uso u stanicu
-			}
-		}
 		return false;
 	}
 	
 }
-
-
-

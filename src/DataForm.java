@@ -72,7 +72,8 @@ public class DataForm {
 			}
 		}
 		catch (Exception e) {
-			Logger.getLogger(DataForm.class.getName()).log(Level.WARNING,e.fillInStackTrace().toString());
+			e.printStackTrace();
+			//Logger.getLogger(DataForm.class.getName()).log(Level.WARNING,e.fillInStackTrace().toString());
 		}
 	}
 }

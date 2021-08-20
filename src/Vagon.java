@@ -26,6 +26,7 @@ public class Vagon extends ElementOfComposition implements Serializable
 	}
 	
 	public Vagon(boolean _jePosebneNamjene) {
+		super("resource/traincar.png");
 		IDVagona = count++;
 		duzinaVagona = new Random().nextInt(4)+1;
 		jePosebneNamjene = _jePosebneNamjene;
