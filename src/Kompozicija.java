@@ -326,7 +326,7 @@ public class Kompozicija extends Thread implements Serializable
 		int pocetakA = 19, krajA = 23;
 		for(int i=0; i<lokomotive.size(); i++) //trazi bar jednu elektricnu
 		{
-			if(lokomotive.get(i).pogon == 'E') 
+			if(lokomotive.get(i).elektroPogon) 
 			{	
 				pocetakA = 18; krajA = 24;
 				break;
@@ -355,7 +355,7 @@ public class Kompozicija extends Thread implements Serializable
 		int pocetakB = 12, krajB = 16;
 		for(int i=0; i<lokomotive.size(); i++) //trazi bar jednu elektricnu
 		{
-			if(lokomotive.get(i).pogon == 'E') 
+			if(lokomotive.get(i).elektroPogon) 
 			{	
 				pocetakB = 11; krajB = 17;
 				break;
@@ -383,7 +383,7 @@ public class Kompozicija extends Thread implements Serializable
 		int pocetakC = 19, krajC = 23;
 		for(int i=0; i<lokomotive.size(); i++) //trazi bar jednu elektricnu
 		{
-			if(lokomotive.get(i).pogon == 'E') 
+			if(lokomotive.get(i).elektroPogon) 
 			{	
 				pocetakC = 18; krajC = 24;
 				break;

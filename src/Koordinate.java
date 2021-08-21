@@ -1,5 +1,4 @@
 import java.io.Serializable;
-import java.util.Objects;
 
 public class Koordinate implements Serializable
 {

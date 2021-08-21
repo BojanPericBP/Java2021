@@ -7,8 +7,9 @@ import javax.swing.JLabel;
 public class Lokomotiva implements Serializable
 {
 	private static final long serialVersionUID = 1L;
-	static char[] moguciPogoni = {'D', 'P', 'E'}; //D - dizel, P - parni, E - elektricni
-	final char pogon; 
+	boolean dizelPogon;
+	boolean elektroPogon;
+	boolean parniPogon;
 	boolean jeUniverzalna;
 	boolean jePutnicka;
 	boolean jeTeretna;
@@ -37,8 +38,19 @@ public class Lokomotiva implements Serializable
 	public Lokomotiva(String tipLokomotive) 
 	{
 		idLokomotive = brojacLokomotiva++;
-		pogon = moguciPogoni[new Random().nextInt(3)];
-		if(pogon==69) 
+		
+		//TODO izbor pogona
+		
+		//elektroPogon=true;
+		dizelPogon=true;
+		//parniPogon=true;
+		
+		snaga = Math.random()*10;
+		
+		trenutneKoordinate = new Koordinate(-1,-1);
+		prethodneKoordinate = new Koordinate(-1,-1);
+		
+		if(elektroPogon) 
 		{ 
 			slika="SLIKE/elektricna.png";
 		}
@@ -46,10 +58,6 @@ public class Lokomotiva implements Serializable
 		{ 
 			slika="SLIKE/lokomotiva.png"; 
 		}
-		snaga = Math.random()*10;
-		
-		trenutneKoordinate = new Koordinate(-1,-1);
-		prethodneKoordinate = new Koordinate(-1,-1);
 		
 		if(tipLokomotive == "univerzalna")
 			jeUniverzalna = true;
