@@ -233,7 +233,7 @@ public class Train extends Thread implements Serializable
 					synchronized(Main.frame)
 					{ Main.refreshGui(); }
 				}
-				try { Thread.sleep(speed); } catch (InterruptedException e) { Logger.getLogger(Train.class.getName()).log(Level.WARNING, 							e.fillInStackTrace().toString()); 
+				try { Thread.sleep(speed); } catch (InterruptedException e) { Logger.getLogger(Train.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString()); 
 				}
 			}
 	}

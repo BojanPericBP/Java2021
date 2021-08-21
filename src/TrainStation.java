@@ -13,7 +13,7 @@ public class TrainStation extends Thread implements Serializable
 	private static final long serialVersionUID = 1L;
 	ArrayList<Train> outgoingtrains;
 	ArrayList<Train> incomingTrains;
-	static int schedulerMatrix[][]; //matrica susjedstva[i][j] = 0; putanja od stanice i ka stanici j je slobodna, matrica je konzistentna
+	static int schedulerMatrix[][]; //mat[i][j] = 0; putanja od stanice i ka stanici j je slobodna, matrica je konzistentna
 	char nameStation;
 	ArrayList<Point> coordinates;
 	
@@ -56,7 +56,6 @@ public class TrainStation extends Thread implements Serializable
 	@Override
 	public void run() // kompozicija je vec na prvom polju izvan pruge tj lokomotiva
 	{
-
 		while (Main.isAlive)
 		{
 			Iterator<Train> iteratorKompozicija = outgoingtrains.iterator();
@@ -71,7 +70,6 @@ public class TrainStation extends Thread implements Serializable
 				Point point2 = null;
 				synchronized (schedulerMatrix)
 				{
-					
 					nextStation = tmpTrain.findNextStation();
 
 					if (schedulerMatrix[nextStation.nameStation - 'A'][(nameStation - 'A')] == 0)
@@ -110,15 +108,16 @@ public class TrainStation extends Thread implements Serializable
 					if(tmpTrain.trinStationToVisit.get(0).coordinates.contains(tmpTrain.train.get(0).currentCoordinates))
 						tmpTrain.movingTime = System.currentTimeMillis();
 					
-					tmpTrain.train.get(0).currentCoordinates = new Point(point1);
 					tmpTrain.movingHistory.add(new Point(tmpTrain.train.get(0).currentCoordinates));
+					tmpTrain.train.get(0).currentCoordinates = new Point(point1);
 					
 					synchronized (this)
 					{
 						schedulerMatrix[nameStation - 'A'][nextStation.nameStation - 'A']++;
 					}
-					
+					 
 					nextStation.incomingTrains.add(tmpTrain);
+					
 					synchronized (Main.frame)
 					{
 						Main.trainMap[tmpTrain.train.get(0).currentCoordinates.x][tmpTrain.train.get(0).currentCoordinates.y]

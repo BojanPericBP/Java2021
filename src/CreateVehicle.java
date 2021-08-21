@@ -83,7 +83,6 @@ public class CreateVehicle extends TimerTask{
 				tempVehicle.setVehicle();
 				Main.currVheicleCounter[tempVehicle.way-'A']++;
 				Main.trainMap[tempVehicle.currPoint.x][tempVehicle.currPoint.y].add(new JLabel(new ImageIcon(tempVehicle.imagePath)));
-				((JLabel)Main.trainMap[tempVehicle.currPoint.x][tempVehicle.currPoint.y].getComponents()[0]).setName(""+(long)tempVehicle.currSpeed);
 				tempVehicle.start();
 			}
 			else break;
