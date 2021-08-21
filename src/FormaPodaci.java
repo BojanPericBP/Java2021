@@ -45,6 +45,7 @@ public class FormaPodaci
 	    table.getColumnModel().getColumn(3).setMaxWidth(95);
 	    table.getColumnModel().getColumn(4).setMinWidth(95);
 	    table.getColumnModel().getColumn(4).setMaxWidth(95);
+	    table.setRowHeight(40);
 	    frame.add(new JScrollPane(table));
 	    frame.setVisible(false);
 	}

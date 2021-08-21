@@ -1,6 +1,8 @@
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.logging.*;
 import javax.swing.*;
 
@@ -14,7 +16,7 @@ public class ZeljeznickaStanica extends Thread implements Serializable
 	char nazivStanice;
 	ArrayList<Koordinate> koordinate;
 	static FileHandler handler;
-	
+	static Map<String,Koordinate[]> mapaIzlaskaIzStanice;
 	static 
 	{
 		try
@@ -37,6 +39,15 @@ public class ZeljeznickaStanica extends Thread implements Serializable
 				matricaSusjedstva[i][j] = 0;
 			}
 		}
+		mapaIzlaskaIzStanice = new HashMap<>();
+		mapaIzlaskaIzStanice.put("AB" , new Koordinate[]{ new Koordinate(27, 2), new Koordinate(26, 2), new Koordinate(25, 2) });
+		mapaIzlaskaIzStanice.put("BA" , new Koordinate[]{ new Koordinate(6, 6), new Koordinate(6, 5), new Koordinate(7, 5) });
+		mapaIzlaskaIzStanice.put("BC" , new Koordinate[]{ new Koordinate(6, 7), new Koordinate(6, 8), new Koordinate(6, 9) });
+		mapaIzlaskaIzStanice.put("CB" , new Koordinate[]{ new Koordinate(12, 19), new Koordinate(11, 19), new Koordinate(10, 19) });
+		mapaIzlaskaIzStanice.put("CD" , new Koordinate[]{ new Koordinate(12, 20), new Koordinate(12, 21), new Koordinate(12, 22) });
+		mapaIzlaskaIzStanice.put("CE" , new Koordinate[]{ new Koordinate(13, 20), new Koordinate(14, 20), new Koordinate(15, 20) });
+		mapaIzlaskaIzStanice.put("DC" , new Koordinate[]{ new Koordinate(1, 26), new Koordinate(1, 25), new Koordinate(1, 24) });
+		mapaIzlaskaIzStanice.put("EC" , new Koordinate[]{ new Koordinate(25, 26), new Koordinate(24, 26), new Koordinate(23, 26) });
 	}
 	public ZeljeznickaStanica(char nazivStaniceArg)
 	{
@@ -87,7 +98,7 @@ public class ZeljeznickaStanica extends Thread implements Serializable
 
 					for (Lokomotiva l : kompozicija.lokomotive)
 					{
-						l.trenutneKoordinate = usmjeriKompoziciju(kompozicija)[0];
+						l.trenutneKoordinate = new Koordinate(usmjeriKompoziciju(kompozicija)[0]);
 						l.prethodneKoordinate = new Koordinate(usmjeriKompoziciju(kompozicija)[0]);
 					}
 
@@ -100,7 +111,7 @@ public class ZeljeznickaStanica extends Thread implements Serializable
 					if(kompozicija.polazak.koordinate.contains(kompozicija.lokomotive.get(0).trenutneKoordinate)) //ako je tek pocelo kretanja, pocinje mjeriti vrijeme
 						kompozicija.vrijemeKretanja = System.currentTimeMillis();
 					
-					kompozicija.lokomotive.get(0).trenutneKoordinate = usmjeriKompoziciju(kompozicija)[1]; //prva lokomotiva izlazi iz stanice
+					kompozicija.lokomotive.get(0).trenutneKoordinate = new Koordinate(usmjeriKompoziciju(kompozicija)[1]); //prva lokomotiva izlazi iz stanice
 					kompozicija.istorijaKretanja.add(new Koordinate(kompozicija.lokomotive.get(0).trenutneKoordinate));
 					synchronized (this)
 					{
@@ -155,36 +166,27 @@ public class ZeljeznickaStanica extends Thread implements Serializable
 		}
 		return false;
 	}
-
+	
 	synchronized Koordinate[] usmjeriKompoziciju(Kompozicija komp)
 	{
 		char susjednaStanica = komp.odrediSusjeda().nazivStanice;
-		
 		if (nazivStanice == 'A')
-			return (new Koordinate[] { new Koordinate(27, 2), new Koordinate(26, 2), new Koordinate(25, 2) });
-
+			return mapaIzlaskaIzStanice.get("AB");
 		else if (nazivStanice == 'B' && susjednaStanica == 'A')
-			return (new Koordinate[] { new Koordinate(6, 6), new Koordinate(6, 5), new Koordinate(7, 5) }); 
-
+			return mapaIzlaskaIzStanice.get("BA");
 		else if (nazivStanice == 'B' && susjednaStanica == 'C')
-			return (new Koordinate[] { new Koordinate(6, 7), new Koordinate(6, 8), new Koordinate(6, 9) });
-
+			return mapaIzlaskaIzStanice.get("BC");
 		else if (nazivStanice == 'C' && susjednaStanica == 'B')
-			return (new Koordinate[] { new Koordinate(12, 19), new Koordinate(11, 19), new Koordinate(10, 19) });
-
+			return mapaIzlaskaIzStanice.get("CB");
 		else if (nazivStanice == 'C' && susjednaStanica == 'D')
-			return (new Koordinate[] { new Koordinate(12, 20), new Koordinate(12, 21), new Koordinate(12, 22) });
-
+			return mapaIzlaskaIzStanice.get("CD");
 		else if (nazivStanice == 'C' && susjednaStanica == 'E')
-			return (new Koordinate[] { new Koordinate(13, 20), new Koordinate(14, 20), new Koordinate(15, 20) });
-
+			return mapaIzlaskaIzStanice.get("CE");
 		else if (nazivStanice == 'D')
-			return (new Koordinate[] { new Koordinate(1, 26), new Koordinate(1, 25), new Koordinate(1, 24) });
-
+			return mapaIzlaskaIzStanice.get("DC");
 		else if (nazivStanice == 'E')
-			return (new Koordinate[] { new Koordinate(25, 26), new Koordinate(24, 26), new Koordinate(23, 26) });
-
+			return mapaIzlaskaIzStanice.get("EC");
 		return null;
 	}
-
+	
 }
