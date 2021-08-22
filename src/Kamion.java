@@ -21,9 +21,14 @@ public class Kamion extends Vozilo
 		}
 	}
 	
-	public Kamion(double maxBriznaArg, char putArg, String putanjaSlikeArg) 
+	public Kamion(double maxBriznaArg, char putArg) 
 	{
-		super(maxBriznaArg, putArg, putanjaSlikeArg);
+		super(maxBriznaArg, putArg);
+		smjer = (char) ('0' + new Random().nextInt(2));
+		if(smjer == '1')
+			putanjaSlike = "SLIKE/kamion_desni.png";
+		else 
+			putanjaSlike = "SLIKE/kamion_lijevi.png";
 		nosivost = new Random().nextInt(200) + 40;
 	}
 

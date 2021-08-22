@@ -62,7 +62,7 @@ public class KreiranjeKompozicija extends Thread
 					if (nazivDatoteke.toString().trim().endsWith(".txt"))
 					{
 						List<String>content = Files.readAllLines(putanjaFoldera.resolve(nazivDatoteke));
-						kreiraj(content.get(2));
+						if(content.size()>2)kreiraj(content.get(2));
 					}
 				}
 				boolean valid = key.reset();

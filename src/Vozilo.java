@@ -32,7 +32,7 @@ public abstract class Vozilo extends Thread
 		}
 	}
 
-	public Vozilo(double maxBrzinaArg, char putArg, String putanjaSlikeArg)
+	public Vozilo(double maxBrzinaArg, char putArg)
 	{
 		maxBrzina = maxBrzinaArg;
 		trenutnaBrzina = maxBrzina + Math.random() * (MIN_BRZINA-maxBrzina);
@@ -42,8 +42,6 @@ public abstract class Vozilo extends Thread
 		put = putArg;
 		trenutneKoordinate = new Koordinate(-3, -3);
 		prethodneKoordinate = new Koordinate(-3, -3);
-		smjer = (char) ('0' + new Random().nextInt(2));
-		putanjaSlike = putanjaSlikeArg;
 	}
 
 	@Override
@@ -60,6 +58,10 @@ public abstract class Vozilo extends Thread
 				Logger.getLogger(Vozilo.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 			}
 
+			GUI.frame.invalidate();
+			GUI.frame.validate();
+			GUI.frame.repaint();
+			
 			synchronized (GUI.frame)
 			{
 				Koordinate k = sledeciKorak();

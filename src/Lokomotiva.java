@@ -1,5 +1,4 @@
 import java.io.Serializable;
-import java.util.Random;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import javax.swing.JLabel;
@@ -41,8 +40,8 @@ public class Lokomotiva implements Serializable
 		
 		//TODO izbor pogona
 		
-		//elektroPogon=true;
-		dizelPogon=true;
+		elektroPogon=true;
+		//dizelPogon=true;
 		//parniPogon=true;
 		
 		snaga = Math.random()*10;

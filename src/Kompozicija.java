@@ -11,6 +11,7 @@ public class Kompozicija extends Thread implements Serializable
 	private static int brojacKompozicija = 0;
 	final static int MAX_BROJ_LOKOMOTIVA = 5;
 	final static int MAX_BR_VAGONA = 5;
+	static final long MIN_BRZINA = 50;
 	int idKompozicije;
 	public long vrijemeKretanja;
 	ArrayList<Koordinate> istorijaKretanja;
@@ -43,7 +44,7 @@ public class Kompozicija extends Thread implements Serializable
 		if (brLokomotivaArg > MAX_BROJ_LOKOMOTIVA || brLokomotivaArg < 1 || brVagonaArg > MAX_BR_VAGONA || brVagonaArg < 0)
 			throw new Exception("Kompozicija nije validna!");
 
-		brzinaKretanja = brzinaArg <= 500 ? 500: brzinaArg;
+		brzinaKretanja = brzinaArg <= MIN_BRZINA ? MIN_BRZINA: brzinaArg;
 		uskladjenaBrzina = brzinaKretanja;
 		polazak = polazakArg;
 		prethodnaStanica = polazak;

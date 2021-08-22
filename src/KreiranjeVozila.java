@@ -81,7 +81,10 @@ public class KreiranjeVozila extends TimerTask
 		else
 		{
 			if((GUI.trenutniBrVozilaNaPutevima[randomPut] + vozilaNaCekanju.get(randomPut).size()) < maxBrVozila[randomPut])
-				vozilaNaCekanju.get(randomPut).add(new Kamion(maxBrzine[randomPut], naziviPuteva[randomPut],"SLIKE/kamion.png"));
+			{
+				Kamion tmpKamion = new Kamion(maxBrzine[randomPut], naziviPuteva[randomPut]);
+				vozilaNaCekanju.get(randomPut).add(tmpKamion);
+			}
 		}
 	}
 

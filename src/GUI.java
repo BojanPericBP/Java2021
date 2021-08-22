@@ -291,5 +291,6 @@ public class GUI extends JFrame
 		
 		stanice.add(new ZeljeznickaStanica('E'));
 		stanice.get(4).koordinate.add(new Koordinate(25,26));
+		frame.setLocation(0, 0);
 	}
 }
