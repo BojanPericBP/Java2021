@@ -12,17 +12,6 @@ public class Wagon extends ElementOfComposition implements Serializable
 	int wagonLength;
 	int IdWagon;
 	
-	static 
-	{
-		try
-		{
-			Logger.getLogger(Wagon.class.getName()).addHandler(new FileHandler("Error logs/Vagon.log"));
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
 	
 	public Wagon() {
 		super("resource/traincar.png");

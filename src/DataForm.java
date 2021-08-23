@@ -23,7 +23,7 @@ public class DataForm {
 	static {
 		
 		try {
-			Logger.getLogger(DataForm.class.getName()).addHandler(new FileHandler("Error logs/FormaPodaci.log"));
+			Logger.getLogger(DataForm.class.getName()).addHandler(new FileHandler("logs/DataForm.log"));
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

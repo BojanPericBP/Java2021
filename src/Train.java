@@ -31,7 +31,7 @@ public class Train extends Thread implements Serializable
 	{
 		try
 		{
-			Logger.getLogger(Train.class.getName()).addHandler(new FileHandler("Error logs/Kompozicija.log"));
+			Logger.getLogger(Train.class.getName()).addHandler(new FileHandler("logs/Train.log"));
 		}
 		catch (Exception e)
 		{
@@ -337,7 +337,7 @@ public class Train extends Thread implements Serializable
 			{	
 					boolean flag = train.get(i).move();
 					if(i == 0)
-						movingHistory.add(new Point(train.get(0).currentCoordinates));
+						movingHistory.add(new Point(train.get(0).previousCoordinates));
 				 
 					synchronized(Main.frame)
 					{				

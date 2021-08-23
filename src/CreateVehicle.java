@@ -14,11 +14,12 @@ import javax.swing.JLabel;
 public class CreateVehicle extends TimerTask{
 	ArrayList<Vehicle> waitingVehicles;
 	HashMap<Integer, Way> ways;
+	
 	static 
 	{
 		try
 		{
-			Logger.getLogger(CreateVehicle.class.getName()).addHandler(new FileHandler("Error logs/CreateVehicle.log"));
+			Logger.getLogger(CreateVehicle.class.getName()).addHandler(new FileHandler("logs/CreateVehicle.log"));
 		}
 		catch (Exception e)
 		{
@@ -73,22 +74,13 @@ public class CreateVehicle extends TimerTask{
 	
 	public void setOnMap()
 	{
-		Vehicle tempVehicle;
-		
-		for(int i=0; i<6; ++i)
+		for(int i=0; i<6 && !waitingVehicles.isEmpty(); ++i)
 		{
-			if(!waitingVehicles.isEmpty())
-			{
-				tempVehicle = waitingVehicles.remove(i);
-				tempVehicle.setVehicle();
-				Main.currVheicleCounter[tempVehicle.way-'A']++;
-				Main.trainMap[tempVehicle.currPoint.x][tempVehicle.currPoint.y].add(new JLabel(new ImageIcon(tempVehicle.imagePath)));
-				tempVehicle.start();
-			}
-			else break;
+			Vehicle tempVehicle = waitingVehicles.remove(i);
+			tempVehicle.setVehicle();
+			Main.currVheicleCounter[tempVehicle.way-'A']++;
+			Main.trainMap[tempVehicle.currPoint.x][tempVehicle.currPoint.y].add(new JLabel(new ImageIcon(tempVehicle.imagePath)));
+			tempVehicle.start();
 		}
 	}
-	
-	
-	
 }

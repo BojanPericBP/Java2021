@@ -25,16 +25,14 @@ public class TrainStation extends Thread implements Serializable
 			for (int j = 0; j < schedulerMatrix.length; j++)
 				schedulerMatrix[i][j] = 0;
 		}
-		
 		try
 		{
-			Logger.getLogger(TrainStation.class.getName()).addHandler(new FileHandler("Error logs/ZeljeznickaStanica.log"));
+			Logger.getLogger(TrainStation.class.getName()).addHandler(new FileHandler("logs/TrainStation.log"));
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
-		
 	}
 	
 	@Override
@@ -72,7 +70,7 @@ public class TrainStation extends Thread implements Serializable
 				{
 					nextStation = tmpTrain.findNextStation();
 
-					if (schedulerMatrix[nextStation.nameStation - 'A'][(nameStation - 'A')] == 0)
+					if (schedulerMatrix[nextStation.nameStation - 'A'][(nameStation - 'A')] == 0)//provjeravam da li je dionica pruge slobodna
 					{
 						point1 = redirectTrain(tmpTrain)[1];
 						point2 = redirectTrain(tmpTrain)[2];
@@ -85,7 +83,7 @@ public class TrainStation extends Thread implements Serializable
 			
 				if (isFree)
 				{
-					if (schedulerMatrix[nameStation - 'A'][nextStation.nameStation - 'A'] != 0)
+					if (schedulerMatrix[nameStation - 'A'][nextStation.nameStation - 'A'] != 0)//usaglasavanje brzine kretanja
 					{
 						long min = tmpTrain.speed;
 						// prodjikroz dolazne dolazneKompozicije susjeda i uzmi min brzinu
@@ -99,7 +97,7 @@ public class TrainStation extends Thread implements Serializable
 						tmpTrain.speed = min;
 					}
 
-					for (int i = 0; i < tmpTrain.train.size(); ++i)
+					for (int i = 0; i < tmpTrain.train.size(); ++i)// setovanje pocetnih koordinata svim elementima kompozicije
 					{
 						tmpTrain.train.get(i).previousCoordinates = redirectTrain(tmpTrain)[0];
 						tmpTrain.train.get(i).currentCoordinates = new Point(redirectTrain(tmpTrain)[0]);
@@ -108,7 +106,6 @@ public class TrainStation extends Thread implements Serializable
 					if(tmpTrain.trinStationToVisit.get(0).coordinates.contains(tmpTrain.train.get(0).currentCoordinates))
 						tmpTrain.movingTime = System.currentTimeMillis();
 					
-					tmpTrain.movingHistory.add(new Point(tmpTrain.train.get(0).currentCoordinates));
 					tmpTrain.train.get(0).currentCoordinates = new Point(point1);
 					
 					synchronized (this)

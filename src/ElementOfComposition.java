@@ -18,19 +18,19 @@ public abstract class ElementOfComposition implements Serializable {
 		imgPath = _imgPath;
 	}
 
-
 	synchronized public boolean move() {
 		if((Main.trainMap[currentCoordinates.x-1][currentCoordinates.y].getBackground() == Color.LIGHT_GRAY || Main.trainMap[currentCoordinates.x-1][currentCoordinates.y].getBackground() == Color.red || Main.trainMap[currentCoordinates.x-1][currentCoordinates.y].getBackground() == Color.yellow)
 				&& ( currentCoordinates.x-1 != previousCoordinates.x))//provjerava gore
 		 {
 			 previousCoordinates = new Point(currentCoordinates);
 			 currentCoordinates.x--;
+			 
 			 if(Main.trainMap[currentCoordinates.x][currentCoordinates.y].getBackground() != Color.yellow) 
 				 Main.trainMap[currentCoordinates.x][currentCoordinates.y].add((JLabel) Main.trainMap[previousCoordinates.x][previousCoordinates.y].getComponents()[0]);
 			 
-			 
 			 else if(Main.trainMap[currentCoordinates.x][currentCoordinates.y].getBackground()  == Color.yellow) {
 				 Main.trainMap[previousCoordinates.x][previousCoordinates.y].remove((JLabel) Main.trainMap[previousCoordinates.x][previousCoordinates.y].getComponents()[0]);
+			
 				 return false;
 			}
 
@@ -44,11 +44,10 @@ public abstract class ElementOfComposition implements Serializable {
 			 if(Main.trainMap[currentCoordinates.x][currentCoordinates.y].getBackground() != Color.yellow) 
 				 Main.trainMap[currentCoordinates.x][currentCoordinates.y].add((JLabel) Main.trainMap[previousCoordinates.x][previousCoordinates.y].getComponents()[0]);
 			 
-			 else if(Main.trainMap[currentCoordinates.x][currentCoordinates.y].getBackground() == Color.yellow) {		//ovo srediti
+			 else if(Main.trainMap[currentCoordinates.x][currentCoordinates.y].getBackground() == Color.yellow) {
 				 Main.trainMap[previousCoordinates.x][previousCoordinates.y].remove((JLabel) Main.trainMap[previousCoordinates.x][previousCoordinates.y].getComponents()[0]); //ovo srediti
-				 return false; // ovo srediti
+				 return false;
 			}
-			 
 			 return true;
 		 }
 		 else if((Main.trainMap[currentCoordinates.x][currentCoordinates.y+1].getBackground() == Color.LIGHT_GRAY || Main.trainMap[currentCoordinates.x][currentCoordinates.y+1].getBackground() == Color.red || Main.trainMap[currentCoordinates.x][currentCoordinates.y+1].getBackground() == Color.yellow)

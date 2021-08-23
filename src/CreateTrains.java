@@ -26,7 +26,7 @@ public class CreateTrains extends Thread
 	{
 		try
 		{
-			Logger.getLogger(CreateTrains.class.getName()).addHandler(new FileHandler("Error logs/KreiranjeKompozicija.log"));
+			Logger.getLogger(CreateTrains.class.getName()).addHandler(new FileHandler("logs/CreateComposition.log"));
 		}
 		catch (SecurityException | IOException e)
 		{
@@ -48,7 +48,7 @@ public class CreateTrains extends Thread
 		}
 	}
 	
-	public void pokreni()
+	private void tempFunc()
 	{
 		try
 		{
@@ -70,7 +70,7 @@ public class CreateTrains extends Thread
 					Path fileName = ev.context();
 
 					List<String>content = Files.readAllLines(dir.resolve(fileName));
-					kreiraj(content.get(2));
+					create(content.get(2));
 				}
 				boolean valid = key.reset();
 				if (!valid)
@@ -85,23 +85,23 @@ public class CreateTrains extends Thread
 	@Override
 	public void run()
 	{
-		pokreni();
+		tempFunc();
 	}
 	
-	private void kreiraj(String podaciOKompoziciji) throws Exception
+	private void create(String podaciOKompoziciji) throws Exception
 	{
 		try
 		{
-			String[] podaci = podaciOKompoziciji.split(" ");
+			String[] data = podaciOKompoziciji.split(" ");
 
-			String rasporedL = podaci[0];
-			String rasporedV = podaci[1];
+			String rasporedL = data[0];
+			String rasporedV = data[1];
 			
-			long brzina = Long.parseLong(podaci[2]);
-			String[] linijaString = podaci[3].split("-");
+			long speed = Long.parseLong(data[2]);
+			String[] tmpString = data[3].split("-");
 			ArrayList<TrainStation> _linija = new ArrayList<>();
 			
-			for(String s : linijaString)
+			for(String s : tmpString)
 			{
 				for(int i=0; i< Main.trainStations.size();++i)
 				if(Main.trainStations.get(i).nameStation == s.charAt(0))
@@ -111,7 +111,7 @@ public class CreateTrains extends Thread
 				}
 			}
 
-			Train tmp = new Train(rasporedL, rasporedV, brzina,_linija);
+			Train tmp = new Train(rasporedL, rasporedV, speed,_linija);
 			Main.trainStations.get(_linija.get(0).nameStation-'A').outgoingtrains.add(tmp);		
 			
 		}
@@ -120,7 +120,4 @@ public class CreateTrains extends Thread
 			Logger.getLogger(CreateTrains.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
 		}
 	}
-	
-	
-	
 }

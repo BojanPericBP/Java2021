@@ -26,7 +26,7 @@ public abstract class Vehicle extends Thread
 	{
 		try
 		{
-			Logger.getLogger(Vehicle.class.getName()).addHandler(new FileHandler("Error logs/Vozila.log"));
+			Logger.getLogger(Vehicle.class.getName()).addHandler(new FileHandler("logs/Vehicle.log"));
 		}
 		catch (Exception e)
 		{
@@ -50,7 +50,6 @@ public abstract class Vehicle extends Thread
 
 	public void setVehicle()
 	{
-
 		if(way == 'A')
 		{
 			if(direction == 0)
@@ -81,34 +80,28 @@ public abstract class Vehicle extends Thread
 		while (Main.isAlive && (currPoint.x != -1 || currPoint.y != -1))
 		{
 			
-			try 
-			{
-				sleep(currSpeed);
-			} 
-			catch (Exception e) 
-			{
-				Logger.getLogger(Train.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());
-			}
-			
 			Main.refreshGui();
-
-				Point k = sledeciKorak(currPoint,prevPoint);
+			try 
+			{ sleep(currSpeed); } 
+			catch (Exception e) 
+			{ Logger.getLogger(Train.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString()); }
+			
+				Point k = nextStep(currPoint,prevPoint);
 				
-				if (k.x == -1 && k.y == -1)
+				if (k.x == -1 && k.y == -1) // vozilo je na kraju mape i treba ga ukloniti
 				{
 					synchronized(Main.frame)
 					{
-					Main.trainMap[currPoint.x][currPoint.y].remove((JLabel) Main.trainMap[currPoint.x][currPoint.y].getComponents()[0]);
-					currPoint = k;
-					Main.currVheicleCounter[way - 'A']--;
-					Main.refreshGui();
+						Main.trainMap[currPoint.x][currPoint.y].remove((JLabel) Main.trainMap[currPoint.x][currPoint.y].getComponents()[0]);
+						Main.refreshGui();
+						currPoint = k;
+						Main.currVheicleCounter[way - 'A']--;
 					 }
-					try{Thread.sleep((long) currSpeed);}
-					catch (Exception e)
-					{Logger.getLogger(Vehicle.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());}
+					try{ Thread.sleep((long) currSpeed); }
+					catch (Exception e) {Logger.getLogger(Vehicle.class.getName()).log(Level.WARNING, e.fillInStackTrace().toString());}
 				}
 				
-				else if (currPoint.equals(k) || (Main.trainMap[k.x][k.y].getBackground() == Color.red))
+				else if (currPoint.equals(k) || (Main.trainMap[k.x][k.y].getBackground() == Color.red))// ili je ispred auto ili spustena rampa pa auto trebas da stoji
 				{
 					continue;
 				}
@@ -117,8 +110,9 @@ public abstract class Vehicle extends Thread
 					synchronized(this)
 					{
 						
-					//ako na k2 nema nikoga napravi dva koraka bez da gubi monitor i sleep na svakom polju da bude /2
-					Point k2 = sledeciKorak(k, currPoint);
+					//ako na k2 nema nikoga napravi dva koraka bez da gubi monitor i sleep na svakom polju da bude manji za 1/2
+						
+					Point k2 = nextStep(k, currPoint); // uzmem dva koraka u naprijed
 					if(!k.equals(k2))
 					{
 						Main.trainMap[k.x][k.y].add((JLabel) Main.trainMap[currPoint.x][currPoint.y].getComponents()[0]);
@@ -144,21 +138,19 @@ public abstract class Vehicle extends Thread
 				{
 					synchronized(Main.frame)
 					{
-					//usaglasavanjeBrzine(k);
-					Main.trainMap[k.x][k.y].add((JLabel) Main.trainMap[currPoint.x][currPoint.y].getComponents()[0]);
-					prevPoint.x = currPoint.x;
-					prevPoint.y = currPoint.y;
-					currPoint = k;
-					Main.refreshGui();
+						Main.trainMap[k.x][k.y].add((JLabel) Main.trainMap[currPoint.x][currPoint.y].getComponents()[0]);
+						prevPoint.x = currPoint.x;
+						prevPoint.y = currPoint.y;
+						currPoint = k;
+						Main.refreshGui();
 					}
-					
 				}
 
 			}
 		}
 
 
-	synchronized Point sledeciKorak(Point p, Point q)//
+	synchronized Point nextStep(Point p, Point q)//
 	{
 
 		if (p.y < 29 && 
@@ -202,7 +194,7 @@ public abstract class Vehicle extends Thread
 		}
 		else
 		{
-			return new Point(-1, -1);
+			return new Point(-1, -1); //ako treba izaci sa mape vrati -1
 		}
 	}
 
