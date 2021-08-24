@@ -1,0 +1,8 @@
+raspored_lokomotiva raspored_vagona brzina linija
+
+ml,ul vpn,vpn,vpn,vpn 700 D-C-E
+
+
+
+
+
